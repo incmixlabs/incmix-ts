@@ -1,0 +1,4 @@
+export type FlexProps = {
+  direction?: "row" | "column";
+  wrap?: "wrap" | "nowrap";
+};
