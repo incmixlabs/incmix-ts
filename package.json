@@ -6,6 +6,11 @@
   "bugs": {
     "url": "https://github.com/fabien-ml/incmix-ui/issues"
   },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": ["rollup","webpack","types/lodash-es","vite","@babel/core"]
+    }
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
