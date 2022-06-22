@@ -1,0 +1,3 @@
+// import { TsRuntimeObject_Type } from "./test1.ts.runtime";
+import * as t from "./test.ts";
+console.log(t.default.properties.a.type);

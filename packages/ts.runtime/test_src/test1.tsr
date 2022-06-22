@@ -1,0 +1,6 @@
+export type Type_ = {
+  a: number;
+  b: string;
+};
+
+export default {};

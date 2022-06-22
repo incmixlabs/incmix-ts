@@ -1,0 +1,19 @@
+{
+  "name": "@incmix/vite-plugin-tsr",
+  "version": "1.0.7",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pub": "npm version patch && npm publish"
+  },
+  "keywords": [
+    "vite-plugin",
+    "rollup-plugin"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@incmix/ts.runtime": "latest"
+  }
+}
