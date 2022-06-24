@@ -15,5 +15,9 @@
   "license": "ISC",
   "dependencies": {
     "@incmix/ts.runtime": "latest"
+  },
+  "publishConfig": {
+    "access": "public"
   }
+  
 }

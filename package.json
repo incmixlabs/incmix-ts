@@ -1,6 +1,5 @@
 {
   "name": "incmix-ui-monorepo",
-  "private": true,
   "description": "The SolidJS component library you've incmixd for.",
   "homepage": "https://incmix-ui.com",
   "bugs": {

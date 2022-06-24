@@ -40,5 +40,8 @@
     "@changesets/cli": "2.22.0",
     "commander": "^9.2.0",
     "typescript": "^4.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

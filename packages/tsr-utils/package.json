@@ -1,5 +1,8 @@
 {
-    "name": "@incmix/tsr-utils",
-    "description": "Utils for Typescript Runtime",
-    "main": "src/index.ts"
+  "name": "@incmix/tsr-utils",
+  "description": "Utils for Typescript Runtime",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "access": "public"
+  }
 }

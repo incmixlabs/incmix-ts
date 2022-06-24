@@ -1,5 +1,5 @@
 {
-  "name": "typescript-tsr-plugin",
+  "name": "@incmix/typescript-tsr-plugin",
   "version": "1.0.0",
   "description": "",
   "main": "dist/src/index.js",
@@ -20,5 +20,8 @@
     "@tsconfig/node12": "^1.0.0",
     "@types/node": "^13.9.0",
     "typescript": "^4.7.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
