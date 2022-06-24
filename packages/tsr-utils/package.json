@@ -1,0 +1,5 @@
+{
+    "name": "@incmix/tsr-utils",
+    "description": "Utils for Typescript Runtime",
+    "main": "src/index.ts"
+}
