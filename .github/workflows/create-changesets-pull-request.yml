@@ -13,6 +13,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
+
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7.3.0
       - run: pnpm
       # - run: pnpm test
 
