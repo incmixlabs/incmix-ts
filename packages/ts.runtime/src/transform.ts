@@ -1,6 +1,5 @@
 import * as ts from "typescript";
 import fs from "fs";
-import prettier from "prettier";
 import { getTransformerFactory } from "./factory";
 
 var strBuilder = "";
