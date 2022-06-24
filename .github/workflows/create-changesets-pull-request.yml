@@ -17,7 +17,7 @@ jobs:
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: 7.3.0
-      - run: pnpm
+      - run: pnpm install
       # - run: pnpm test
 
   release:
@@ -37,7 +37,7 @@ jobs:
           version: 7.3.0
 
       - name: Install Dependencies
-        run: pnpm
+        run: pnpm install
 
       - name: Create Release Pull Request
         uses: changesets/action@master
