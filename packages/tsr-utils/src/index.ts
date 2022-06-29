@@ -1,6 +1,6 @@
 export type TsRuntimeObjectGeneric = {
   readonly name: string;
-  readonly extends: TsRuntimeObject;
+  readonly extends: ConcreteTsRuntimeObject;
 };
 
 export type GlobalTsRuntimeObjectKeys = {
@@ -90,6 +90,11 @@ export type SymbolTsRuntimeObject = {
   readonly type: "symbol";
 } & GlobalTsRuntimeObjectKeys;
 
+export type GenericTsRuntimeObjectValue = {
+  readonly type: "generic";
+  readonly name: string;
+} & GlobalTsRuntimeObjectKeys;
+
 export type TsRuntimeObject =
   | FunctionTsRuntimeObject
   | ObjectTsRuntimeObject
@@ -104,7 +109,16 @@ export type TsRuntimeObject =
   | StringTsRuntimeObject
   | BooleanTsRuntimeObject
   | BigIntTsRuntimeObject
-  | SymbolTsRuntimeObject;
+  | SymbolTsRuntimeObject
+  | GenericTsRuntimeObjectValue;
+
+export type GenericTsRuntimeObject = TsRuntimeObject & {
+  generics: TsRuntimeObjectGeneric[];
+};
+
+export type ConcreteTsRuntimeObject = TsRuntimeObject & {
+  generics: undefined;
+};
 
 export const validateTsRuntimeObject = (
   tsRuntimeObject: TsRuntimeObject,
@@ -120,30 +134,34 @@ export const validateExtendsTsRuntimeObject = (
   return false;
 };
 
-export class TsRuntime {
-  tsRuntimeObject: TsRuntimeObject;
+export class TsRuntime<T extends TsRuntimeObject> {
+  tsRuntimeObject: T;
 
-  constructor(tsRuntimeObject: TsRuntimeObject) {
+  constructor(tsRuntimeObject: T) {
     this.tsRuntimeObject = tsRuntimeObject;
   }
 
-  static fromTsRuntimeObject(tsRuntimeObject: TsRuntimeObject) {
-    // Check if it's generic: TODO: MAKE SURE IT'S ACCURATE
-
-    if (tsRuntimeObject.generics) {
-      return new GenericTsRuntime(tsRuntimeObject);
+  static fromTsRuntimeObject<T extends TsRuntimeObject>(tsRuntimeObject: T) {
+    const generics = tsRuntimeObject.generics;
+    if (generics) {
+      return new GenericTsRuntime({ ...tsRuntimeObject, generics });
     }
 
-    return new ConcreteTsRuntime(tsRuntimeObject);
+    return new ConcreteTsRuntime({
+      ...tsRuntimeObject,
+      generics,
+    });
   }
 }
 
-export class ConcreteTsRuntime extends TsRuntime {
+export class ConcreteTsRuntime<
+  T extends ConcreteTsRuntimeObject
+> extends TsRuntime<T> {
   validate(data: any) {
     return validateTsRuntimeObject(this.tsRuntimeObject, data);
   }
 
-  validateExtends(tsRuntime: ConcreteTsRuntime) {
+  validateExtends(tsRuntime: ConcreteTsRuntime<any>) {
     return validateExtendsTsRuntimeObject(
       this.tsRuntimeObject,
       tsRuntime.tsRuntimeObject
@@ -151,30 +169,58 @@ export class ConcreteTsRuntime extends TsRuntime {
   }
 }
 
-export class GenericTsRuntime extends TsRuntime {
-  toConcrete(...params: ConcreteTsRuntime[]): ConcreteTsRuntime {
+export class GenericTsRuntime<
+  T extends GenericTsRuntimeObject
+> extends TsRuntime<T> {
+  // TODO: In theory these types don't need any and could be ultra good however, I'm not sure it's worth the time especially right now.
+  toConcrete(
+    ...filledGenerics: ConcreteTsRuntime<any>[]
+  ): ConcreteTsRuntime<any> {
     // TODO: GET ACTUAL Array of Generics
-    const generics: ConcreteTsRuntime[] = [];
 
-    if (generics.length !== params.length) {
+    if (this.tsRuntimeObject.generics.length !== filledGenerics.length) {
       throw new Error(
-        `This GenericTsRuntime requires ${generics.length} generics whereas you provided ${params.length}`
+        `This GenericTsRuntime requires ${this.tsRuntimeObject.generics.length} generics whereas you provided ${filledGenerics.length}`
       );
     }
 
-    for (let index = 0; index < params.length; index++) {
-      const generic = generics[index];
-      const param = params[index];
+    for (let index = 0; index < filledGenerics.length; index++) {
+      const generic = this.tsRuntimeObject.generics[index];
+      const param = filledGenerics[index];
 
-      if (!generic.validateExtends(param)) {
+      if (!new ConcreteTsRuntime(generic.extends).validateExtends(param)) {
         throw new Error(
           `Param at index ${index} doesn't extend the generic at the corresponding index`
         );
       }
     }
 
-    // TODO: Implement the actual logic after figuring out how generics are implemented
-    throw new Error("This function isn't yet implemented yet");
+    // TODO: I have determined that the input data is valid. Now it is time to search the type and replace the generics!
+
+    return new ConcreteTsRuntime(
+      transformTsRuntimeObject({
+        tsRuntimeObject: this.tsRuntimeObject,
+        shouldApply: (tsr) => tsr.type === "generic",
+        transform: (_tsr) => {
+          const tsr = _tsr as GenericTsRuntimeObjectValue;
+          const genericIndex = this.tsRuntimeObject.generics.findIndex(
+            (generic) => {
+              return generic.name === tsr.name;
+            }
+          );
+          const genericType = filledGenerics[genericIndex];
+
+          if (!genericType) {
+            console.error(`
+            You have a generic named ${tsr.name} but no corresponding filler
+          `);
+            return tsr;
+          }
+
+          return genericType.tsRuntimeObject;
+        },
+      }) as ConcreteTsRuntimeObject
+    );
   }
 }
 
