@@ -121,15 +121,15 @@ export type ConcreteTsRuntimeObject = TsRuntimeObject & {
 };
 
 export const validateTsRuntimeObject = (
-  tsRuntimeObject: TsRuntimeObject,
+  tsRuntimeObject: ConcreteTsRuntimeObject,
   data: any
 ): boolean => {
   return false;
 };
 
 export const validateExtendsTsRuntimeObject = (
-  tsRuntimeObject: TsRuntimeObject,
-  extendsTsRuntimeObject: TsRuntimeObject
+  tsRuntimeObject: ConcreteTsRuntimeObject,
+  extendsTsRuntimeObject: ConcreteTsRuntimeObject
 ): boolean => {
   return false;
 };
