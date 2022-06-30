@@ -174,7 +174,7 @@ export class GenericTsRuntime<
 > extends TsRuntime<T> {
   // TODO: In theory these types don't need any and could be ultra good however, I'm not sure it's worth the time especially right now.
   toConcrete(
-    ...filledGenerics: ConcreteTsRuntime<any>[]
+    ...filledGenerics: ConcreteTsRuntime<ConcreteTsRuntimeObject>[]
   ): ConcreteTsRuntime<any> {
     // TODO: GET ACTUAL Array of Generics
 
