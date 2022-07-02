@@ -1,6 +1,5 @@
 import * as ts from "typescript";
 import { visit } from "./lib/visit/visit";
-import { visitTypeAliasDeclaration } from "./lib/visit/visitTypeAliasDeclaration";
 
 type Fn = (_ctx: ts.TransformationContext) => void;
 

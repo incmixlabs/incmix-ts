@@ -1,4 +1,4 @@
-import { transform, transformFromSource, transformTypings } from "./transform";
+import { transform, transformFromSource } from "./transform";
 import {
   generateTSRuntimeObjectFromDir,
   generateTSRuntimeObjectFromFile,
@@ -8,7 +8,6 @@ import {
 export {
   transform,
   transformFromSource,
-  transformTypings,
   generateTSRuntimeObjectFromDir,
   generateTSRuntimeObjectFromFile,
   generateTSRuntimeObjectFromSourceString,
