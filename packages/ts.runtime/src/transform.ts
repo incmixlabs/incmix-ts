@@ -21,6 +21,7 @@ export function transform(filename: string): string {
     code,
     ts.ScriptTarget.Latest
   );
+
   return printNode(
     sourceFile,
     getTransformerFactory((_ctx: ts.TransformationContext) => (ctx = _ctx)),
@@ -28,10 +29,8 @@ export function transform(filename: string): string {
   );
 }
 
-export function transformFromSource(source: string) {
+export function transformFromSource(source: string, fileName = "") {
   resetValues();
-
-  const fileName = "";
   const sourceFile = ts.createSourceFile(
     fileName,
     source,
@@ -76,6 +75,11 @@ export function transformTypings(source: string) {
 }
 
 function visit(node: ts.Node): ts.Node {
+  if (node.kind === ts.SyntaxKind.TypeKeyword) {
+    console.log("Found TypeKeyword");
+    return ts.factory.createToken(ts.SyntaxKind.ConstKeyword);
+  }
+
   if (node.kind === ts.SyntaxKind.TypeLiteral) {
     return visitTypeLiteral(node);
   }
@@ -151,28 +155,24 @@ export function visitTypeAliasDeclaration(
   const childNode = ts.visitEachChild(
     node,
     (_node: ts.Node): ts.Node => {
-      if (_node.kind === ts.SyntaxKind.TypeParameter) {
-        _node.forEachChild((cNode: ts.Node) => {
-          if (cNode.kind === ts.SyntaxKind.Identifier) {
-            const _cNode = cNode as ts.Identifier;
-            const nodeText = _cNode.escapedText.toString();
-            str += nodeText.toLocaleLowerCase() + ": '" + nodeText + "',";
-            generics[nodeText] = nodeText;
-          }
-        });
-      } else if (_node.kind === ts.SyntaxKind.Identifier) {
+      if (_node.kind === ts.SyntaxKind.Identifier) {
         const n = _node as ts.Identifier;
         const nodeText = n.escapedText.toString() + "_$TSR";
-        // add to types
-        types[nodeText] = "";
-        typeName = nodeText;
 
-        strBuilder += nodeText + "= ";
-      } else {
-        const visitNode = visit(_node);
-        return visitNode;
+        return ts.factory.createIdentifier(nodeText);
       }
-      return _node;
+
+      if (_node.kind === ts.SyntaxKind.TypeKeyword) {
+        console.log("Found TypeKeyword");
+        return ts.factory.createToken(ts.SyntaxKind.ConstKeyword);
+      }
+
+      if (_node.kind === ts.SyntaxKind.TypeParameter) {
+        return _node;
+      }
+
+      const visitNode = visit(_node);
+      return visitNode;
     },
     context
   );
@@ -471,31 +471,32 @@ function printNode(
   filename: string,
   canWriteFile: boolean = true
 ) {
-  // const transformationResult = ts.transform(sourceFile, [transformerFactory]);
-  // const transformedSourceFile = transformationResult.transformed[0];
-  // const printer = ts.createPrinter();
+  const transformResult = ts.transform(sourceFile, [transformerFactory]);
 
-  // const code =
-  //   printer.printNode(
-  //     ts.EmitHint.Unspecified,
-  //     transformedSourceFile,
-  //     sourceFile
-  //   ) + strBuilder;
+  const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+  const resultFile = ts.createSourceFile(
+    "someFileName.ts",
+    "",
+    ts.ScriptTarget.Latest,
+    /*setParentNodes*/ false,
+    ts.ScriptKind.TS
+  );
 
-  // return code;
-  ts.transform(sourceFile, [transformerFactory]);
-  canWriteFile && createTsRuntimeFile(filename);
-  return strBuilder;
+  const text = printer.printNode(
+    ts.EmitHint.Unspecified,
+    transformResult.transformed[0],
+    resultFile
+  );
+
+  canWriteFile && createTsRuntimeFile(filename, text);
+
+  return text;
 }
 
-function createTsRuntimeFile(filename: string) {
+function createTsRuntimeFile(filename: string, text: string) {
   const file = filename + fileExt;
-  /*strBuilder = prettier.format(strBuilder, {
-    semi: false,
-    singleQuote: true,
-    jsxSingleQuote: true,
-  });*/
-  fs.writeFileSync(file, strBuilder);
+
+  fs.writeFileSync(file, text);
 }
 
 function resetValues() {
