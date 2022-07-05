@@ -3,6 +3,30 @@ export const Type_$TSR = {
     properties: {
         a: { type: "number" },
         b: { type: "string" },
-        c: { type: "boolean" }
+        c: { type: "boolean" },
+        d: {
+            type: "object",
+            properties: {
+                a: { type: "number" },
+                b: { type: "string" },
+                c: { type: "boolean" },
+                d: {
+                    type: "object",
+                    properties: {
+                        a: { type: "number" },
+                        b: { type: "string" },
+                        c: { type: "boolean" },
+                        d: {
+                            type: "object",
+                            properties: {
+                                a: { type: "number" },
+                                b: { type: "string" },
+                                c: { type: "boolean" }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 };

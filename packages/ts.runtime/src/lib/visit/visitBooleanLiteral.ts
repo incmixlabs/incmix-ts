@@ -1,7 +1,6 @@
 import ts from "typescript";
 
 export const visitBooleanLiteral =
-  (context: ts.TransformationContext) =>
   (node: ts.Node): ts.Node => {
     return ts.factory.createObjectLiteralExpression(
       [

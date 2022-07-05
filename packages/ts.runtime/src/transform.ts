@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import fs from "fs";
-import { getTransformerFactory } from "./factory";
+import { visit } from "./lib/visit/visit";
 
 var ctx: ts.TransformationContext;
 const fileExt = ".ts";
@@ -17,7 +17,6 @@ export function transform(filename: string): string {
 
   return printNode(
     sourceFile,
-    getTransformerFactory((_ctx: ts.TransformationContext) => (ctx = _ctx)),
     filename
   );
 }
@@ -30,7 +29,6 @@ export function transformFromSource(source: string, fileName = "") {
   );
   return printNode(
     sourceFile,
-    getTransformerFactory((_ctx: ts.TransformationContext) => (ctx = _ctx)),
     fileName,
     false
   );
@@ -38,11 +36,10 @@ export function transformFromSource(source: string, fileName = "") {
 
 function printNode(
   sourceFile: ts.SourceFile,
-  transformerFactory: ts.TransformerFactory<ts.Node>,
   filename: string,
   canWriteFile: boolean = true
 ) {
-  const transformResult = ts.transform(sourceFile, [transformerFactory]);
+  const transformResult = visit(sourceFile);
 
   const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
   const resultFile = ts.createSourceFile(
@@ -55,7 +52,7 @@ function printNode(
 
   const text = printer.printNode(
     ts.EmitHint.Unspecified,
-    transformResult.transformed[0],
+    transformResult,
     resultFile
   );
 

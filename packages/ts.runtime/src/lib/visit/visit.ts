@@ -11,50 +11,49 @@ import { visitStringKeyword } from "./visitStringKeyword";
 import { visitBooleanKeyword } from "./visitBooleanKeyword";
 
 export const visit =
-  (context: ts.TransformationContext) =>
   (node: ts.Node): ts.Node => {
     console.log(node?.kind);
     if (node.kind === ts.SyntaxKind.TypeAliasDeclaration) {
-      return visitTypeAliasDeclaration(context)(node as TypeAliasDeclaration);
+      return visitTypeAliasDeclaration(node as TypeAliasDeclaration);
     }
 
     if (node.kind === ts.SyntaxKind.NumericLiteral) {
-      return visitNumericLiteral(context)(node);
+      return visitNumericLiteral(node);
     }
 
     if (node.kind === ts.SyntaxKind.StringLiteral) {
-      return visitStringLiteral(context)(node);
+      return visitStringLiteral(node);
     }
 
     if (
       node.kind === ts.SyntaxKind.TrueKeyword ||
       node.kind === ts.SyntaxKind.FalseKeyword
     ) {
-      return visitBooleanLiteral(context)(node);
+      return visitBooleanLiteral(node);
     }
 
     if (node.kind === ts.SyntaxKind.TypeLiteral) {
-      return visitTypeLiteral(context)(node as ts.TypeLiteralNode);
+      return visitTypeLiteral(node as ts.TypeLiteralNode);
     }
 
     if (node.kind === ts.SyntaxKind.LiteralType) {
-      return visit(context)((node as ts.LiteralTypeNode).literal);
+      return visit((node as ts.LiteralTypeNode).literal);
     }
 
     if (node.kind === ts.SyntaxKind.PropertySignature) {
-      return visitPropertySignature(context)(node);
+      return visitPropertySignature(node);
     }
 
     if (node.kind === ts.SyntaxKind.NumberKeyword) {
-      return visitNumberKeyword(context)(node);
+      return visitNumberKeyword(node);
     }
 
     if (node.kind === ts.SyntaxKind.StringKeyword) {
-      return visitStringKeyword(context)(node);
+      return visitStringKeyword(node);
     }
 
     if (node.kind === ts.SyntaxKind.BooleanKeyword) {
-      return visitBooleanKeyword(context)(node);
+      return visitBooleanKeyword(node);
     }
 
     // if (node.kind === ts.SyntaxKind.InterfaceDeclaration) {
@@ -64,5 +63,5 @@ export const visit =
     //   return visitEnumDeclaration(node, context);
     // }
 
-    return node.forEachChild(visit(context)) as ts.Node;
+    return node.forEachChild(visit) as ts.Node;
   };
