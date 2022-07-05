@@ -1,8 +1,9 @@
-import ts, { TypeAliasDeclaration } from "typescript";
+import ts, { ObjectLiteralExpression, TypeAliasDeclaration } from "typescript";
 import { visitNumericLiteral } from "./visitNumericLiteral";
 import { visitTypeAliasDeclaration } from "./visitTypeAliasDeclaration";
 import { visitStringLiteral } from "./visitStringLiteral";
 import { visitBooleanLiteral } from "./visitBooleanLiteral";
+import { visitObjectLiteralExpression } from "./visitObjectLiteralExpression";
 
 export const visit =
   (context: ts.TransformationContext) =>
@@ -24,6 +25,12 @@ export const visit =
       node.kind === ts.SyntaxKind.FalseKeyword
     ) {
       return visitBooleanLiteral(context)(node);
+    }
+
+    if (node.kind === ts.SyntaxKind.ObjectLiteralExpression) {
+      return visitObjectLiteralExpression(context)(
+        node as ObjectLiteralExpression
+      );
     }
 
     if (node.kind === ts.SyntaxKind.LiteralType) {
