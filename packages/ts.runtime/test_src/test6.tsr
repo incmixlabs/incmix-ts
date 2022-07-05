@@ -1,6 +1,0 @@
-export type ____Type<A, B, C, Type> = {
-  a: A;
-  b: B;
-  c: Promise<C> | number;
-  d: (a: number) => boolean;
-};
