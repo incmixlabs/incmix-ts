@@ -1,10 +1,12 @@
-import ts from "typescript";
+import ts, { UnionTypeNode } from "typescript";
 import { mapNodeChildren } from "../helpers/mapNodeChildren";
+import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitUnionType = (node: ts.UnionTypeNode) => {
+export const visitUnionType: Visiter<UnionTypeNode> = (node, metadata) => {
   return ts.factory.createObjectLiteralExpression(
     [
+      ...(metadata ?? []),
       ts.factory.createPropertyAssignment(
         "type",
         ts.factory.createStringLiteral("union")

@@ -1,8 +1,10 @@
 import ts from "typescript";
+import { Visiter } from "../helpers/types";
 
-export const visitStringLiteral = (node: ts.Node) => {
+export const visitStringLiteral: Visiter = (node, metadata) => {
   return ts.factory.createObjectLiteralExpression(
     [
+      ...(metadata ?? []),
       ts.factory.createPropertyAssignment(
         "type",
         ts.factory.createStringLiteral("literal")

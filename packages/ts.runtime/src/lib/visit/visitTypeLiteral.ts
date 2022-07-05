@@ -1,10 +1,15 @@
 import ts, { ObjectLiteralElementLike } from "typescript";
 import { mapNodeChildren } from "../helpers/mapNodeChildren";
+import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitTypeLiteral = (node: ts.TypeLiteralNode) => {
+export const visitTypeLiteral: Visiter<ts.TypeLiteralNode> = (
+  node,
+  metadata
+) => {
   return ts.factory.createObjectLiteralExpression(
     [
+      ...(metadata ?? []),
       ts.factory.createPropertyAssignment(
         "type",
         ts.factory.createStringLiteral("object")

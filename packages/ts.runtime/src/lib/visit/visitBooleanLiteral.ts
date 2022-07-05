@@ -1,24 +1,25 @@
 import ts from "typescript";
+import { Visiter } from "../helpers/types";
 
-export const visitBooleanLiteral =
-  (node: ts.Node): ts.Node => {
-    return ts.factory.createObjectLiteralExpression(
-      [
-        ts.factory.createPropertyAssignment(
-          "type",
-          ts.factory.createStringLiteral("literal")
-        ),
-        ts.factory.createPropertyAssignment(
-          "typeLiteral",
-          ts.factory.createStringLiteral("boolean")
-        ),
-        ts.factory.createPropertyAssignment(
-          "value",
-          node.kind === ts.SyntaxKind.TrueKeyword
-            ? ts.factory.createTrue()
-            : ts.factory.createFalse()
-        ),
-      ],
-      true
-    );
-  };
+export const visitBooleanLiteral: Visiter = (node, metadata) => {
+  return ts.factory.createObjectLiteralExpression(
+    [
+      ...(metadata ?? []),
+      ts.factory.createPropertyAssignment(
+        "type",
+        ts.factory.createStringLiteral("literal")
+      ),
+      ts.factory.createPropertyAssignment(
+        "typeLiteral",
+        ts.factory.createStringLiteral("boolean")
+      ),
+      ts.factory.createPropertyAssignment(
+        "value",
+        node.kind === ts.SyntaxKind.TrueKeyword
+          ? ts.factory.createTrue()
+          : ts.factory.createFalse()
+      ),
+    ],
+    true
+  );
+};

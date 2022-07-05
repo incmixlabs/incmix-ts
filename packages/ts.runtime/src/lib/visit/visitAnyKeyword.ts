@@ -1,7 +1,12 @@
 import ts from "typescript";
+import { Visiter } from "../helpers/types";
 
-export const visitAnyKeyword = (node: ts.Node) => {
-    return ts.factory.createObjectLiteralExpression([
-        ts.factory.createPropertyAssignment("type", ts.factory.createStringLiteral("any"))
-    ])
-}
+export const visitAnyKeyword: Visiter = (node, metadata) => {
+  return ts.factory.createObjectLiteralExpression([
+    ...(metadata ?? []),
+    ts.factory.createPropertyAssignment(
+      "type",
+      ts.factory.createStringLiteral("any")
+    ),
+  ]);
+};

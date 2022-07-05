@@ -1,11 +1,10 @@
-import ts, { ObjectLiteralExpression, TypeAliasDeclaration } from "typescript";
+import ts from "typescript";
 import { visitNumericLiteral } from "./visitNumericLiteral";
 import { visitTypeAliasDeclaration } from "./visitTypeAliasDeclaration";
 import { visitStringLiteral } from "./visitStringLiteral";
 import { visitBooleanLiteral } from "./visitBooleanLiteral";
 import { visitTypeLiteral } from "./visitTypeLiteral";
 import { visitPropertySignature } from "./visitPropertySIgnature";
-import { mapNodeChildren } from "../helpers/mapNodeChildren";
 import { visitNumberKeyword } from "./visitNumberKeyword";
 import { visitStringKeyword } from "./visitStringKeyword";
 import { visitBooleanKeyword } from "./visitBooleanKeyword";
@@ -14,78 +13,44 @@ import { visitParameter } from "./visitParameter";
 import { visitAnyKeyword } from "./visitAnyKeyword";
 import { visitUnknownKeyword } from "./visitUnknownKeyword";
 import { visitUnionType } from "./visitUnionType";
+import { Visiter } from "../helpers/types";
+import { randomUUID } from "crypto";
+import { visitTypeParameter } from "./visitTypeParameter";
 
-export const visit = (node: ts.Node): ts.Node => {
-  console.log(node?.kind);
-  if (node.kind === ts.SyntaxKind.TypeAliasDeclaration) {
-    return visitTypeAliasDeclaration(node as TypeAliasDeclaration);
-  }
+const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
+  [ts.SyntaxKind.TypeAliasDeclaration]: visitTypeAliasDeclaration,
+  [ts.SyntaxKind.NumericLiteral]: visitNumericLiteral,
+  [ts.SyntaxKind.StringLiteral]: visitStringLiteral,
+  [ts.SyntaxKind.TrueKeyword]: visitBooleanLiteral,
+  [ts.SyntaxKind.FalseKeyword]: visitBooleanLiteral,
+  [ts.SyntaxKind.TypeLiteral]: visitTypeLiteral,
+  [ts.SyntaxKind.PropertySignature]: visitPropertySignature,
+  [ts.SyntaxKind.NumberKeyword]: visitNumberKeyword,
+  [ts.SyntaxKind.StringKeyword]: visitStringKeyword,
+  [ts.SyntaxKind.BooleanKeyword]: visitBooleanKeyword,
+  [ts.SyntaxKind.AnyKeyword]: visitAnyKeyword,
+  [ts.SyntaxKind.UnknownKeyword]: visitUnknownKeyword,
+  [ts.SyntaxKind.FunctionType]: visitFunctionType,
+  [ts.SyntaxKind.Parameter]: visitParameter,
+  [ts.SyntaxKind.UnionType]: visitUnionType,
+  [ts.SyntaxKind.TypeParameter]: visitTypeParameter,
+};
 
-  if (node.kind === ts.SyntaxKind.NumericLiteral) {
-    return visitNumericLiteral(node);
-  }
-
-  if (node.kind === ts.SyntaxKind.StringLiteral) {
-    return visitStringLiteral(node);
-  }
-
-  if (
-    node.kind === ts.SyntaxKind.TrueKeyword ||
-    node.kind === ts.SyntaxKind.FalseKeyword
-  ) {
-    return visitBooleanLiteral(node);
-  }
-
-  if (node.kind === ts.SyntaxKind.TypeLiteral) {
-    return visitTypeLiteral(node as ts.TypeLiteralNode);
+export const visit: Visiter = (node, metadata): ts.Node => {
+  console.log(node.kind, metadata?.length);
+  if (visitMap[node.kind]) {
+    return visitMap[node.kind]!(node, [
+      ...(metadata ?? []),
+      ts.factory.createPropertyAssignment(
+        "id",
+        ts.factory.createStringLiteral(randomUUID())
+      ),
+    ]);
   }
 
   if (node.kind === ts.SyntaxKind.LiteralType) {
-    return visit((node as ts.LiteralTypeNode).literal);
+    visit((node as ts.LiteralTypeNode).literal, metadata);
   }
 
-  if (node.kind === ts.SyntaxKind.PropertySignature) {
-    return visitPropertySignature(node);
-  }
-
-  if (node.kind === ts.SyntaxKind.NumberKeyword) {
-    return visitNumberKeyword(node);
-  }
-
-  if (node.kind === ts.SyntaxKind.StringKeyword) {
-    return visitStringKeyword(node);
-  }
-
-  if (node.kind === ts.SyntaxKind.BooleanKeyword) {
-    return visitBooleanKeyword(node);
-  }
-
-  if (node.kind === ts.SyntaxKind.FunctionType) {
-    return visitFunctionType(node as ts.FunctionTypeNode);
-  }
-
-  if (node.kind === ts.SyntaxKind.Parameter) {
-    return visitParameter(node as ts.ParameterDeclaration);
-  }
-
-  if (node.kind === ts.SyntaxKind.AnyKeyword) {
-    return visitAnyKeyword(node);
-  }
-
-  if (node.kind === ts.SyntaxKind.UnknownKeyword) {
-    return visitUnknownKeyword(node);
-  }
-
-  if (node.kind === ts.SyntaxKind.UnionType) {
-    return visitUnionType(node as ts.UnionTypeNode);
-  }
-
-  // if (node.kind === ts.SyntaxKind.InterfaceDeclaration) {
-  //   return visitInterfaceDeclaration(node, context);
-  // }
-  // if (node.kind === ts.SyntaxKind.EnumDeclaration) {
-  //   return visitEnumDeclaration(node, context);
-  // }
-
-  return node.forEachChild(visit) as ts.Node;
+  return node.forEachChild((n) => visit(n)) as ts.Node;
 };

@@ -1,11 +1,16 @@
-import ts, { Expression } from "typescript";
+import ts, { Expression, FunctionTypeNode } from "typescript";
 import { mapNodeChildren } from "../helpers/mapNodeChildren";
+import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitFunctionType = (node: ts.FunctionTypeNode) => {
+export const visitFunctionType: Visiter<FunctionTypeNode> = (
+  node,
+  metadata
+) => {
   const children = mapNodeChildren(node, (n) => n);
   return ts.factory.createObjectLiteralExpression(
     [
+      ...(metadata ?? []),
       ts.factory.createPropertyAssignment(
         "type",
         ts.factory.createStringLiteral("function")
@@ -13,7 +18,7 @@ export const visitFunctionType = (node: ts.FunctionTypeNode) => {
       ts.factory.createPropertyAssignment(
         "parameters",
         ts.factory.createArrayLiteralExpression(
-          node.parameters.map(visit) as Expression[],
+          node.parameters.map((n) => visit(n)) as Expression[],
           true
         )
       ),

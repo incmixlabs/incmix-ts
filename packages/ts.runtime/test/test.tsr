@@ -1,1 +1,1 @@
-export type Type = 1 | 2
+export type Type<A, B extends number> = 1 | 2

@@ -1,43 +1,43 @@
+import { randomUUID } from "crypto";
 import ts, { Expression } from "typescript";
+import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitTypeAliasDeclaration = (node: ts.TypeAliasDeclaration) => {
-  console.log("Found TypeKeyword");
-
-  let identifier: ts.Identifier = undefined!;
-  let expression: ts.Node = undefined!;
-
-  let index = 0;
-  node.forEachChild((cNode) => {
-    if (cNode.kind === ts.SyntaxKind.Identifier) {
-      identifier = cNode as ts.Identifier;
-    }
-    if (index === 2) {
-      expression = cNode;
-    }
-    index++;
-  });
-
-  if (identifier && expression) {
-    console.log(expression.kind);
-    const variableDeclarationList = ts.factory.createVariableDeclarationList(
+export const visitTypeAliasDeclaration: Visiter<ts.TypeAliasDeclaration> = (
+  node: ts.TypeAliasDeclaration,
+  /* We can't have metadata */
+  _metadata
+) => {
+  return ts.factory.createVariableStatement(
+    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    ts.factory.createVariableDeclarationList(
       [
         ts.factory.createVariableDeclaration(
-          ts.factory.createIdentifier(identifier.text + `_$TSR`),
+          ts.factory.createIdentifier(node.name.text + `_$TSR`),
           undefined,
           undefined,
 
-          visit(expression) as Expression
+          visit(
+            node.type,
+            [
+              !!node.typeParameters?.length &&
+                ts.factory.createPropertyAssignment(
+                  "generics",
+                  ts.factory.createArrayLiteralExpression(
+                    node.typeParameters!.map(
+                      (typeParameter) => visit(typeParameter) as Expression
+                    ),
+                    true
+                  )
+                ),
+              // TODO: Add Logic to detect documentation,
+            ]
+              .filter((i) => !!i)
+              .map((i) => i as ts.PropertyAssignment)
+          ) as Expression
         ),
       ],
       ts.NodeFlags.Const
-    );
-
-    return ts.factory.createVariableStatement(
-      [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-      variableDeclarationList
-    );
-  }
-
-  throw new Error("Can't find Identifier or Expression");
+    )
+  );
 };
