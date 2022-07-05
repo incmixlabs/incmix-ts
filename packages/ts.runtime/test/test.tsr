@@ -1,1 +1,1 @@
-export type Type = (a,b,...c) => {};
+export type Type = 1 | 2

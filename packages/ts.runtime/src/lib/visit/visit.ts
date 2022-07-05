@@ -13,6 +13,7 @@ import { visitFunctionType } from "./visitFunctionType";
 import { visitParameter } from "./visitParameter";
 import { visitAnyKeyword } from "./visitAnyKeyword";
 import { visitUnknownKeyword } from "./visitUnknownKeyword";
+import { visitUnionType } from "./visitUnionType";
 
 export const visit = (node: ts.Node): ts.Node => {
   console.log(node?.kind);
@@ -73,6 +74,10 @@ export const visit = (node: ts.Node): ts.Node => {
 
   if (node.kind === ts.SyntaxKind.UnknownKeyword) {
     return visitUnknownKeyword(node);
+  }
+
+  if (node.kind === ts.SyntaxKind.UnionType) {
+    return visitUnionType(node as ts.UnionTypeNode);
   }
 
   // if (node.kind === ts.SyntaxKind.InterfaceDeclaration) {
