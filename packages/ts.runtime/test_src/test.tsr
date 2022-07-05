@@ -1,1 +1,5 @@
-export type Type = false;
+export type Type = {
+    a: number,
+    b: string,
+    c: boolean
+}
