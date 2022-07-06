@@ -9,7 +9,6 @@ export function transform(filename: string): string {
   ) => {
     return (rootNode) => {
       function visit(node: ts.Node): ts.Node {
-        console.log(node.kind);
         if (ts.isTypeReferenceNode(node)) {
           const type = typeChecker.getTypeFromTypeNode(node);
           const typeName = typeChecker.typeToString(type);

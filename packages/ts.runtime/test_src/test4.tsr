@@ -1,4 +1,0 @@
-export type __Type = {
-  a: 4 | 5 | string;
-  b: Promise<string | number>;
-};
