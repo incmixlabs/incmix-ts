@@ -1,1 +1,2 @@
-export type Type = void
+export type A<T> = number;
+export type Type<T> = A<T>;
