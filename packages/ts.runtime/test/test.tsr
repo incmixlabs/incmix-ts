@@ -1,1 +1,1 @@
-export type Type = <A extends number, B>() => number
+export type Type = void

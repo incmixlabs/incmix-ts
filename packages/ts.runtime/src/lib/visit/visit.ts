@@ -16,6 +16,8 @@ import { visitUnionType } from "./visitUnionType";
 import { Visiter } from "../helpers/types";
 import { randomUUID } from "crypto";
 import { visitTypeParameter } from "./visitTypeParameter";
+import { visitIntersectionType } from "./visitIntersectionType";
+import { visitVoidKeyword } from "./visitVoidKeyword";
 
 const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.TypeAliasDeclaration]: visitTypeAliasDeclaration,
@@ -34,6 +36,8 @@ const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.Parameter]: visitParameter,
   [ts.SyntaxKind.UnionType]: visitUnionType,
   [ts.SyntaxKind.TypeParameter]: visitTypeParameter,
+  [ts.SyntaxKind.IntersectionType]: visitIntersectionType,
+  [ts.SyntaxKind.VoidKeyword]: visitVoidKeyword,
 };
 
 export const visit: Visiter = (node, metadata): ts.Node => {
