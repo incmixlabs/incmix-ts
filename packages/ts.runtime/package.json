@@ -10,7 +10,8 @@
     "node": "ts-node",
     "tsc": "rm -r ./dist & tsc",
     "npm:publish": "npm run tsc && npm publish",
-    "patch": "npm version patch"
+    "patch": "npm version patch",
+    "build": "npm run tsc"
   },
   "repository": {
     "type": "git",
