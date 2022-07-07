@@ -1,6 +1,6 @@
 {
   "name": "@incmix/ts.runtime",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "",
   "main": "dist/src/index.js",
   "bin": "dist/src/bin/cli.js",
