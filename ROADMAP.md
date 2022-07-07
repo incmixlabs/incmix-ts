@@ -1,17 +1,23 @@
 # Roadmap
-- [x] string
-- [x] number
-- [x] boolean
-- [x] void
-- [x] unknown
-- [x] any
-- [x] generics
-- [x] functions
-- [x] function spread pagirameters
-- [x] function generics
-- [x] objects
-- [ ] identifiers for generics
-- [ ] identifiers for types in the file
-- [ ] identifiers for imported types
-- [ ] typeof types
-- [ ] make tsRuntimeObjects have better typings by adding as const
+- ts.runtime basics
+    - [x] string
+    - [x] number
+    - [x] boolean
+    - [x] void
+    - [x] unknown
+    - [x] any
+    - [x] generics
+    - [x] functions
+    - [x] function spread pagirameters
+    - [x] function generics
+    - [x] objects
+    - [x] identifiers
+    - [ ] support resolving identifiers
+    - [ ] typeof types
+    - [ ] make tsRuntimeObjects have better typings by adding as const
+    - [ ] support interfaces
+    - [ ] support enums
+    - [ ] block other types of declarations and statements
+- language support
+    - [ ] VsCode support importing tsr files with accurate types
+
