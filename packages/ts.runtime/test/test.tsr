@@ -1,2 +1,2 @@
 export type A<T> = number;
-export type Type<T> = A<T>;
+export type B<T> = number

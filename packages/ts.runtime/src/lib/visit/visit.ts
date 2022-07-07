@@ -19,6 +19,7 @@ import { visitTypeParameter } from "./visitTypeParameter";
 import { visitIntersectionType } from "./visitIntersectionType";
 import { visitVoidKeyword } from "./visitVoidKeyword";
 import { visitTypeReference } from "./visitTypeReference";
+import { visitSourceFile } from "./visitSourceFile";
 
 const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.TypeAliasDeclaration]: visitTypeAliasDeclaration,
@@ -40,6 +41,7 @@ const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.IntersectionType]: visitIntersectionType,
   [ts.SyntaxKind.VoidKeyword]: visitVoidKeyword,
   [ts.SyntaxKind.TypeReference]: visitTypeReference,
+  [ts.SyntaxKind.SourceFile]: visitSourceFile
 };
 
 export const visit: Visiter = (node, metadata): ts.Node => {
