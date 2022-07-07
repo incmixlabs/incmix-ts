@@ -1,2 +1,3 @@
-export type A<T> = number;
-export type B<T> = number
+export type A = {
+    a?: string;
+}
