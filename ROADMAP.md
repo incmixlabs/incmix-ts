@@ -18,6 +18,9 @@
     - [ ] support interfaces
     - [ ] support enums
     - [ ] block other types of declarations and statements
+    - [x] support optional types
+    - [x] null
+    - [x] undefined
 - language support
     - [ ] VsCode support importing tsr files with accurate types
 
