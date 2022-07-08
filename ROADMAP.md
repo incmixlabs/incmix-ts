@@ -21,6 +21,11 @@
     - [x] support optional types
     - [x] null
     - [x] undefined
+    - [x] array
+    - [x] tuple
+    - [x] union
+    - [x] intersection
+    - [ ] somehow add optional property on object keys instead of `null | undefined | type`
 - language support
     - [ ] VsCode support importing tsr files with accurate types
 

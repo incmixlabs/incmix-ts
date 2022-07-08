@@ -214,10 +214,7 @@ importers:
       typescript: 4.7.4
 
   packages/vite-plugin-tsr:
-    specifiers:
-      '@incmix/ts.runtime': latest
-    dependencies:
-      '@incmix/ts.runtime': link:../ts.runtime
+    specifiers: {}
 
 packages:
 
