@@ -7,8 +7,8 @@ export const visitParameter: Visiter<ts.ParameterDeclaration> = (
   node,
   metadata
 ) => {
-  const children = mapNodeChildren(node, (n) => n);
-  const spread = children.some((n) => n.kind === ts.SyntaxKind.DotDotDotToken);
+  const spread = !!node.dotDotDotToken;
+  const optional = !!node.questionToken;
 
   return ts.factory.createObjectLiteralExpression(
     [
@@ -16,6 +16,10 @@ export const visitParameter: Visiter<ts.ParameterDeclaration> = (
       ts.factory.createPropertyAssignment(
         "spread",
         spread ? ts.factory.createTrue() : ts.factory.createFalse()
+      ),
+      ts.factory.createPropertyAssignment(
+        "optional",
+        optional ? ts.factory.createTrue() : ts.factory.createFalse()
       ),
       ts.factory.createPropertyAssignment(
         "tsRuntimeObject",

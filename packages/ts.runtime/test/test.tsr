@@ -1,3 +1,5 @@
-export type A = {
-    a?: string;
-}
+export type Type = [a: number, b: string, ...c: number[]];
+
+export type Type2 = [a: number, b: string, c?: string];
+
+export type Type3 = [number, string, ...number[]];

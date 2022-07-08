@@ -33,10 +33,12 @@ export type TupleTsRuntimeObject = {
   readonly items: (
     | {
         readonly spread: true;
+        readonly optional: false;
         readonly tsRuntimeObject: ArrayTsRuntimeObject | TupleTsRuntimeObject;
       }
     | {
         readonly spread: false;
+        readonly optional: boolean;
         readonly tsRuntimeObject: TsRuntimeObject;
       }
   )[];

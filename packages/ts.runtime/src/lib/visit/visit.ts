@@ -22,6 +22,8 @@ import { visitTypeReference } from "./visitTypeReference";
 import { visitSourceFile } from "./visitSourceFile";
 import { visitNullKeyword } from "./visitNullKeyword";
 import { visitUndefinedKeyword } from "./visitUndefinedKeyword";
+import { visitArrayType } from "./visitArrayType";
+import { visitTupleType } from "./visitTupleType";
 
 const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.TypeAliasDeclaration]: visitTypeAliasDeclaration,
@@ -45,7 +47,9 @@ const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.TypeReference]: visitTypeReference,
   [ts.SyntaxKind.SourceFile]: visitSourceFile,
   [ts.SyntaxKind.NullKeyword]: visitNullKeyword,
-  [ts.SyntaxKind.UndefinedKeyword]: visitUndefinedKeyword
+  [ts.SyntaxKind.UndefinedKeyword]: visitUndefinedKeyword,
+  [ts.SyntaxKind.ArrayType]: visitArrayType,
+  [ts.SyntaxKind.TupleType]: visitTupleType,
 };
 
 export const visit: Visiter = (node, metadata): ts.Node => {
