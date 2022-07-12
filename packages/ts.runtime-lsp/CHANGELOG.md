@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.0.1
+
+### Patch Changes
+
+- a18b5c7: bump
+- Updated dependencies [a18b5c7]
+  - @incmix/ts.runtime@2.0.1
+
 ## 1.0.0
 
 ### Major Changes
