@@ -16,6 +16,13 @@ export type FunctionTsRuntimeObject = {
   readonly returns: TsRuntimeObject
 } & GlobalTsRuntimeObjectKeys;
 
+export type InterfaceTsRuntimeObject = {
+  readonly type: "interface";
+  readonly members: {
+    [key: string]: TsRuntimeObject;
+  };
+} & GlobalTsRuntimeObjectKeys;
+
 export type ObjectTsRuntimeObject = {
   readonly type: "object";
   readonly properties: {
