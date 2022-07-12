@@ -1,5 +1,11 @@
 # @incmix/tsr-utils
 
+## 1.1.0
+
+### Minor Changes
+
+- 02d9d6f: Add support for interfaces
+
 ## 1.0.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @incmix/ts.runtime
 
+## 2.1.0
+
+### Minor Changes
+
+- 02d9d6f: Add support for interfaces
+
 ## 2.0.2
 
 ### Patch Changes
