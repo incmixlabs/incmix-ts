@@ -1,5 +1,12 @@
 # @incmix/vite-plugin-tsr
 
+## 4.0.0
+
+### Patch Changes
+
+- Updated dependencies [02d9d6f]
+  - @incmix/ts.runtime@2.1.0
+
 ## 3.0.2
 
 ### Patch Changes
