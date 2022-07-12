@@ -1,5 +1,12 @@
 # @incmix/ts.runtime
 
+## 2.0.2
+
+### Patch Changes
+
+- 3401ae2: bump (again)
+- 3401ae2: bump again
+
 ## 2.0.1
 
 ### Patch Changes

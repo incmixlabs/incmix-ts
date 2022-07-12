@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.0.2
+
+### Patch Changes
+
+- 3401ae2: bump (again)
+- 3401ae2: bump again
+- Updated dependencies [3401ae2]
+- Updated dependencies [3401ae2]
+  - @incmix/ts.runtime@2.0.2
+
 ## 1.0.1
 
 ### Patch Changes
