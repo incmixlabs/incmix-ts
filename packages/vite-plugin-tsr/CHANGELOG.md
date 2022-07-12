@@ -1,5 +1,16 @@
 # @incmix/vite-plugin-tsr
 
+## 5.0.0
+
+### Minor Changes
+
+- caf4e81: move vite to peer deps
+
+### Patch Changes
+
+- Updated dependencies [caf4e81]
+  - @incmix/ts.runtime@2.2.0
+
 ## 4.0.0
 
 ### Patch Changes
