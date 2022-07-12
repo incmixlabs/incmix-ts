@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "@incmix/ts.runtime": "latest"
+    "@incmix/ts.runtime": "1.6.0"
   },
   "publishConfig": {
     "access": "public"
