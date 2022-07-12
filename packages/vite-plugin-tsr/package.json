@@ -2,10 +2,12 @@
   "name": "@incmix/vite-plugin-tsr",
   "version": "1.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pub": "npm version patch && npm publish"
+    "publish": "npm version patch && npm publish",
+    "build": "tsc"
   },
   "keywords": [
     "vite-plugin",
@@ -18,6 +20,10 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.49",
+    "typescript": "^4.7.4",
+    "vite": "2.9.1"
   }
-  
 }
