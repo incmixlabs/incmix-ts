@@ -1,4 +1,4 @@
-name: Publish Packages
+name: Create Changesets Versioning PR
 
 on:
   push:
@@ -43,3 +43,5 @@ jobs:
         uses: changesets/action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          version: changeset version && pnpm install --no-frozen-lockfile
