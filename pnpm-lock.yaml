@@ -165,10 +165,10 @@ importers:
 
   packages/ts.runtime-lsp:
     specifiers:
-      '@incmix/ts.runtime': 1.0.12
+      '@incmix/ts.runtime': 1.6.0
       typescript: ^4.7.2
     dependencies:
-      '@incmix/ts.runtime': 1.0.12
+      '@incmix/ts.runtime': link:../ts.runtime
       typescript: 4.7.4
 
   packages/ts.runtime.vscode:
@@ -2577,14 +2577,6 @@ packages:
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
-
-  /@incmix/ts.runtime/1.0.12:
-    resolution: {integrity: sha512-vDkzwX98LoTpLHXrZF0/IeSpUnxHiJPD5xoJRYO/vLclwrLsqwzILzk6shpmK6nl+E0vzaTN2Pwn/JdWJFNsTg==}
-    hasBin: true
-    dependencies:
-      commander: 9.3.0
-      typescript: 4.7.4
-    dev: false
 
   /@istanbuljs/load-nyc-config/1.1.0:
     resolution: {integrity: sha512-VjeHSlIzpv/NyD3N0YuHfXOPDIixcA1q2ZV98wsMqcYlPmv2n3Yb2lYP9XMElnaFVXg5A7YLTeLu6V84uQDjmQ==}
