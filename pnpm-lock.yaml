@@ -165,7 +165,7 @@ importers:
 
   packages/ts.runtime-lsp:
     specifiers:
-      '@incmix/ts.runtime': 2.0.0
+      '@incmix/ts.runtime': 2.0.1
       typescript: ^4.7.2
     dependencies:
       '@incmix/ts.runtime': link:../ts.runtime
