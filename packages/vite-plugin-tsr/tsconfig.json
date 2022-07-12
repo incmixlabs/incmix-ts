@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "moduleResolution": "node",
+    "outDir": "dist"
+  },
+  "files": [
+    "src/index.ts"
+  ]
+}
