@@ -1,9 +1,10 @@
-# Change Log
+# @incmix/vite-plugin-tsr
 
-## 0.1.0
+## 2.0.0
 
 ### Minor Changes
 
+- ff91bf0: Attempt a fix
 - cb72d38: abc
 - 37d8106: Try to fix changest
 
@@ -20,11 +21,3 @@
 - Updated dependencies [cb72d38]
 - Updated dependencies [37d8106]
   - @incmix/ts.runtime@1.9.0
-
-All notable changes to the "ts-runtime-lsp" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
