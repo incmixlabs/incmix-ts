@@ -1,5 +1,11 @@
 # @incmix/ts.runtime
 
+## 2.2.0
+
+### Minor Changes
+
+- caf4e81: move vite to peer deps
+
 ## 2.1.0
 
 ### Minor Changes

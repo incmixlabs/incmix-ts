@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.0.4
+
+### Patch Changes
+
+- Updated dependencies [caf4e81]
+  - @incmix/ts.runtime@2.2.0
+
 ## 1.0.3
 
 ### Patch Changes
