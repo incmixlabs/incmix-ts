@@ -25,7 +25,7 @@
     "release": "turbo run build && changeset publish",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "version-packages": "changeset version"
+    "version-packages": "changeset version && pnpm install --no-frozen-lockfile"
   },
   "lint-staged": {
     "package.json": "npx sort-package-json"
