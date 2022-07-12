@@ -1,5 +1,12 @@
 # @incmix/vite-plugin-tsr
 
+## 5.1.0
+
+### Minor Changes
+
+- 92fdc09: abc
+- 92fdc09: make target esnext in vite plugin
+
 ## 5.0.0
 
 ### Minor Changes
