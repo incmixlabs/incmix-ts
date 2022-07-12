@@ -1,5 +1,15 @@
 # @incmix/ts.runtime
 
+## 2.0.0
+
+### Major Changes
+
+- f0e767b: Release
+
+### Patch Changes
+
+- 995084a: test
+
 ## 1.9.0
 
 ### Minor Changes
