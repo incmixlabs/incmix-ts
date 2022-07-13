@@ -1,5 +1,11 @@
 # @incmix/tsr-utils
 
+## 1.1.1
+
+### Patch Changes
+
+- 8db2a4a: Add interface to list in tsr utils
+
 ## 1.1.0
 
 ### Minor Changes
