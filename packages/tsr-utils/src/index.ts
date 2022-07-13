@@ -12,8 +12,8 @@ export type GlobalTsRuntimeObjectKeys = {
 export type FunctionTsRuntimeObject = {
   readonly type: "function";
   readonly functionGenerics?: TsRuntimeObjectGeneric[];
-  readonly parameters: TupleTsRuntimeObject["items"],
-  readonly returns: TsRuntimeObject
+  readonly parameters: TupleTsRuntimeObject["items"];
+  readonly returns: TsRuntimeObject;
 } & GlobalTsRuntimeObjectKeys;
 
 export type InterfaceTsRuntimeObject = {
@@ -121,7 +121,8 @@ export type TsRuntimeObject =
   | BooleanTsRuntimeObject
   | BigIntTsRuntimeObject
   | SymbolTsRuntimeObject
-  | GenericTsRuntimeObjectValue;
+  | GenericTsRuntimeObjectValue
+  | InterfaceTsRuntimeObject;
 
 export type GenericTsRuntimeObject = TsRuntimeObject & {
   generics: TsRuntimeObjectGeneric[];
