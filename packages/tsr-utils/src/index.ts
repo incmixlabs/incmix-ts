@@ -106,6 +106,11 @@ export type GenericTsRuntimeObjectValue = {
   readonly name: string;
 } & GlobalTsRuntimeObjectKeys;
 
+export type SpecialTsRuntimeObject = {
+  readonly type: `$${string}`;
+  readonly data: any;
+} & GlobalTsRuntimeObjectKeys;
+
 export type TsRuntimeObject =
   | FunctionTsRuntimeObject
   | ObjectTsRuntimeObject
@@ -122,7 +127,8 @@ export type TsRuntimeObject =
   | BigIntTsRuntimeObject
   | SymbolTsRuntimeObject
   | GenericTsRuntimeObjectValue
-  | InterfaceTsRuntimeObject;
+  | InterfaceTsRuntimeObject
+  | SpecialTsRuntimeObject;
 
 export type GenericTsRuntimeObject = TsRuntimeObject & {
   generics: TsRuntimeObjectGeneric[];
