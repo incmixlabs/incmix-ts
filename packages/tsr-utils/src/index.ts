@@ -111,6 +111,11 @@ export type SpecialTsRuntimeObject = {
   readonly data: any;
 } & GlobalTsRuntimeObjectKeys;
 
+export type UnionTsRuntimeObject = {
+  readonly type: "union";
+  readonly members: TsRuntimeObject[];
+} & GlobalTsRuntimeObjectKeys;
+
 export type TsRuntimeObject =
   | FunctionTsRuntimeObject
   | ObjectTsRuntimeObject
@@ -128,7 +133,8 @@ export type TsRuntimeObject =
   | SymbolTsRuntimeObject
   | GenericTsRuntimeObjectValue
   | InterfaceTsRuntimeObject
-  | SpecialTsRuntimeObject;
+  | SpecialTsRuntimeObject
+  | UnionTsRuntimeObject;
 
 export type GenericTsRuntimeObject = TsRuntimeObject & {
   generics: TsRuntimeObjectGeneric[];
