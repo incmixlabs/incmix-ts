@@ -1,5 +1,11 @@
 # @incmix/tsr-utils
 
+## 1.2.0
+
+### Minor Changes
+
+- 4515b39: Add Union to tsr-utils
+
 ## 1.1.2
 
 ### Patch Changes
