@@ -1,5 +1,11 @@
 # @incmix/tsr-utils
 
+## 1.1.2
+
+### Patch Changes
+
+- 2a3ba67: Add dynamic types to tsr
+
 ## 1.1.1
 
 ### Patch Changes
