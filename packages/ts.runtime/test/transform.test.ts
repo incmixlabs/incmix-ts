@@ -1,6 +1,7 @@
 import { transform } from "../src";
 import { Id } from "../src/Id";
 import prettier from "prettier";
+import { Failable } from "../src/Failable";
 
 const TEST_ID_GENERATED = "the-id-is-here";
 const testId: Id = {
@@ -14,18 +15,19 @@ const format = (code: string) =>
 
 const basicTypeCheck = (name: string) => {
   it(`Properly handles the ${name} type`, () => {
-    expect(
-      format(
-        transform(
-          {
-            filename: `${name}.tsr`,
-            text: `export type Type = ${name};`,
-            outputFilename: `${name}.tsr.ts`,
-          },
-          { id: testId }
-        ).trim()
-      )
-    ).toBe(
+    const transformResult = transform(
+      {
+        filename: `${name}.tsr`,
+        text: `export type Type = ${name};`,
+        outputFilename: `${name}.tsr.ts`,
+      },
+      { id: testId }
+    );
+
+    expect(transformResult.type).toBe("success");
+    const transformSuccess = transformResult as Failable.Success<string>;
+
+    expect(format(transformSuccess.value.trim())).toBe(
       format(
         `export const Type_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`
       )
@@ -38,5 +40,5 @@ describe(transform, () => {
   basicTypeCheck("number");
   basicTypeCheck("unknown");
   basicTypeCheck("any");
-  basicTypeCheck("boolean")
+  basicTypeCheck("boolean");
 });
