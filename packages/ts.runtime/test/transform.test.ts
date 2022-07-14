@@ -41,8 +41,4 @@ describe(transform, () => {
   basicTypeCheck("unknown");
   basicTypeCheck("any");
   basicTypeCheck("boolean");
-
-  it("should fail tests for testing the github action", () => {
-    expect(1).toBe(2);
-  });
 });
