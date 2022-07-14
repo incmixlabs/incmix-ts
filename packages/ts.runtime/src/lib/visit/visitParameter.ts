@@ -3,10 +3,11 @@ import { mapNodeChildren } from "../helpers/mapNodeChildren";
 import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitParameter: Visiter<ts.ParameterDeclaration> = (
+export const visitParameter: Visiter<ts.ParameterDeclaration> = ({
   node,
-  metadata
-) => {
+  metadata,
+  deps,
+}) => {
   const spread = !!node.dotDotDotToken;
   const optional = !!node.questionToken;
 
@@ -23,10 +24,12 @@ export const visitParameter: Visiter<ts.ParameterDeclaration> = (
       ),
       ts.factory.createPropertyAssignment(
         "tsRuntimeObject",
-        visit(
-          node.type ??
-            ts.factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword)
-        ) as ts.Expression
+        visit({
+          node:
+            node.type ??
+            ts.factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
+          deps,
+        }) as ts.Expression
       ),
     ],
     true

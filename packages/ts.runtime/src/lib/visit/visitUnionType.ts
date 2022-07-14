@@ -3,7 +3,11 @@ import { mapNodeChildren } from "../helpers/mapNodeChildren";
 import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitUnionType: Visiter<UnionTypeNode> = (node, metadata) => {
+export const visitUnionType: Visiter<UnionTypeNode> = ({
+  node,
+  metadata,
+  deps,
+}) => {
   return ts.factory.createObjectLiteralExpression(
     [
       ...(metadata ?? []),
@@ -14,7 +18,9 @@ export const visitUnionType: Visiter<UnionTypeNode> = (node, metadata) => {
       ts.factory.createPropertyAssignment(
         "values",
         ts.factory.createArrayLiteralExpression(
-          mapNodeChildren(node, visit) as ts.Expression[],
+          mapNodeChildren(node, (n) =>
+            visit({ node: n, deps })
+          ) as ts.Expression[],
           true
         )
       ),

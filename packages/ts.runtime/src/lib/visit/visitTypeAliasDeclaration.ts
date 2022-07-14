@@ -3,11 +3,11 @@ import ts, { Expression } from "typescript";
 import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitTypeAliasDeclaration: Visiter<ts.TypeAliasDeclaration> = (
-  node: ts.TypeAliasDeclaration,
+export const visitTypeAliasDeclaration: Visiter<ts.TypeAliasDeclaration> = ({
+  node,
   /* We can't have metadata */
-  _metadata
-) => {
+  deps,
+}) => {
   return ts.factory.createVariableStatement(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     ts.factory.createVariableDeclarationList(
@@ -17,15 +17,16 @@ export const visitTypeAliasDeclaration: Visiter<ts.TypeAliasDeclaration> = (
           undefined,
           undefined,
 
-          visit(
-            node.type,
-            [
+          visit({
+            node: node.type,
+            metadata: [
               !!node.typeParameters?.length &&
                 ts.factory.createPropertyAssignment(
                   "generics",
                   ts.factory.createArrayLiteralExpression(
                     node.typeParameters!.map(
-                      (typeParameter) => visit(typeParameter) as Expression
+                      (typeParameter) =>
+                        visit({ node: typeParameter, deps }) as Expression
                     ),
                     true
                   )
@@ -33,8 +34,9 @@ export const visitTypeAliasDeclaration: Visiter<ts.TypeAliasDeclaration> = (
               // TODO: Add Logic to detect documentation,
             ]
               .filter((i) => !!i)
-              .map((i) => i as ts.PropertyAssignment)
-          ) as Expression
+              .map((i) => i as ts.PropertyAssignment),
+            deps: deps,
+          }) as Expression
         ),
       ],
       ts.NodeFlags.Const

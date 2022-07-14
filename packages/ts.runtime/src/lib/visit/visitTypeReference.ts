@@ -3,10 +3,11 @@ import { mapNodeChildren } from "../helpers/mapNodeChildren";
 import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitTypeReference: Visiter<ts.TypeReferenceNode> = (
+export const visitTypeReference: Visiter<ts.TypeReferenceNode> = ({
   node,
-  metadata
-) => {
+  metadata,
+  deps,
+}) => {
   const children = mapNodeChildren(node, (n) => n);
 
   let identifier: ts.Identifier = null!;
@@ -35,7 +36,9 @@ export const visitTypeReference: Visiter<ts.TypeReferenceNode> = (
         ts.factory.createPropertyAssignment(
           "filledGenerics",
           ts.factory.createArrayLiteralExpression(
-            node.typeArguments?.map((typeArg) => visit(typeArg) as Expression),
+            node.typeArguments?.map(
+              (typeArg) => visit({ node: typeArg, deps }) as Expression
+            ),
             true
           )
         ),
