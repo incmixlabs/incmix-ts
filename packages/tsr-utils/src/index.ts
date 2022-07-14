@@ -1,3 +1,5 @@
+import {Identifier} from "typescript";
+
 export type TsRuntimeObjectGeneric = {
   readonly name: string;
   readonly extends: ConcreteTsRuntimeObject;
@@ -106,6 +108,11 @@ export type GenericTsRuntimeObjectValue = {
   readonly name: string;
 } & GlobalTsRuntimeObjectKeys;
 
+export type EnumTsRuntimeObject = {
+  readonly type: "enum";
+  readonly enum: Identifier;
+} & GlobalTsRuntimeObjectKeys;
+
 export type TsRuntimeObject =
   | FunctionTsRuntimeObject
   | ObjectTsRuntimeObject
@@ -121,7 +128,8 @@ export type TsRuntimeObject =
   | BooleanTsRuntimeObject
   | BigIntTsRuntimeObject
   | SymbolTsRuntimeObject
-  | GenericTsRuntimeObjectValue;
+  | GenericTsRuntimeObjectValue
+  | EnumTsRuntimeObject;
 
 export type GenericTsRuntimeObject = TsRuntimeObject & {
   generics: TsRuntimeObjectGeneric[];
