@@ -1,29 +1,3 @@
-export type AccordionProps = {
-  class?: string;
-  /**
-   * If `true`, multiple accordion items can be expanded at once.
-   */
-  allowMultiple?: boolean;
+import  type {randomSymbol} from "my-random-library";
 
-  /**
-   * The index(es) of the expanded accordion item.
-   * (in controlled mode)
-   */
-  index?: ExpandedIndex;
-
-  /**
-   * The initial index(es) of the expanded accordion item.
-   * (in uncontrolled mode)
-   */
-  defaultIndex?: ExpandedIndex;
-
-  /**
-   * The callback invoked when accordion items are expanded or collapsed.
-   */
-  onChange?: (expandedIndex: ExpandedIndex) => void;
-
-  /**
-   * The callback invoked when accordion items are expanded or collapsed.
-   */
-  items: [];
-};
+export type Type = typeof randomSymbol;
