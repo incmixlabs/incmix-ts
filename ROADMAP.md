@@ -30,6 +30,7 @@
     - [x] setup testing
     - [ ] add tests for existing code
     - [ ] make the transform function return a `Failure` if given invalid typescipt also test this
+    - [ ] test the cli
 - language support
     - [ ] VsCode support importing tsr files with accurate types
 
