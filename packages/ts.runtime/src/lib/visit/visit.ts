@@ -54,21 +54,29 @@ const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.InterfaceDeclaration]: visitInterfaceDeclaration,
 };
 
-export const visit: Visiter = (node, metadata): ts.Node => {
+export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {
   console.log(node.kind, metadata?.length);
   if (visitMap[node.kind]) {
-    return visitMap[node.kind]!(node, [
-      ...(metadata ?? []),
-      ts.factory.createPropertyAssignment(
-        "id",
-        ts.factory.createStringLiteral(randomUUID())
-      ),
-    ]);
+    return visitMap[node.kind]!({
+      node: node,
+      metadata: [
+        ...(metadata ?? []),
+        ts.factory.createPropertyAssignment(
+          "id",
+          ts.factory.createStringLiteral(deps.id.generateId())
+        ),
+      ],
+      deps: deps,
+    });
   }
 
   if (node.kind === ts.SyntaxKind.LiteralType) {
-    visit((node as ts.LiteralTypeNode).literal, metadata);
+    visit({
+      node: (node as ts.LiteralTypeNode).literal,
+      metadata: metadata,
+      deps: deps,
+    });
   }
 
-  return node.forEachChild((n) => visit(n)) as ts.Node;
+  return node.forEachChild((n) => visit({ node: n, deps: deps })) as ts.Node;
 };

@@ -3,10 +3,11 @@ import { mapNodeChildren } from "../helpers/mapNodeChildren";
 import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitTypeLiteral: Visiter<ts.TypeLiteralNode> = (
+export const visitTypeLiteral: Visiter<ts.TypeLiteralNode> = ({
   node,
-  metadata
-) => {
+  metadata,
+  deps,
+}) => {
   return ts.factory.createObjectLiteralExpression(
     [
       ...(metadata ?? []),
@@ -17,7 +18,9 @@ export const visitTypeLiteral: Visiter<ts.TypeLiteralNode> = (
       ts.factory.createPropertyAssignment(
         "properties",
         ts.factory.createObjectLiteralExpression(
-          mapNodeChildren(node, visit) as ObjectLiteralElementLike[],
+          mapNodeChildren(node, (n) =>
+            visit({ node: n, deps })
+          ) as ObjectLiteralElementLike[],
           true
         )
       ),
