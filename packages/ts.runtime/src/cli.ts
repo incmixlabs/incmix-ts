@@ -84,19 +84,22 @@ export function cli(params: {
       })
     );
 
-    Failable.runFailure(fileWriteResult, Failable.unwrapFailure);
+    Failable.runFailure<void, Failable.Type<void>>(fileWriteResult, (err) => {
+      params.deps.logger.error(`${err.msg}`);
+      return err;
+    });
 
     return;
   }
 
-  const codeTransformSuccess = Failable.runFailure(
-    codeTransform,
-    Failable.unwrapFailure
-  );
+  if (codeTransform.type === "failure") {
+    params.deps.logger.error(`${codeTransform.msg}`);
+    return;
+  }
 
   console.log(`
 Logging to console as you didn't provide an output file:
 
-${codeTransformSuccess.value}
+${codeTransform.value}
   `);
 }

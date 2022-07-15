@@ -115,9 +115,51 @@ describe(cli, () => {
     expect(writeCount).toBe(1);
   });
 
-  it.todo(
-    "Should Exit if the file operations error and should make appropriate error messages"
-  );
+  it("Should Exit if reading fails appropriate error messages", () => {
+    let logs = "";
+    let errors = "";
+    let exited = false;
+    let readCount = 0;
+
+    cli({
+      deps: {
+        fileIO: {
+          read(fileName) {
+            readCount++;
+            expect(fileName).toBe("abc.tsr");
+            return Failable.failure("Couldn't read");
+          },
+          write({ filePath, text }) {
+            fail("Shouldn't be writing");
+          },
+        },
+        args: {
+          startsOnActualArguments: true,
+          getArgs() {
+            return ["abc.tsr", "-o", "xyz.tsr.ts"];
+          },
+        },
+        commanderProgram: {
+          exitOverride(err) {
+            exited = true;
+          },
+        },
+        logger: {
+          error(text) {
+            errors += `${text}\n`;
+          },
+          log(text) {
+            logs += `${text}\n`;
+          },
+        },
+        id: testIdGenerator,
+      },
+    });
+
+    expect(readCount).toBe(1);
+    expect(errors.includes("Couldn't read")).toBe(true);
+  });
+
   it.todo(
     "Should simply log the result if the -o flag is not passed and shouldn't perform any file writes"
   );
