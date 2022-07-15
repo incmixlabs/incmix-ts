@@ -15,7 +15,10 @@ export namespace Failable {
     fn: Failable.Fn<T, V>
   ): Failable.Type<V> => {
     if (v.type === "failure") {
-      return v;
+      return {
+        ...v,
+        stack: [...v.stack, fn.name],
+      };
     }
 
     return fn(v.value);
