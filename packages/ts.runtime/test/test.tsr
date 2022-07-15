@@ -4,5 +4,3 @@ export enum Enum {
     C = B * 2,
     D = "12".length
 }
-
-// .ts
