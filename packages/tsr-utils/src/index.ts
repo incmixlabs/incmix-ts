@@ -1,3 +1,5 @@
+import {Identifier} from "typescript";
+
 export type TsRuntimeObjectGeneric = {
   readonly name: string;
   readonly extends: ConcreteTsRuntimeObject;
@@ -116,6 +118,11 @@ export type UnionTsRuntimeObject = {
   readonly members: TsRuntimeObject[];
 } & GlobalTsRuntimeObjectKeys;
 
+export type TypeQueryTsRuntimeObject = {
+  readonly type: "uniqueSymbol";
+  readonly symbol: Identifier;
+} & GlobalTsRuntimeObjectKeys;
+
 export type TsRuntimeObject =
   | FunctionTsRuntimeObject
   | ObjectTsRuntimeObject
@@ -134,7 +141,8 @@ export type TsRuntimeObject =
   | GenericTsRuntimeObjectValue
   | InterfaceTsRuntimeObject
   | SpecialTsRuntimeObject
-  | UnionTsRuntimeObject;
+  | UnionTsRuntimeObject
+  | TypeQueryTsRuntimeObject;
 
 export type GenericTsRuntimeObject = TsRuntimeObject & {
   generics: TsRuntimeObjectGeneric[];

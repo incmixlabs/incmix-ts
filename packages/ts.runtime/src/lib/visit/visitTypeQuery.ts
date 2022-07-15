@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, {Identifier} from "typescript";
 import { Visiter } from "../helpers/types";
 
 export const visitTypeQuery: Visiter<ts.TypeQueryNode> = (node, metadata) => {
@@ -11,7 +11,7 @@ export const visitTypeQuery: Visiter<ts.TypeQueryNode> = (node, metadata) => {
             ),
             ts.factory.createPropertyAssignment(
                 ts.factory.createIdentifier("symbol"),
-                ts.factory.createIdentifier(node.exprName.getText())
+                node.exprName as Identifier
             )
         ],
         true

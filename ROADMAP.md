@@ -13,7 +13,7 @@
     - [x] objects
     - [x] identifiers
     - [ ] support resolving identifiers
-    - [ ] typeof types
+    - [x] typeof types
     - [ ] make tsRuntimeObjects have better typings by adding as const
     - [x] support interfaces
     - [ ] support enums
@@ -26,7 +26,8 @@
     - [x] union
     - [x] intersection
     - [ ] somehow add optional property on object keys instead of `null | undefined | type`
-    - [ ] exmpty statements
+    - [ ] empty statements
+    - [x] import statements
 - language support
     - [ ] VsCode support importing tsr files with accurate types
 
