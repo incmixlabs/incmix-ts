@@ -1,5 +1,23 @@
 # @incmix/tsr-utils
 
+## 1.2.0
+
+### Minor Changes
+
+- 4515b39: Add Union to tsr-utils
+
+## 1.1.2
+
+### Patch Changes
+
+- 2a3ba67: Add dynamic types to tsr
+
+## 1.1.1
+
+### Patch Changes
+
+- 8db2a4a: Add interface to list in tsr utils
+
 ## 1.1.0
 
 ### Minor Changes

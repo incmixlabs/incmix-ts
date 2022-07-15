@@ -1,7 +1,7 @@
 import ts from "typescript";
 import { Visiter } from "../helpers/types";
 
-export const visitEnumDeclaration: Visiter<ts.EnumDeclaration> = (node, metadata) => {
+export const visitEnumDeclaration: Visiter<ts.EnumDeclaration> = ({node, metadata}) => {
     const {name} = node;
 
     return ts.factory.createVariableStatement(

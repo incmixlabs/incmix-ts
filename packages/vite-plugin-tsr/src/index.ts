@@ -4,7 +4,7 @@ const {
   generateTSRuntimeObjectFromSourceString,
 } = require("@incmix/ts.runtime");
 
-export default function viteTsrPlugin(): Plugin {
+export function viteTsrPlugin(): Plugin {
   return {
     name: "vite-plugin-tsr",
     enforce: "pre",

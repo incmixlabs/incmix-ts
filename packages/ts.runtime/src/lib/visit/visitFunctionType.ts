@@ -7,10 +7,11 @@ import { mapNodeChildren } from "../helpers/mapNodeChildren";
 import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitFunctionType: Visiter<FunctionTypeNode> = (
+export const visitFunctionType: Visiter<FunctionTypeNode> = ({
   node,
-  metadata
-) => {
+  metadata,
+  deps,
+}) => {
   const children = mapNodeChildren(node, (n) => n);
   return ts.factory.createObjectLiteralExpression(
     [
@@ -20,7 +21,8 @@ export const visitFunctionType: Visiter<FunctionTypeNode> = (
           "functionGenerics",
           ts.factory.createArrayLiteralExpression(
             node.typeParameters!.map(
-              (typeParameter) => visit(typeParameter) as Expression
+              (typeParameter) =>
+                visit({ node: typeParameter, deps }) as Expression
             ),
             true
           )
@@ -32,13 +34,13 @@ export const visitFunctionType: Visiter<FunctionTypeNode> = (
       ts.factory.createPropertyAssignment(
         "parameters",
         ts.factory.createArrayLiteralExpression(
-          node.parameters.map((n) => visit(n)) as Expression[],
+          node.parameters.map((n) => visit({ node: n, deps })) as Expression[],
           true
         )
       ),
       ts.factory.createPropertyAssignment(
         "returns",
-        visit(children.at(-1)!) as Expression
+        visit({ node: children.at(-1)!, deps }) as Expression
       ),
     ]
       .filter((i) => i)

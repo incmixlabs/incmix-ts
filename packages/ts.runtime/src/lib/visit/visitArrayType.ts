@@ -2,7 +2,11 @@ import ts from "typescript";
 import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitArrayType: Visiter<ts.ArrayTypeNode> = (node, metadata) => {
+export const visitArrayType: Visiter<ts.ArrayTypeNode> = ({
+  node,
+  metadata,
+  deps,
+}) => {
   return ts.factory.createObjectLiteralExpression(
     [
       ...(metadata ?? []),
@@ -10,7 +14,10 @@ export const visitArrayType: Visiter<ts.ArrayTypeNode> = (node, metadata) => {
         "type",
         ts.factory.createStringLiteral("array")
       ),
-      ts.factory.createPropertyAssignment("items", visit(node.elementType) as ts.Expression),
+      ts.factory.createPropertyAssignment(
+        "items",
+        visit({ node: node.elementType, deps: deps }) as ts.Expression
+      ),
     ],
     true
   );

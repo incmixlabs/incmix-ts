@@ -1,5 +1,11 @@
 # @incmix/vite-plugin-tsr
 
+## 5.3.0
+
+### Minor Changes
+
+- 484bb9d: Attempt a fix
+
 ## 5.2.0
 
 ### Minor Changes

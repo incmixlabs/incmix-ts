@@ -3,7 +3,11 @@ import { mapNodeChildren } from "../helpers/mapNodeChildren";
 import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitTupleType: Visiter<ts.TupleTypeNode> = (node, metadata) => {
+export const visitTupleType: Visiter<ts.TupleTypeNode> = ({
+  node,
+  metadata,
+  deps,
+}) => {
   return ts.factory.createObjectLiteralExpression(
     [
       ...(metadata ?? []),
@@ -22,7 +26,7 @@ export const visitTupleType: Visiter<ts.TupleTypeNode> = (node, metadata) => {
               const type = ntm.type;
               const name = ntm.name.text;
 
-              return getTupleItemPart({ spread, optional, type, name });
+              return getTupleItemPart({ spread, optional, type, name, deps });
             }
 
             if (node.kind === ts.SyntaxKind.RestType) {
@@ -34,6 +38,7 @@ export const visitTupleType: Visiter<ts.TupleTypeNode> = (node, metadata) => {
                 optional: false,
                 type,
                 name: undefined,
+                deps,
               });
             }
 
@@ -43,6 +48,7 @@ export const visitTupleType: Visiter<ts.TupleTypeNode> = (node, metadata) => {
               optional: false,
               type: tn,
               name: undefined,
+              deps,
             });
           }),
           true
@@ -58,11 +64,13 @@ const getTupleItemPart = ({
   optional,
   name,
   type,
+  deps,
 }: {
   spread: boolean;
   optional: boolean;
   name: string | undefined;
   type: ts.TypeNode;
+  deps: Parameters<Visiter>[0]["deps"];
 }) => {
   return ts.factory.createObjectLiteralExpression(
     [
@@ -81,7 +89,7 @@ const getTupleItemPart = ({
       ),
       ts.factory.createPropertyAssignment(
         "tsRuntimeObject",
-        visit(type) as ts.Expression
+        visit({ node: type, deps }) as ts.Expression
       ),
     ]
       .filter((item) => item)

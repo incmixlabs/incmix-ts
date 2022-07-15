@@ -1,6 +1,0 @@
-export enum Enum {
-    A,
-    B = 2,
-    C = B * 2,
-    D = "12".length
-}
