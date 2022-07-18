@@ -1,7 +1,7 @@
 import ts from "typescript";
 import {Visiter} from "../helpers/types";
 
-export const visitImportDeclaration: Visiter<ts.ImportDeclaration> = (node, metadata) => {
+export const visitImportDeclaration: Visiter<ts.ImportDeclaration> = ({node}) => {
     const {moduleSpecifier, importClause} = node;
 
     return ts.factory.createImportDeclaration(

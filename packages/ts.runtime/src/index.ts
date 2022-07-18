@@ -1,14 +1,4 @@
-import { transform, transformFromSource } from "./transform";
-import {
-  generateTSRuntimeObjectFromDir,
-  generateTSRuntimeObjectFromFile,
-  generateTSRuntimeObjectFromSourceString,
-} from "./lib";
+import { transform } from "./transform";
+import { generateTSRuntimeObjectFromDir } from "./lib";
 
-export {
-  transform,
-  transformFromSource,
-  generateTSRuntimeObjectFromDir,
-  generateTSRuntimeObjectFromFile,
-  generateTSRuntimeObjectFromSourceString,
-};
+export { transform, generateTSRuntimeObjectFromDir };

@@ -2,10 +2,11 @@ import ts from "typescript";
 import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
-export const visitInterfaceDeclaration: Visiter<ts.ClassLikeDeclaration> = (
+export const visitInterfaceDeclaration: Visiter<ts.ClassLikeDeclaration> = ({
   node,
-  metadata
-) => {
+  metadata,
+  deps,
+}) => {
   const members = node.members;
   const typeParameters = node.typeParameters;
   return ts.factory.createVariableStatement(
@@ -27,7 +28,8 @@ export const visitInterfaceDeclaration: Visiter<ts.ClassLikeDeclaration> = (
                 "members",
                 ts.factory.createObjectLiteralExpression(
                   members.map(
-                    (member) => visit(member) as ts.PropertyAssignment
+                    (member) =>
+                      visit({ node: member, deps }) as ts.PropertyAssignment
                   ),
                   true
                 )
@@ -37,7 +39,7 @@ export const visitInterfaceDeclaration: Visiter<ts.ClassLikeDeclaration> = (
                     "generics",
                     ts.factory.createArrayLiteralExpression(
                       typeParameters?.map(
-                        (node) => visit(node) as ts.Expression
+                        (node) => visit({ node, deps }) as ts.Expression
                       ),
                       true
                     )

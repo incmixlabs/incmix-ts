@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.3
+
+### Patch Changes
+
+- dd1de77: refactor and add tests
+
 ## 1.0.2
 
 ### Patch Changes

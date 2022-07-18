@@ -1,7 +1,7 @@
 import ts, {Identifier} from "typescript";
 import { Visiter } from "../helpers/types";
 
-export const visitTypeQuery: Visiter<ts.TypeQueryNode> = (node, metadata) => {
+export const visitTypeQuery: Visiter<ts.TypeQueryNode> = ({node}) => {
 
     return ts.factory.createObjectLiteralExpression(
         [

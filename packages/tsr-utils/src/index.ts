@@ -108,6 +108,11 @@ export type GenericTsRuntimeObjectValue = {
   readonly name: string;
 } & GlobalTsRuntimeObjectKeys;
 
+export type EnumTsRuntimeObject = {
+  readonly type: "enum";
+  readonly enum: Identifier;
+} & GlobalTsRuntimeObjectKeys;
+
 export type SpecialTsRuntimeObject = {
   readonly type: `$${string}`;
   readonly data: any;
@@ -139,6 +144,7 @@ export type TsRuntimeObject =
   | BigIntTsRuntimeObject
   | SymbolTsRuntimeObject
   | GenericTsRuntimeObjectValue
+  | EnumTsRuntimeObject
   | InterfaceTsRuntimeObject
   | SpecialTsRuntimeObject
   | UnionTsRuntimeObject

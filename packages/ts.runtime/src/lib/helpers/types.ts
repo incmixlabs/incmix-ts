@@ -1,6 +1,8 @@
 import ts from "typescript";
+import { Id } from "../../Id";
 
-export type Visiter<T extends ts.Node = ts.Node> = (
-  node: T,
-  metadata?: ts.PropertyAssignment[]
-) => ts.Node;
+export type Visiter<T extends ts.Node = ts.Node> = (params: {
+  node: T;
+  metadata?: ts.PropertyAssignment[];
+  deps: { id: Id };
+}) => ts.Node;

@@ -28,6 +28,10 @@
     - [ ] somehow add optional property on object keys instead of `null | undefined | type`
     - [ ] empty statements
     - [x] import statements
+    - [x] setup testing
+    - [ ] add tests for existing code
+    - [ ] make the transform function return a `Failure` if given invalid typescipt also test this
+    - [ ] test the cli
 - language support
     - [ ] VsCode support importing tsr files with accurate types
 

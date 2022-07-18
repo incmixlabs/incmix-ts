@@ -1,3 +1,0 @@
-import  type {randomSymbol} from "my-random-library";
-
-export type Type = typeof randomSymbol;

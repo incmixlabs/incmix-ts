@@ -1,5 +1,14 @@
 # @incmix/ts.runtime
 
+## 2.3.0
+
+### Minor Changes
+
+- 44d9f15: Fixed enum bug. Enum visitor now produces correct export output - however two nodes need be produced in order for the reference that the enum attribute makes to be resolved. Currently only one node is produced.
+- f836a11: Fixed enum id reference and finalised enum visit function
+- dd1de77: refactor and add tests
+- 936f2eb: Added enum visitor function - enums will simply be passed to the runtime (in the front-end)
+
 ## 2.2.0
 
 ### Minor Changes
