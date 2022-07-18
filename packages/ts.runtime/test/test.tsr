@@ -2,5 +2,5 @@ import type B from "file";
 import type C from "filea";
 
 
-//export type A = B;
-//export type D = C;
+export type A = B;
+export type D = C;

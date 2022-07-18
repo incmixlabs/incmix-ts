@@ -22,25 +22,26 @@ function printRecursiveFrom(
   );
 }
 
-function insertTSRCode(transformResult: ts.SourceFile, sourceFile: ts.SourceFile) {
-  // Walk through source file until you get past the import statements
-  sourceFile.statements.forEach(_ => {
-    console.log(ts.SyntaxKind[_.kind]);
-  });
-
+function insertTSRCode(transformResult: ts.SourceFile, sourceFile: ts.SourceFile): ts.Node {
   // Find the index at which the source file's code should be inserted into the transformed file
   const index = sourceFile.statements.findIndex(node =>
      node.kind !== ts.SyntaxKind.ImportDeclaration
   );
-  console.log(index); // TODO REMOVE ME
 
   // Nothing is to be done if the file contains only import statements, so return
-  if (index === -1) return;
+  if (index === -1) return transformResult;
 
+  // Filter out import statements from source file
+  const sourceCode = sourceFile.statements.filter(node =>
+      node.kind !== ts.SyntaxKind.ImportDeclaration
+  );
 
-  // TODO Filter out all nodes from the source file which will have been transformed
-  // TODO Insert those nodes at the above specified index into the transform result file
-
+  // Insert those nodes at the above specified index into the transform result file
+  return ts.factory.createSourceFile(
+      [...transformResult.statements.slice(0, index), ...sourceCode, ...transformResult.statements.slice(index)],
+      transformResult.endOfFileToken,
+      transformResult.flags
+  ) as ts.Node;
 }
 
 export function transform(
@@ -62,11 +63,11 @@ export function transform(
   );
 
   const transformResult = visit({ deps, node: sourceFile });
-  insertTSRCode(transformResult as SourceFile, sourceFile); // TODO not functional as of yet (REMOVE ME when functional)
+  const prependedResult = insertTSRCode(transformResult as SourceFile, sourceFile); // TODO not functional as of yet (REMOVE ME when functional)
   const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
   const text = printer.printNode(
     ts.EmitHint.Unspecified,
-    transformResult,
+    prependedResult,
     resultFile
   );
 
