@@ -29,7 +29,7 @@ function insertTSRCode(transformResult: ts.SourceFile, sourceFile: ts.SourceFile
     );
 
     // Nothing is to be done if the file contains only import statements, so return
-    if (index === -1) return transformResult;
+    if (index === -1) return transformResult as ts.Node;
 
     // Filter out import statements from source file
     const sourceCode = sourceFile.statements.filter(node =>
