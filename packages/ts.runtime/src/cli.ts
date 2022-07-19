@@ -26,7 +26,7 @@ export function cli(params: {
   program
     .name("ts.runtime")
     .description('CLI to generate ".ts.runtime" files from ".ts" files.')
-    .version(require("../package.json").version)
+    .version("0.0.0")
     .argument("<input-file>", "The path to the file to read")
     .option("-o --output [output]", "The path to the output file")
     .configureOutput({
