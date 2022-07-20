@@ -2,12 +2,8 @@
   "name": "@incmix/ts.runtime",
   "version": "2.5.0",
   "description": "",
-  "exports": {
-    ".": {
-      "default": "./dist/src/index.js",
-      "types": "./dist/src/index.d.ts"
-    }
-  },
+  "types": "./dist/src/index.d.ts",
+  "main": "./dist/src/index.js",
   "bin": "dist/src/bin/cli.js",
   "scripts": {
     "test": "jest",
