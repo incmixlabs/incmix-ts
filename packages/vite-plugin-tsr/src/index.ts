@@ -1,7 +1,7 @@
 import { Plugin } from "vite";
 
 const {
-  generateTSRuntimeObjectFromSourceString,
+  transform,
 } = require("@incmix/ts.runtime");
 
 export function viteTsrPlugin(): Plugin {
@@ -9,7 +9,7 @@ export function viteTsrPlugin(): Plugin {
     name: "vite-plugin-tsr",
     enforce: "pre",
     async transform(code, id, options) {
-      return { code: generateTsRuntimeFiles(code, id, options) };
+      return { code: transform(code, id, options) };
     },
   };
 }
@@ -17,6 +17,6 @@ export function viteTsrPlugin(): Plugin {
 function generateTsRuntimeFiles(code: string, id = "", options) {
   if (id.endsWith(".tsr")) {
     // call ts.runtime API here to generate TS Runtime object from the source.
-    return generateTSRuntimeObjectFromSourceString(code);
+    return transform(code);
   }
 }

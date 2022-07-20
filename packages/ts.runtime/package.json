@@ -3,6 +3,7 @@
   "version": "2.5.0",
   "description": "",
   "main": "dist/src/index.js",
+  "types": "dist/src/index",
   "bin": "dist/src/bin/cli.js",
   "scripts": {
     "test": "jest",
