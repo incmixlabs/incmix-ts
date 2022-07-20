@@ -1,5 +1,11 @@
 # @incmix/tsr-utils
 
+## 1.2.1
+
+### Patch Changes
+
+- 8849d42: Fix ts runtime exports
+
 ## 1.2.0
 
 ### Minor Changes

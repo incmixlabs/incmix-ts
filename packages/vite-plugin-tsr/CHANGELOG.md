@@ -1,5 +1,13 @@
 # @incmix/vite-plugin-tsr
 
+## 8.0.1
+
+### Patch Changes
+
+- 8849d42: Fix ts runtime exports
+- Updated dependencies [8849d42]
+  - @incmix/ts.runtime@2.5.1
+
 ## 8.0.0
 
 ### Patch Changes

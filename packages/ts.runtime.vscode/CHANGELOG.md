@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.4
+
+### Patch Changes
+
+- 8849d42: Fix ts runtime exports
+
 ## 1.0.3
 
 ### Patch Changes
