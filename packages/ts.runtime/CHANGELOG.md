@@ -1,5 +1,11 @@
 # @incmix/ts.runtime
 
+## 2.5.3
+
+### Patch Changes
+
+- 6a22842: fix tsrExtensionRE
+
 ## 2.5.2
 
 ### Patch Changes

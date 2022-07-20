@@ -1,5 +1,13 @@
 # @incmix/vite-plugin-tsr
 
+## 8.0.3
+
+### Patch Changes
+
+- 6a22842: fix tsrExtensionRE
+- Updated dependencies [6a22842]
+  - @incmix/ts.runtime@2.5.3
+
 ## 8.0.2
 
 ### Patch Changes
