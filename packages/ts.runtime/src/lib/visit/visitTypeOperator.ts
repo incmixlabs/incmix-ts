@@ -2,9 +2,9 @@ import ts from "typescript";
 import {Visiter} from "../helpers/types";
 import {visit} from "./visit";
 
-export const visitTypeOperator: Visiter<ts.TypeOperatorNode> = (params) => {
+export const visitTypeOperator: Visiter<ts.TypeOperatorNode> = ({node, metadata, deps}) => {
     const {KeyOfKeyword, UniqueKeyword, ReadonlyKeyword} = ts.SyntaxKind;
-    const {operator, type} = params.node;
+    const {operator, type} = node;
 
     let readOnly = false;
     let body: ts.PropertyAssignment[] | undefined = undefined;
@@ -23,6 +23,7 @@ export const visitTypeOperator: Visiter<ts.TypeOperatorNode> = (params) => {
         case UniqueKeyword:
             // The unique keyword is only ever used when followed by a symbol keyword
             body = [
+                ...metadata ?? [],
                 ts.factory.createPropertyAssignment(
                     "type",
                     ts.factory.createStringLiteral("unique symbol")
@@ -50,7 +51,7 @@ export const visitTypeOperator: Visiter<ts.TypeOperatorNode> = (params) => {
                     "readOnly",
                     readOnly ? ts.factory.createTrue() : ts.factory.createFalse()
                 ),
-                ...(body ?? (visit({...params, node: type}) as ts.ObjectLiteralExpression).properties)
+                ...(body ?? (visit({node: type, deps}) as ts.ObjectLiteralExpression).properties)
             ], true)
         )
     ], true);
