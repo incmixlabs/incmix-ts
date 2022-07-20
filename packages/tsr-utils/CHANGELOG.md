@@ -1,5 +1,11 @@
 # @incmix/tsr-utils
 
+## 1.2.3
+
+### Patch Changes
+
+- 6a22842: fix tsrExtensionRE
+
 ## 1.2.2
 
 ### Patch Changes

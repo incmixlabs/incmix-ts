@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.6
+
+### Patch Changes
+
+- 6a22842: fix tsrExtensionRE
+
 ## 1.0.5
 
 ### Patch Changes

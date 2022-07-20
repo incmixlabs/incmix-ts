@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.0.10
+
+### Patch Changes
+
+- 6a22842: fix tsrExtensionRE
+- Updated dependencies [6a22842]
+  - @incmix/ts.runtime@2.5.3
+
 ## 1.0.9
 
 ### Patch Changes
