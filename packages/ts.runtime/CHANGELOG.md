@@ -1,5 +1,11 @@
 # @incmix/ts.runtime
 
+## 2.5.2
+
+### Patch Changes
+
+- 05036bf: attempt to fix the vite plugin
+
 ## 2.5.1
 
 ### Patch Changes
