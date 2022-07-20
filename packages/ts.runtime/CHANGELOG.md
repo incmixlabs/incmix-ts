@@ -1,5 +1,11 @@
 # @incmix/ts.runtime
 
+## 2.5.0
+
+### Minor Changes
+
+- 3ad0cc5: Fix resolution in ts.runtime
+
 ## 2.4.0
 
 ### Minor Changes
