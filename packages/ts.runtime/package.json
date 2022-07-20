@@ -2,8 +2,8 @@
   "name": "@incmix/ts.runtime",
   "version": "2.3.0",
   "description": "",
-  "main": "dist/index.js",
-  "bin": "dist/bin/cli.js",
+  "main": "dist/src/index.js",
+  "bin": "dist/src/bin/cli.js",
   "scripts": {
     "test": "jest",
     "start": "ts-node src/bin/cli.ts",
