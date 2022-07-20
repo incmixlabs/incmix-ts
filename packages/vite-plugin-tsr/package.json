@@ -1,6 +1,6 @@
 {
   "name": "@incmix/vite-plugin-tsr",
-  "version": "8.0.1",
+  "version": "8.0.2",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "@incmix/ts.runtime": "2.5.1",
+    "@incmix/ts.runtime": "2.5.2",
     "vite": "^2.9.1"
   },
   "publishConfig": {
@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "typescript": "^4.7.4",
-    "@incmix/ts.runtime": "2.5.1",
+    "@incmix/ts.runtime": "2.5.2",
     "vite": "^2.9.1"
   }
 }

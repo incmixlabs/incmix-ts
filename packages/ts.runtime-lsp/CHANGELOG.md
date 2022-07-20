@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.0.9
+
+### Patch Changes
+
+- 05036bf: attempt to fix the vite plugin
+- Updated dependencies [05036bf]
+  - @incmix/ts.runtime@2.5.2
+
 ## 1.0.8
 
 ### Patch Changes

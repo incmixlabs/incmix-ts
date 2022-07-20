@@ -1,5 +1,13 @@
 # @incmix/vite-plugin-tsr
 
+## 8.0.2
+
+### Patch Changes
+
+- 05036bf: attempt to fix the vite plugin
+- Updated dependencies [05036bf]
+  - @incmix/ts.runtime@2.5.2
+
 ## 8.0.1
 
 ### Patch Changes

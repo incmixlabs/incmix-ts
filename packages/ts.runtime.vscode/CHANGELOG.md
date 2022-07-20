@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.5
+
+### Patch Changes
+
+- 05036bf: attempt to fix the vite plugin
+
 ## 1.0.4
 
 ### Patch Changes

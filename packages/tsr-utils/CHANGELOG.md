@@ -1,5 +1,11 @@
 # @incmix/tsr-utils
 
+## 1.2.2
+
+### Patch Changes
+
+- 05036bf: attempt to fix the vite plugin
+
 ## 1.2.1
 
 ### Patch Changes
