@@ -1,5 +1,12 @@
 # @incmix/ts.runtime
 
+## 2.4.0
+
+### Minor Changes
+
+- b263b09: Added support for empty statements
+- cbf71ab: Fix bug where it was generating `values` instead of `members` this is not breaking because `members` was the expected output
+
 ## 2.3.0
 
 ### Minor Changes
