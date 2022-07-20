@@ -3,20 +3,31 @@ import { Plugin } from "vite";
 import { transform as tsTransform } from "@incmix/ts.runtime";
 import { Failable, id as tsrId } from "@incmix/ts.runtime";
 
+const fileExtensionRE = /\.[^\/\s\?]+$/;
+const tsrExtensionRE = /\.tsr\$/;
 export function viteTsrPlugin(): Plugin {
   return {
     name: "vite-plugin-tsr",
     enforce: "pre",
     async transform(code, id, options) {
-      return {
-        code: Failable.runFailure<string, Failable.Success<string>>(
-          tsTransform(
-            { text: code, filename: id, outputFilename: `${id}.ts` },
-            { id: tsrId }
-          ),
-          Failable.unwrapFailure
-        ).value,
-      };
+      const [filepath, querystring = ""] = id.split("?");
+
+      const [extenesion = ""] =
+        querystring.match(fileExtensionRE) ||
+        filepath.match(fileExtensionRE) ||
+        [];
+
+      if (tsrExtensionRE.test(extenesion)) {
+        return {
+          code: Failable.runFailure<string, Failable.Success<string>>(
+            tsTransform(
+              { text: code, filename: id, outputFilename: `${id}.ts` },
+              { id: tsrId }
+            ),
+            Failable.unwrapFailure
+          ).value,
+        };
+      }
     },
   };
 }
