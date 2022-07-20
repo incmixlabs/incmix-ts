@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.0.8
+
+### Patch Changes
+
+- 8849d42: Fix ts runtime exports
+- Updated dependencies [8849d42]
+  - @incmix/ts.runtime@2.5.1
+
 ## 1.0.7
 
 ### Patch Changes
