@@ -29,9 +29,15 @@ export const visitTypeOperator: Visiter<ts.TypeOperatorNode> = ({node, metadata,
                     ts.factory.createStringLiteral("unique symbol")
                 ),
                 ts.factory.createPropertyAssignment(
-                    "uniqueSymbolId",
-                    // TODO look to TS compiler API for the unique symbol's id
-                    ts.factory.createStringLiteral("ID FUNCTIONALITY NOT IMPLEMENTED YET")
+                    "uniqueSymbolTypeId",
+                    /*
+                    * Symbols guarantee uniqueness - so use a symbol at the front-end to ensure that
+                    * a symbol can be used to identify the type of the unique symbol
+                    * */
+                    ts.factory.createCallExpression(
+                        ts.factory.createIdentifier("Symbol"),
+                        undefined, []
+                    )
                 ),
             ];
             break;
