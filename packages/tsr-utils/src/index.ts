@@ -123,6 +123,12 @@ export type UnionTsRuntimeObject = {
   readonly members: TsRuntimeObject[];
 } & GlobalTsRuntimeObjectKeys;
 
+export type PropertySignatureTsRuntimeObject = {
+  readonly type: "propertySignature";
+  readonly optional: boolean;
+  readonly tsRuntimeObject: TsRuntimeObject;
+} & GlobalTsRuntimeObjectKeys;
+
 export type TsRuntimeObject =
   | FunctionTsRuntimeObject
   | ObjectTsRuntimeObject
@@ -142,7 +148,8 @@ export type TsRuntimeObject =
   | EnumTsRuntimeObject
   | InterfaceTsRuntimeObject
   | SpecialTsRuntimeObject
-  | UnionTsRuntimeObject;
+  | UnionTsRuntimeObject
+  | PropertySignatureTsRuntimeObject;
 
 export type GenericTsRuntimeObject = TsRuntimeObject & {
   generics: TsRuntimeObjectGeneric[];
