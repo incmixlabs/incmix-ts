@@ -11,6 +11,10 @@ export type GlobalTsRuntimeObjectKeys = {
   readonly documentation?: string;
 };
 
+export type CanBeReadOnly = {
+  readonly itemsAreReadOnly: boolean;
+} & GlobalTsRuntimeObjectKeys;
+
 export type FunctionTsRuntimeObject = {
   readonly type: "function";
   readonly functionGenerics?: TsRuntimeObjectGeneric[];
@@ -35,7 +39,7 @@ export type ObjectTsRuntimeObject = {
 export type ArrayTsRuntimeObject = {
   readonly type: "array";
   readonly items: TsRuntimeObject;
-} & GlobalTsRuntimeObjectKeys;
+} & CanBeReadOnly & GlobalTsRuntimeObjectKeys;
 
 export type TupleTsRuntimeObject = {
   readonly type: "tuple";
@@ -51,7 +55,7 @@ export type TupleTsRuntimeObject = {
         readonly tsRuntimeObject: TsRuntimeObject;
       }
   )[];
-} & GlobalTsRuntimeObjectKeys;
+} & CanBeReadOnly & GlobalTsRuntimeObjectKeys;
 
 export type NumberLiteralTsRuntimeObject = {
   readonly type: "literal";

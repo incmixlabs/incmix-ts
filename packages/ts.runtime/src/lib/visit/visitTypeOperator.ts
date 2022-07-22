@@ -6,9 +6,6 @@ export const visitTypeOperator: Visiter<ts.TypeOperatorNode> = ({node, metadata,
     const {KeyOfKeyword, UniqueKeyword, ReadonlyKeyword} = ts.SyntaxKind;
     const {operator, type} = node;
 
-    let readOnly = false;
-    let body: ts.PropertyAssignment[] | undefined = undefined;
-
     switch (operator) {
         case KeyOfKeyword:
             /*
@@ -18,11 +15,10 @@ export const visitTypeOperator: Visiter<ts.TypeOperatorNode> = ({node, metadata,
             *   compiler API https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API
             *  - Then the type returned is either: union of the keys() or the single type specified
             * */
-            // TODO put me back - throw Error("keyof keyword is not supported yet!");
-            break;
+            throw Error("keyof keyword is not supported yet!");
         case UniqueKeyword:
             // The unique keyword is only ever used when followed by a symbol keyword
-            body = [
+            return ts.factory.createObjectLiteralExpression([
                 ...metadata ?? [],
                 ts.factory.createPropertyAssignment(
                     "type",
@@ -38,22 +34,22 @@ export const visitTypeOperator: Visiter<ts.TypeOperatorNode> = ({node, metadata,
                         ts.factory.createIdentifier("Symbol"),
                         undefined, []
                     )
-                ),
-            ];
-            break;
+                )
+            ], true);
         case ReadonlyKeyword:
-            readOnly = true;
-            break;
-        default:
-            // TODO Look into better way of handling this
-            throw Error("Unsupported keyword in TypeOperator!");
+            // In this context, the readonly keyword can only be followed by a tuple or array
+            return ts.factory.createObjectLiteralExpression([
+                /*
+                * Visit the tuple or array and update the value of its itemsAreReadOnly property by
+                * creating a new object with all its properties - save for itemsAreReadOnly - and then
+                * add a itemsAreReadOnly property, to which true is assigned
+                * */
+                ...(visit({node: type, deps}) as ts.ObjectLiteralExpression).properties
+                    .filter(
+                        properties =>
+                            ((properties as ts.PropertyAssignment).name as ts.StringLiteral).text !== "itemsAreReadOnly"
+                    ),
+                ts.factory.createPropertyAssignment("itemsAreReadOnly", ts.factory.createTrue())
+            ], true);
     }
-
-    return ts.factory.createObjectLiteralExpression([
-        ts.factory.createPropertyAssignment(
-            "readOnly",
-            readOnly ? ts.factory.createTrue() : ts.factory.createFalse()
-        ),
-        ...(body ?? (visit({node: type, deps}) as ts.ObjectLiteralExpression).properties)
-    ], true);
 }
