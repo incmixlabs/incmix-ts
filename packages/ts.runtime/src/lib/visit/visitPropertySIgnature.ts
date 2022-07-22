@@ -15,6 +15,8 @@ export const visitPropertySignature: Visiter<PropertySignature> = ({
   return ts.factory.createPropertyAssignment(
     node.name,
 
+    // TODO add code to check if visit generates a typeIsReadOnly - if it doesn't then add the attribute and set it to false
+
     hasQuestion
       ? (visit({
           node: ts.factory.createUnionTypeNode([

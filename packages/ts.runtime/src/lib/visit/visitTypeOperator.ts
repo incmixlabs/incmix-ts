@@ -51,14 +51,9 @@ export const visitTypeOperator: Visiter<ts.TypeOperatorNode> = ({node, metadata,
 
     return ts.factory.createObjectLiteralExpression([
         ts.factory.createPropertyAssignment(
-            "tsRuntimeObject",
-            ts.factory.createObjectLiteralExpression([
-                ts.factory.createPropertyAssignment(
-                    "readOnly",
-                    readOnly ? ts.factory.createTrue() : ts.factory.createFalse()
-                ),
-                ...(body ?? (visit({node: type, deps}) as ts.ObjectLiteralExpression).properties)
-            ], true)
-        )
+            "readOnly",
+            readOnly ? ts.factory.createTrue() : ts.factory.createFalse()
+        ),
+        ...(body ?? (visit({node: type, deps}) as ts.ObjectLiteralExpression).properties)
     ], true);
 }
