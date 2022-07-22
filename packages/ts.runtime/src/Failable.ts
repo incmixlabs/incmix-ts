@@ -15,7 +15,10 @@ export namespace Failable {
     fn: Failable.Fn<T, V>
   ): Failable.Type<V> => {
     if (v.type === "failure") {
-      return v;
+      return {
+        ...v,
+        stack: [...v.stack, fn.name],
+      };
     }
 
     return fn(v.value);
@@ -38,14 +41,40 @@ export namespace Failable {
     };
   };
 
+  type OneOf<
+    T,
+    V extends any[],
+    NK extends keyof V = Exclude<keyof V, keyof any[]>
+  > = { [K in NK]: T extends V[K] ? V[K] : never }[NK];
+
   /**
    * If the input value is a success then it simply returns it,
    * If the input value is a failure then it runs and returns fn with the failure
+   * Example usage:
+   * ```
+   *     const x = Failable.runFailure<void, Failable.Success<void>>(
+   *       fileWriteResult,
+   *       Failable.unwrapFailure
+   *     );
+   * ```
    */
   export const runFailure = <T, V extends Failable.Type<T>>(
     v: Failable.Type<T>,
-    fn: FailFn<T, Success<T> extends V ? Success<T> : Failable.Type<T>>
-  ): Success<T> extends V ? Success<T> : Failable.Type<T> => {
+    fn: FailFn<
+      T,
+      OneOf<
+        V,
+        [Failable.Failure, Failable.Success<T>]
+      > extends Failable.Success<T>
+        ? Failable.Success<T>
+        : Failable.Type<T>
+    >
+  ): OneOf<
+    V,
+    [Failable.Failure, Failable.Success<T>]
+  > extends Failable.Success<T>
+    ? Failable.Success<T>
+    : Failable.Type<T> => {
     if (v.type === "success") {
       return v;
     }
