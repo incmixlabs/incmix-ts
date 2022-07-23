@@ -23,26 +23,23 @@ function printRecursiveFrom(
 }
 
 function insertTSRCode(transformResult: ts.SourceFile, sourceFile: ts.SourceFile): ts.Node {
-    // Find the index in the transformed file at which the source file's code should be inserted
-    const index = transformResult.statements.findIndex(node =>
-        node.kind !== ts.SyntaxKind.ImportDeclaration
+    let i = 0;
+    const statements: ts.Statement[] = [];
+    const mustExclude = (node: ts.Node) => !(
+        ts.isImportDeclaration(node) ||
+        ts.isExportDeclaration(node) ||
+        ts.isExportAssignment(node) ||
+        !!node.modifiers && ts.SyntaxKind.ExportKeyword in node.modifiers
     );
 
-    // Nothing is to be done if the file contains only import statements, so return
-    if (index === -1) return transformResult as ts.Node;
+    // Only include statements from the source file that are neither import nor export statements
+    // as those statements will all have already been output into transformResult
+    sourceFile.statements.forEach(statement => {
+        statements.push(mustExclude(statement) ? transformResult.statements[i++] : statement);
+    });
 
-    // Filter out import statements from source file
-    const sourceCode = sourceFile.statements.filter(node =>
-        node.kind !== ts.SyntaxKind.ImportDeclaration
-    );
-
-    // Insert those nodes at the above specified index into the transform result file
     return ts.factory.createSourceFile(
-        [
-            ...transformResult.statements.slice(0, index),
-            ...sourceCode,
-            ...transformResult.statements.slice(index)
-        ],
+        statements,
         transformResult.endOfFileToken,
         transformResult.flags
     ) as ts.Node;

@@ -1,6 +1,8 @@
 import type B from "file";
 import type C from "filea";
 
+const g = 1;
+const h = 0;
 
 export type A = B;
 export type D = C;
