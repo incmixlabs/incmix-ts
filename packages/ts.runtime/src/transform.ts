@@ -49,7 +49,7 @@ function insertTSRCode(transformResult: ts.SourceFile, sourceFile: ts.SourceFile
 }
 
 export function transform(
-    params: { filename: string; text: string; outputFilename: string },
+    params: { filename: string; text: string; outputFilename: string, prependTsCode: boolean },
     deps: { id: Id }
 ): Failable.Type<string> {
     const sourceFile = ts.createSourceFile(
@@ -67,7 +67,9 @@ export function transform(
     );
 
     const transformResult = visit({deps, node: sourceFile});
-    const prependedResult = insertTSRCode(transformResult as SourceFile, sourceFile); // TODO not functional as of yet (REMOVE ME when functional)
+    const prependedResult = params.prependTsCode ?
+        insertTSRCode(transformResult as SourceFile, sourceFile)
+        : transformResult;
     const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed});
     const text = printer.printNode(
         ts.EmitHint.Unspecified,
