@@ -1,26 +1,11 @@
 import * as ts from "typescript";
 import fs from "fs";
 import {visit} from "./lib/visit/visit";
-import {FileIO} from "./FileIO";
-import {Id} from "./Id";
+import {Id} from "./deps/Id";
 import {Failable} from "./Failable";
-import {SourceFile} from "typescript";
 
 var ctx: ts.TransformationContext;
 const fileExt = ".ts";
-
-function printRecursiveFrom(
-    node: ts.Node, indentLevel: number
-) {
-    const indentation = "-".repeat(indentLevel);
-    const syntaxKind = ts.SyntaxKind[node.kind];
-    // const nodeText = node.getText(sourceFile);
-    console.log(`${indentation}${syntaxKind}`);
-
-    node.forEachChild(child =>
-        printRecursiveFrom(child, indentLevel + 1)
-    );
-}
 
 function insertTSRCode(transformResult: ts.SourceFile, sourceFile: ts.SourceFile): ts.Node {
     let i = 0;
@@ -36,7 +21,7 @@ function insertTSRCode(transformResult: ts.SourceFile, sourceFile: ts.SourceFile
     sourceFile.statements.forEach(statement => {
         // TODO Include the below statements if visit() include the ignored statements
         statements.push(mustExclude(statement) ? transformResult.statements[i] : statement);
-        i ++;
+        i++;
         // TODO Include the below statement if visit() excludes the ignored statements
         // statements.push(mustExclude(statement) ? transformResult.statements[i++] : statement);
     });
@@ -68,7 +53,7 @@ export function transform(
 
     const transformResult = visit({deps, node: sourceFile});
     const prependedResult = params.prependTsCode ?
-        insertTSRCode(transformResult as SourceFile, sourceFile)
+        insertTSRCode(transformResult as ts.SourceFile, sourceFile)
         : transformResult;
     const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed});
     const text = printer.printNode(
