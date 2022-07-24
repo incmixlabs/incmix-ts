@@ -25,17 +25,20 @@ function printRecursiveFrom(
 function insertTSRCode(transformResult: ts.SourceFile, sourceFile: ts.SourceFile): ts.Node {
     let i = 0;
     const statements: ts.Statement[] = [];
-    const mustExclude = (node: ts.Node) => !(
+    const mustExclude = (node: ts.Node) =>
         ts.isImportDeclaration(node) ||
         ts.isExportDeclaration(node) ||
         ts.isExportAssignment(node) ||
-        !!node.modifiers && ts.SyntaxKind.ExportKeyword in node.modifiers
-    );
+        !!node.modifiers && !!node.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword)
 
     // Only include statements from the source file that are neither import nor export statements
     // as those statements will all have already been output into transformResult
     sourceFile.statements.forEach(statement => {
-        statements.push(mustExclude(statement) ? transformResult.statements[i++] : statement);
+        // TODO Include the below statements if visit() include the ignored statements
+        statements.push(mustExclude(statement) ? transformResult.statements[i] : statement);
+        i ++;
+        // TODO Include the below statement if visit() excludes the ignored statements
+        // statements.push(mustExclude(statement) ? transformResult.statements[i++] : statement);
     });
 
     return ts.factory.createSourceFile(
