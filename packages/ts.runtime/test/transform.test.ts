@@ -17,17 +17,19 @@ const basicTypeCheck = (name: string) => {
     genericTypeChecker({
         name: "enum",
         input: `export type Type = ${name};`,
-        output: `export const Type_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`
+        output: `export const Type_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`,
+        prependTsCode: false
     });
 };
 
-const genericTypeChecker = ({name, input, output}: { name: string, input: string, output: string }) => {
+const genericTypeChecker = ({name, input, output, prependTsCode}: { name: string, input: string, output: string, prependTsCode: boolean }) => {
     it(`Properly handles the ${name} type`, () => {
         const transformResult = transform(
             {
                 filename: `${name}.tsr`,
                 text: input,
                 outputFilename: `${name}.tsr.ts`,
+                prependTsCode
             },
             {id: testId}
         );
@@ -50,8 +52,15 @@ describe(transform, () => {
     genericTypeChecker({
         name: "enum",
         input: `export enum Enum {A, B = 2}`,
-        output: `export const Enum_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "enum",\n enum: Enum, };`
-    })
+        output: `export const Enum_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "enum",\n enum: Enum, };`,
+        prependTsCode: false
+    });
+    genericTypeChecker({
+        name: "prepend - true",
+        input: `const h = 0;`,
+        output: `const h = 0;`,
+        prependTsCode: true
+    });
 });
 
 
