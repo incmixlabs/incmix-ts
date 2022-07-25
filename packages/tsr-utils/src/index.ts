@@ -82,9 +82,8 @@ export type BigIntLiteralTsRuntimeObject = {
 } & GlobalTsRuntimeObjectKeys;
 
 export type UniqueSymbolTsRuntimeObject = {
-  readonly type: "literal";
-  readonly literalType: "symbol";
-  readonly value: unique symbol;
+  readonly type: "unique symbol";
+  readonly uniqueSymbolTypeId: symbol;
 } & GlobalTsRuntimeObjectKeys;
 
 export type NumberTsRuntimeObject = {
