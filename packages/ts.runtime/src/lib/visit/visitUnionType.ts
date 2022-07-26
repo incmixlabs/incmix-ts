@@ -16,7 +16,7 @@ export const visitUnionType: Visiter<UnionTypeNode> = ({
         ts.factory.createStringLiteral("union")
       ),
       ts.factory.createPropertyAssignment(
-        "members",
+        "values",
         ts.factory.createArrayLiteralExpression(
           mapNodeChildren(node, (n) =>
             visit({ node: n, deps })

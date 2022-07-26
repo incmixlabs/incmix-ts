@@ -1,11 +1,13 @@
 export interface Args {
   getArgs(): string[];
-  startsOnActualArguments: boolean;
+  startsOnActualArguments(): boolean;
 }
 
 export const args: Args = {
   getArgs() {
     return process.argv;
   },
-  startsOnActualArguments: false,
+  startsOnActualArguments() {
+    return false;
+  },
 };

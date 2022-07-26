@@ -16,7 +16,7 @@ export const visitIntersectionType: Visiter<ts.IntersectionTypeNode> = ({
         ts.factory.createStringLiteral("intersection")
       ),
       ts.factory.createPropertyAssignment(
-        "members",
+        "values",
         ts.factory.createArrayLiteralExpression(
           mapNodeChildren(node, (n) =>
             visit({ node: n, deps })

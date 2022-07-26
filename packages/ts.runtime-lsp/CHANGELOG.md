@@ -1,44 +1,5 @@
 # Change Log
 
-## 1.0.10
-
-### Patch Changes
-
-- 6a22842: fix tsrExtensionRE
-- Updated dependencies [6a22842]
-  - @incmix/ts.runtime@2.5.3
-
-## 1.0.9
-
-### Patch Changes
-
-- 05036bf: attempt to fix the vite plugin
-- Updated dependencies [05036bf]
-  - @incmix/ts.runtime@2.5.2
-
-## 1.0.8
-
-### Patch Changes
-
-- 8849d42: Fix ts runtime exports
-- Updated dependencies [8849d42]
-  - @incmix/ts.runtime@2.5.1
-
-## 1.0.7
-
-### Patch Changes
-
-- Updated dependencies [3ad0cc5]
-  - @incmix/ts.runtime@2.5.0
-
-## 1.0.6
-
-### Patch Changes
-
-- Updated dependencies [b263b09]
-- Updated dependencies [cbf71ab]
-  - @incmix/ts.runtime@2.4.0
-
 ## 1.0.5
 
 ### Patch Changes

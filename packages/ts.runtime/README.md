@@ -30,7 +30,7 @@ export type Type = string | 4 | 2 | boolean;
 
 export type TsRuntimeObject_Type = {
   type: "union";
-  members: [
+  values: [
     { type: "string" },
     { type: "number"; value: 4 },
     { type: "number"; value: 2 },

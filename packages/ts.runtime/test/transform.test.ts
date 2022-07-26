@@ -1,5 +1,5 @@
 import {transform} from "../src";
-import {Id} from "../src/deps/Id";
+import {Id} from "../src/Id";
 import prettier from "prettier";
 import {Failable} from "../src/Failable";
 

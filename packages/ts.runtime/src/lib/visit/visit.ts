@@ -25,7 +25,6 @@ import { visitUndefinedKeyword } from "./visitUndefinedKeyword";
 import { visitArrayType } from "./visitArrayType";
 import { visitTupleType } from "./visitTupleType";
 import { visitInterfaceDeclaration } from "./visitInterfaceDeclaration";
-import {visitEmptyStatement} from "./visitEmptyStatement";
 import {visitEnumDeclaration} from "./visitEnumDeclaration";
 import {visitSymbolKeyword} from "./visitSymbolKeyword";
 import {visitTypeOperator} from "./visitTypeOperator";
@@ -56,7 +55,6 @@ const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.ArrayType]: visitArrayType,
   [ts.SyntaxKind.TupleType]: visitTupleType,
   [ts.SyntaxKind.InterfaceDeclaration]: visitInterfaceDeclaration,
-  [ts.SyntaxKind.EmptyStatement]: visitEmptyStatement,
   [ts.SyntaxKind.EnumDeclaration]: visitEnumDeclaration,
   [ts.SyntaxKind.SymbolKeyword]: visitSymbolKeyword,
   [ts.SyntaxKind.TypeOperator]: visitTypeOperator,

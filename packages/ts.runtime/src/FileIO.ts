@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "fs";
 import ts from "typescript";
-import { Failable } from "../Failable";
+import { Failable } from "./Failable";
 
 export interface FileIO {
   read: Failable.Fn<string, string>;

@@ -1,23 +1,5 @@
 # @incmix/tsr-utils
 
-## 1.2.3
-
-### Patch Changes
-
-- 6a22842: fix tsrExtensionRE
-
-## 1.2.2
-
-### Patch Changes
-
-- 05036bf: attempt to fix the vite plugin
-
-## 1.2.1
-
-### Patch Changes
-
-- 8849d42: Fix ts runtime exports
-
 ## 1.2.0
 
 ### Minor Changes

@@ -2,7 +2,7 @@
   "name": "ts-runtime-vscode",
   "displayName": "ts.runtime.vscode",
   "description": "",
-  "version": "1.0.6",
+  "version": "1.0.3",
   "engines": {
     "vscode": "^1.66.0"
   },
