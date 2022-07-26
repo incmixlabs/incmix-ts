@@ -8,26 +8,24 @@ var ctx: ts.TransformationContext;
 const fileExt = ".ts";
 
 function insertTSRCode(transformResult: ts.SourceFile, sourceFile: ts.SourceFile): ts.Node {
-    let i = 0;
-    const statements: ts.Statement[] = [];
-    const mustExclude = (node: ts.Node) =>
-        ts.isImportDeclaration(node) ||
-        ts.isExportDeclaration(node) ||
-        ts.isExportAssignment(node) ||
-        !!node.modifiers && !!node.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword)
+    // Find the index at which the source file's code should be inserted into the transformed file
+    const index = sourceFile.statements.findIndex(node =>
+        node.kind !== ts.SyntaxKind.ImportDeclaration
+    );
 
-    // Only include statements from the source file that are neither import nor export statements
-    // as those statements will all have already been output into transformResult
-    sourceFile.statements.forEach(statement => {
-        // TODO Include the below statements if visit() include the ignored statements
-        statements.push(mustExclude(statement) ? transformResult.statements[i] : statement);
-        i++;
-        // TODO Include the below statement if visit() excludes the ignored statements
-        // statements.push(mustExclude(statement) ? transformResult.statements[i++] : statement);
-    });
+    // Nothing is to be done if the file contains only import statements, so return
+    if (index === -1) return transformResult;
 
+    // Filter out import statements from source file
+    const sourceCode = sourceFile.statements.filter(node =>
+        node.kind !== ts.SyntaxKind.ImportDeclaration
+    );
+
+    // Insert those nodes at the above specified index into the transform result file
     return ts.factory.createSourceFile(
-        statements,
+        transformResult.statements.slice(0, index)
+            .concat(sourceCode)
+            .concat(transformResult.statements.slice(index)),
         transformResult.endOfFileToken,
         transformResult.flags
     ) as ts.Node;

@@ -57,9 +57,26 @@ describe(transform, () => {
     });
     genericTypeChecker({
         name: "prepend - true",
-        input: `const h = 0;`,
-        output: `const h = 0;`,
+        input: `export type X = 1;`,
+        output: "export type X = 1;\n" +
+            "export const X_$TSR = {\n" +
+            `    id: \"${TEST_ID_GENERATED}\",\n` +
+            "    type: \"literal\",\n" +
+            "    typeLiteral: \"number\",\n" +
+            "    value: 1\n" +
+            "}",
         prependTsCode: true
+    });
+    genericTypeChecker({
+        name: "prepend - false",
+        input: `export type X = 1;`,
+        output: "export const X_$TSR = {\n" +
+            `    id: \"${TEST_ID_GENERATED}\",\n` +
+            "        type: \"literal\",\n" +
+            "        typeLiteral: \"number\",\n" +
+            "        value: 1\n" +
+            "    }",
+        prependTsCode: false
     });
     genericTypeChecker({
         name: "unique symbol",
@@ -76,7 +93,7 @@ describe(transform, () => {
             "        },\n" +
             "    },\n" +
             "};",
-        prependTsCode: true
+        prependTsCode: false
     });
     genericTypeChecker({
         name: "readonly tuple",
@@ -102,7 +119,7 @@ describe(transform, () => {
             "        },\n" +
             "    },\n" +
             "};\n",
-        prependTsCode: true
+        prependTsCode: false
     });
     genericTypeChecker({
         name: "readonly tuple",
@@ -122,7 +139,7 @@ describe(transform, () => {
             "        }\n" +
             "    }\n" +
             "};",
-        prependTsCode: true
+        prependTsCode: false
     });
 });
 
