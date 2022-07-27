@@ -17,19 +17,17 @@ const basicTypeCheck = (name: string) => {
     genericTypeChecker({
         name: "enum",
         input: `export type Type = ${name};`,
-        output: `export const Type_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`,
-        prependTsCode: false
+        output: `export const Type_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`
     });
 };
 
-const genericTypeChecker = ({name, input, output, prependTsCode}: { name: string, input: string, output: string, prependTsCode: boolean }) => {
+const genericTypeChecker = ({name, input, output}: { name: string, input: string, output: string }) => {
     it(`Properly handles the ${name} type`, () => {
         const transformResult = transform(
             {
                 filename: `${name}.tsr`,
                 text: input,
                 outputFilename: `${name}.tsr.ts`,
-                prependTsCode
             },
             {id: testId}
         );
@@ -52,78 +50,8 @@ describe(transform, () => {
     genericTypeChecker({
         name: "enum",
         input: `export enum Enum {A, B = 2}`,
-        output: `export const Enum_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "enum",\n enum: Enum, };`,
-        prependTsCode: false
-    });
-    genericTypeChecker({
-        name: "prepend - true",
-        input: `const h = 0;`,
-        output: `const h = 0;`,
-        prependTsCode: true
-    });
-    genericTypeChecker({
-        name: "unique symbol",
-        input: `export type UniqueSymbol = { readonly A: unique symbol; }`,
-        output: "export const UniqueSymbol_$TSR = {\n" +
-            `    id: \"${TEST_ID_GENERATED}\",\n` +
-            "    type: \"object\",\n" +
-            "    properties: {\n" +
-            "        A: {\n" +
-            "            optional: false,\n" +
-            `            id: \"${TEST_ID_GENERATED}\",\n` +
-            "            type: \"unique symbol\",\n" +
-            "            uniqueSymbolTypeId: Symbol(),\n" +
-            "        },\n" +
-            "    },\n" +
-            "};",
-        prependTsCode: true
-    });
-    genericTypeChecker({
-        name: "readonly tuple",
-        input: "export type ReadOnlyTuple = {\n" +
-            "    A: readonly [string];\n" +
-            "};",
-        output: "export const ReadOnlyTuple_$TSR = {\n" +
-            `    id: \"${TEST_ID_GENERATED}\",\n` +
-            "    type: \"object\",\n" +
-            "    properties: {\n" +
-            "        A: {\n" +
-            "            optional: false,\n" +
-            `            id: \"${TEST_ID_GENERATED}\",\n` +
-            "            type: \"tuple\",\n" +
-            "            items: [\n" +
-            "                {\n" +
-            "                    spread: false,\n" +
-            "                    optional: false,\n" +
-            `                    tsRuntimeObject: { id: \"${TEST_ID_GENERATED}\", type: \"string\" },\n` +
-            "                },\n" +
-            "            ],\n" +
-            "            itemsAreReadOnly: true,\n" +
-            "        },\n" +
-            "    },\n" +
-            "};\n",
-        prependTsCode: true
-    });
-    genericTypeChecker({
-        name: "readonly tuple",
-        input: "export type ReadOnlyArray = {\n" +
-            "    A: readonly string[];\n" +
-            "};",
-        output: "export const ReadOnlyArray_$TSR = {\n" +
-            `    id: \"${TEST_ID_GENERATED}\",\n` +
-            "    type: \"object\",\n" +
-            "    properties: {\n" +
-            "        A: {\n" +
-            "            optional: false,\n" +
-            `            id: \"${TEST_ID_GENERATED}\",\n` +
-            "            type: \"array\",\n" +
-            `            items: { id: \"${TEST_ID_GENERATED}\", type: \"string\" },\n` +
-            "            itemsAreReadOnly: true\n" +
-            "        }\n" +
-            "    }\n" +
-            "};",
-        prependTsCode: true
-    });
+        output: `export const Enum_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "enum",\n enum: Enum, };`
+    })
 });
 
 
