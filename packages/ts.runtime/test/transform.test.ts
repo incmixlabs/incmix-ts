@@ -60,12 +60,16 @@ describe(transform, () => {
             "    type: \"object\",\n" +
             "    properties: {\n" +
             "        A: {\n" +
-            `            id: \"${TEST_ID_GENERATED}\",\n` +
-            "            type: \"unique symbol\",\n" +
-            "            uniqueSymbolTypeId: Symbol(),\n" +
-            "        },\n" +
-            "    },\n" +
-            "};"
+            "            type: \"propertySignature\",\n" +
+            "            optional: false,\n" +
+            "            tsRuntimeObject: {\n" +
+            `                id: \"${TEST_ID_GENERATED}\",\n` +
+            "                type: \"unique symbol\",\n" +
+            "                uniqueSymbolTypeId: Symbol()\n" +
+            "            }\n" +
+            "        }\n" +
+            "    }\n" +
+            "};\n"
     });
     genericTypeChecker({
         name: "readonly tuple",
@@ -77,18 +81,23 @@ describe(transform, () => {
             "    type: \"object\",\n" +
             "    properties: {\n" +
             "        A: {\n" +
-            `            id: \"${TEST_ID_GENERATED}\",\n` +
-            "            type: \"tuple\",\n" +
-            "            items: [\n" +
-            "                {\n" +
-            "                    spread: false,\n" +
-            `                    tsRuntimeObject: { id: \"${TEST_ID_GENERATED}\", type: \"string\" },\n` +
-            "                },\n" +
-            "            ],\n" +
-            "            itemsAreReadOnly: true,\n" +
-            "        },\n" +
-            "    },\n" +
-            "};\n"
+            "            type: \"propertySignature\",\n" +
+            "            optional: false,\n" +
+            "            tsRuntimeObject: {\n" +
+            `                id: \"${TEST_ID_GENERATED}\",\n` +
+            "                type: \"tuple\",\n" +
+            "                items: [\n" +
+            "                    {\n" +
+            "                        spread: false,\n" +
+            "                        optional: false,\n" +
+            `                        tsRuntimeObject: { id: \"${TEST_ID_GENERATED}\", type: \"string\" }\n` +
+            "                    }\n" +
+            "                ],\n" +
+            "                itemsAreReadOnly: true\n" +
+            "            }\n" +
+            "        }\n" +
+            "    }\n" +
+            "};"
     });
     genericTypeChecker({
         name: "readonly tuple",
@@ -100,10 +109,14 @@ describe(transform, () => {
             "    type: \"object\",\n" +
             "    properties: {\n" +
             "        A: {\n" +
-            `            id: \"${TEST_ID_GENERATED}\",\n` +
-            "            type: \"array\",\n" +
-            `            items: { id: \"${TEST_ID_GENERATED}\", type: \"string\" },\n` +
-            "            itemsAreReadOnly: true\n" +
+            "            type: \"propertySignature\",\n" +
+            "            optional: false,\n" +
+            "            tsRuntimeObject: {\n" +
+            `                id: \"${TEST_ID_GENERATED}\",\n` +
+            "                type: \"array\",\n" +
+            `                items: { id: \"${TEST_ID_GENERATED}\", type: \"string\" },\n` +
+            "                itemsAreReadOnly: true\n" +
+            "            }\n" +
             "        }\n" +
             "    }\n" +
             "};"
