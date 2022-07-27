@@ -69,6 +69,7 @@ export function cli(params: {
         filename: fileName,
         outputFilename: outputFileName ?? "output-file-name.ts",
         text: v,
+        prependTsCode: false
       },
       {
         id: params.deps.id,
