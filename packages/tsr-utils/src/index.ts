@@ -11,14 +11,6 @@ export type GlobalTsRuntimeObjectKeys = {
   readonly documentation?: string;
 };
 
-export type CanBeReadOnly = {
-  readonly itemsAreReadOnly: boolean;
-} & GlobalTsRuntimeObjectKeys;
-
-export type CanBeOptional = {
-  readonly optional: boolean;
-} & GlobalTsRuntimeObjectKeys;
-
 export type FunctionTsRuntimeObject = {
   readonly type: "function";
   readonly functionGenerics?: TsRuntimeObjectGeneric[];
@@ -29,21 +21,21 @@ export type FunctionTsRuntimeObject = {
 export type InterfaceTsRuntimeObject = {
   readonly type: "interface";
   readonly members: {
-    [key: string]: TsRuntimeObject & CanBeOptional;
+    [key: string]: TsRuntimeObject;
   };
 } & GlobalTsRuntimeObjectKeys;
 
 export type ObjectTsRuntimeObject = {
   readonly type: "object";
   readonly properties: {
-    [key: string]: TsRuntimeObject & CanBeOptional;
+    [key: string]: TsRuntimeObject;
   };
 } & GlobalTsRuntimeObjectKeys;
 
 export type ArrayTsRuntimeObject = {
   readonly type: "array";
   readonly items: TsRuntimeObject;
-} & CanBeReadOnly & GlobalTsRuntimeObjectKeys;
+} & GlobalTsRuntimeObjectKeys;
 
 export type TupleTsRuntimeObject = {
   readonly type: "tuple";
@@ -59,7 +51,7 @@ export type TupleTsRuntimeObject = {
         readonly tsRuntimeObject: TsRuntimeObject;
       }
   )[];
-} & CanBeReadOnly & GlobalTsRuntimeObjectKeys;
+} & GlobalTsRuntimeObjectKeys;
 
 export type NumberLiteralTsRuntimeObject = {
   readonly type: "literal";
@@ -86,8 +78,9 @@ export type BigIntLiteralTsRuntimeObject = {
 } & GlobalTsRuntimeObjectKeys;
 
 export type UniqueSymbolTsRuntimeObject = {
-  readonly type: "unique symbol";
-  readonly uniqueSymbolTypeId: symbol;
+  readonly type: "literal";
+  readonly literalType: "symbol";
+  readonly value: unique symbol;
 } & GlobalTsRuntimeObjectKeys;
 
 export type NumberTsRuntimeObject = {
@@ -130,6 +123,12 @@ export type UnionTsRuntimeObject = {
   readonly members: TsRuntimeObject[];
 } & GlobalTsRuntimeObjectKeys;
 
+export type PropertySignatureTsRuntimeObject = {
+  readonly type: "propertySignature";
+  readonly optional: boolean;
+  readonly tsRuntimeObject: TsRuntimeObject;
+} & GlobalTsRuntimeObjectKeys;
+
 export type TsRuntimeObject =
   | FunctionTsRuntimeObject
   | ObjectTsRuntimeObject
@@ -149,7 +148,8 @@ export type TsRuntimeObject =
   | EnumTsRuntimeObject
   | InterfaceTsRuntimeObject
   | SpecialTsRuntimeObject
-  | UnionTsRuntimeObject;
+  | UnionTsRuntimeObject
+  | PropertySignatureTsRuntimeObject;
 
 export type GenericTsRuntimeObject = TsRuntimeObject & {
   generics: TsRuntimeObjectGeneric[];
@@ -286,9 +286,9 @@ export const transformTsRuntimeObject = (params: {
           transformTsRuntimeObject({
             ...params,
             tsRuntimeObject: tsRuntimeObject.properties[key],
-          })
+          }),
         ])
-      ) as {[key: string]: TsRuntimeObject & CanBeOptional},
+      ),
     };
   }
 

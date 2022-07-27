@@ -1,5 +1,23 @@
 # Change Log
 
+## 1.0.6
+
+### Patch Changes
+
+- 6a22842: fix tsrExtensionRE
+
+## 1.0.5
+
+### Patch Changes
+
+- 05036bf: attempt to fix the vite plugin
+
+## 1.0.4
+
+### Patch Changes
+
+- 8849d42: Fix ts runtime exports
+
 ## 1.0.3
 
 ### Patch Changes

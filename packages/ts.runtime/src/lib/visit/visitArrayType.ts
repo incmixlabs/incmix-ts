@@ -15,10 +15,6 @@ export const visitArrayType: Visiter<ts.ArrayTypeNode> = ({
         ts.factory.createStringLiteral("array")
       ),
       ts.factory.createPropertyAssignment(
-        "itemsAreReadOnly",
-        ts.factory.createFalse()
-      ),
-      ts.factory.createPropertyAssignment(
         "items",
         visit({ node: node.elementType, deps: deps }) as ts.Expression
       ),
