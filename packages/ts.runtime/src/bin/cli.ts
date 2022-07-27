@@ -36,6 +36,7 @@ export function cli(params: { deps: { fileIO: FileIO; args: Args } }) {
         filename: fileName,
         outputFilename: outputFileName ?? "output-file-name.ts",
         text: v,
+        prependTsCode: true
       },
       {
         id,

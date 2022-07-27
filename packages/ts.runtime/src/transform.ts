@@ -1,8 +1,9 @@
 import * as ts from "typescript";
 import fs from "fs";
-import {visit} from "./lib/visit/visit";
-import {Id} from "./deps/Id";
-import {Failable} from "./Failable";
+import { visit } from "./lib/visit/visit";
+import { FileIO } from "./FileIO";
+import { Id } from "./Id";
+import { Failable } from "./Failable";
 
 var ctx: ts.TransformationContext;
 const fileExt = ".ts";

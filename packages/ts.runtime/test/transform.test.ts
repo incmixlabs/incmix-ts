@@ -86,7 +86,6 @@ describe(transform, () => {
             "    type: \"object\",\n" +
             "    properties: {\n" +
             "        A: {\n" +
-            "            optional: false,\n" +
             `            id: \"${TEST_ID_GENERATED}\",\n` +
             "            type: \"unique symbol\",\n" +
             "            uniqueSymbolTypeId: Symbol(),\n" +
@@ -105,7 +104,6 @@ describe(transform, () => {
             "    type: \"object\",\n" +
             "    properties: {\n" +
             "        A: {\n" +
-            "            optional: false,\n" +
             `            id: \"${TEST_ID_GENERATED}\",\n` +
             "            type: \"tuple\",\n" +
             "            items: [\n" +
@@ -131,7 +129,6 @@ describe(transform, () => {
             "    type: \"object\",\n" +
             "    properties: {\n" +
             "        A: {\n" +
-            "            optional: false,\n" +
             `            id: \"${TEST_ID_GENERATED}\",\n` +
             "            type: \"array\",\n" +
             `            items: { id: \"${TEST_ID_GENERATED}\", type: \"string\" },\n` +
