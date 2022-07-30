@@ -24,32 +24,31 @@ export function transform(
 
   const sourceFile = program.getSourceFile(params.filename)!;
   // TODO remove below code
-  if (!sourceFile.isDeclarationFile) {
-    console.log(sourceFile.fileName);
-    ts.forEachChild(sourceFile, (node: ts.Node) => {
-      if (ts.isTypeAliasDeclaration(node)) {
-        console.log(ts.SyntaxKind[node.kind]);
-        console.log(ts.SyntaxKind[node.type.kind]);
-        console.log(ts.TypeFlags[checker.getTypeAtLocation(node.type).flags]);
-        const resolved = checker.typeToTypeNode(checker.getTypeAtLocation(node.type), undefined, undefined)!;
-        console.log(resolved);
-
-        console.log(ts.SyntaxKind[resolved.kind]);
-        // const t = checker.getTypeAtLocation(node.type) as UnionType;
-        // t.types.forEach(_ => console.log(ts.SyntaxKind[checker.typeToTypeNode(_, undefined, undefined)!.kind]));
-        // const n = checker.typeToTypeNode(t, undefined, undefined)!;
-        // console.log(ts.SyntaxKind[n.kind]);
-        // n.forEachChild(_ => console.log(ts.SyntaxKind[_.kind]));
-
-
-        // t.types.forEach(_ => console.log(ts.TypeFlags[_.flags]));
-        // console.log(checker.getWidenedType(t));
-
-        // console.log(checker.getTypeAtLocation(node.type).getProperties()[0].getDeclarations()!.map(_ => ts.SyntaxKind[_.kind]));
-        // console.log(checker.getTypeAtLocation(node.type).aliasTypeArguments);
-      }
-    });
-  }
+  // if (!sourceFile.isDeclarationFile) {
+  //   console.log(sourceFile.fileName);
+  //   ts.forEachChild(sourceFile, (node: ts.Node) => {
+  //     if (ts.isTypeAliasDeclaration(node)) {
+  //       console.log(ts.SyntaxKind[node.kind]);
+  //       console.log(ts.SyntaxKind[node.type.kind]);
+  //       console.log(ts.TypeFlags[checker.getTypeAtLocation(node.type).flags]);
+  //       // const resolved = checker.typeToTypeNode(checker.getTypeAtLocation(node.type), undefined, undefined)!;
+  //       //
+  //       // console.log(ts.SyntaxKind[resolved.kind]);
+  //       const t = checker.getTypeAtLocation(node.type) as ts.UnionType;
+  //       t.types.forEach(_ => console.log(ts.SyntaxKind[checker.typeToTypeNode(_, undefined, undefined)!.kind]));
+  //       // const n = checker.typeToTypeNode(t, undefined, undefined)!;
+  //       // console.log(ts.SyntaxKind[n.kind]);
+  //       // n.forEachChild(_ => console.log(ts.SyntaxKind[_.kind]));
+  //
+  //
+  //       // t.types.forEach(_ => console.log(ts.TypeFlags[_.flags]));
+  //       // console.log(checker.getWidenedType(t));
+  //
+  //       // console.log(checker.getTypeAtLocation(node.type).getProperties()[0].getDeclarations()!.map(_ => ts.SyntaxKind[_.kind]));
+  //       // console.log(checker.getTypeAtLocation(node.type).aliasTypeArguments);
+  //     }
+  //   });
+  // }
   // TODO remove above code
 
   const resultFile = ts.createSourceFile(

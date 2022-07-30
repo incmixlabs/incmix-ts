@@ -2,6 +2,7 @@ import {TypeFlags} from "typescript";
 import {checker} from "../../transform";
 import {Resolver} from "../helpers/types";
 import {resolvePrimitive} from "./resolvePrimitive";
+import {resolveUnion} from "./resolveUnion";
 
 const resolutionMap: Partial<Record<TypeFlags, Resolver>> = {
     [TypeFlags.Any]: resolvePrimitive,
@@ -14,6 +15,7 @@ const resolutionMap: Partial<Record<TypeFlags, Resolver>> = {
     [TypeFlags.NumberLiteral]: resolvePrimitive,
     [TypeFlags.BooleanLiteral]: resolvePrimitive,
     [TypeFlags.BigIntLiteral]: resolvePrimitive,
+    [TypeFlags.Union]: resolveUnion,
 };
 
 export const resolveReference: Resolver = (node) => {
