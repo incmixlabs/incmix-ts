@@ -8,67 +8,67 @@ import { Failable } from "./Failable";
 var ctx: ts.TransformationContext;
 const fileExt = ".ts";
 
-function removeMe(fileName: string) {
-  // TODO ensure that the file's extension is .ts instead of .tsr (so just map .tsr to .ts)
-  const options = {
-    target: ts.ScriptTarget.ES2022,
-    module: ts.ModuleKind.None
-  } as const;
-  const program = ts.createProgram([fileName], options);
-    // Get the checker, we will use it to find more about classes
-  let checker = program.getTypeChecker();
 
-  // Visit every sourceFile in the program
-  for (const sourceFile of program.getSourceFiles()) {
-    if (!sourceFile.isDeclarationFile) {
-      // Walk the tree to search for classes
-      ts.forEachChild(sourceFile, visit);
-    }
-  }
-
-  /** visit nodes finding exported classes */
-  function visit(node: ts.Node) {
-    console.log(ts.SyntaxKind[node.kind]);
-
-    // TODO use getFlags() to obtain the node's type
-    console.log(ts.TypeFlags[checker.getTypeAtLocation(node).getFlags()]);
-    // console.log(node);
-    // checker.getTypeAtLocation(node).getApparentProperties().forEach(_ => {
-    //   console.log(_);
-    // });
-    // console.log(checker.getSymbolAtLocation(node));
-    // checker.getAliasedSymbol(check);
-  }
-}
+export let checker: ts.TypeChecker;
 
 export function transform(
   params: { filename: string; text: string; outputFilename: string },
   deps: { id: Id }
 ): Failable.Type<string> {
-  removeMe(params.filename);
-  // const sourceFile = ts.createSourceFile(
-  //   params.filename,
-  //   params.text,
-  //   ts.ScriptTarget.Latest
-  // );
-  //
-  // const resultFile = ts.createSourceFile(
-  //   params.outputFilename,
-  //   "",
-  //   ts.ScriptTarget.Latest,
-  //   /*setParentNodes*/ false,
-  //   ts.ScriptKind.TS
-  // );
-  //
-  // const transformResult = visit({ deps, node: sourceFile });
-  // const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
-  // const text = printer.printNode(
-  //   ts.EmitHint.Unspecified,
-  //   transformResult,
-  //   resultFile
-  // );
+  // TODO ensure that the file's extension is .ts instead of .tsr (so just map .tsr to .ts)
+  const program = ts.createProgram([params.filename], {
+    target: ts.ScriptTarget.Latest,
+    module: ts.ModuleKind.None
+  });
+  checker = program.getTypeChecker();
 
-  return Failable.success("");
+  const sourceFile = program.getSourceFile(params.filename)!;
+  // TODO remove below code
+  if (!sourceFile.isDeclarationFile) {
+    console.log(sourceFile.fileName);
+    ts.forEachChild(sourceFile, (node: ts.Node) => {
+      if (ts.isTypeAliasDeclaration(node)) {
+        console.log(ts.SyntaxKind[node.kind]);
+        console.log(ts.SyntaxKind[node.type.kind]);
+        console.log(ts.TypeFlags[checker.getTypeAtLocation(node.type).flags]);
+        const resolved = checker.typeToTypeNode(checker.getTypeAtLocation(node.type), undefined, undefined)!;
+        console.log(resolved);
+
+        console.log(ts.SyntaxKind[resolved.kind]);
+        // const t = checker.getTypeAtLocation(node.type) as UnionType;
+        // t.types.forEach(_ => console.log(ts.SyntaxKind[checker.typeToTypeNode(_, undefined, undefined)!.kind]));
+        // const n = checker.typeToTypeNode(t, undefined, undefined)!;
+        // console.log(ts.SyntaxKind[n.kind]);
+        // n.forEachChild(_ => console.log(ts.SyntaxKind[_.kind]));
+
+
+        // t.types.forEach(_ => console.log(ts.TypeFlags[_.flags]));
+        // console.log(checker.getWidenedType(t));
+
+        // console.log(checker.getTypeAtLocation(node.type).getProperties()[0].getDeclarations()!.map(_ => ts.SyntaxKind[_.kind]));
+        // console.log(checker.getTypeAtLocation(node.type).aliasTypeArguments);
+      }
+    });
+  }
+  // TODO remove above code
+
+  const resultFile = ts.createSourceFile(
+    params.outputFilename,
+    "",
+    ts.ScriptTarget.Latest,
+    /*setParentNodes*/ false,
+    ts.ScriptKind.TS
+  );
+
+  const transformResult = visit({ deps, node: sourceFile });
+  const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+  const text = printer.printNode(
+    ts.EmitHint.Unspecified,
+    transformResult,
+    resultFile
+  );
+
+  return Failable.success(text);
 }
 
 function createTsRuntimeFile(filename: string, text: string) {

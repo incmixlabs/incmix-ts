@@ -6,3 +6,5 @@ export type Visiter<T extends ts.Node = ts.Node> = (params: {
   metadata?: ts.PropertyAssignment[];
   deps: { id: Id };
 }) => ts.Node;
+
+export type Resolver = (node: ts.TypeReferenceNode) => ts.Node;
