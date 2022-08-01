@@ -7,4 +7,4 @@ export type Visiter<T extends ts.Node = ts.Node> = (params: {
   deps: { id: Id };
 }) => ts.Node;
 
-export type Resolver = (node: ts.TypeReferenceNode) => ts.Node;
+export type Resolver<T extends ts.TypeReferenceNode | ts.Type = ts.TypeReferenceNode | ts.Type> = (node: T) => ts.Node;
