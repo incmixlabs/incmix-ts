@@ -15,7 +15,6 @@ export function transform(
   params: { filename: string; outputFilename: string },
   deps: { id: Id }
 ): Failable.Type<string> {
-  // TODO ensure that the file's extension is .ts instead of .tsr (so just map .tsr to .ts)
   const program = ts.createProgram([params.filename], {
     target: ts.ScriptTarget.Latest,
     module: ts.ModuleKind.None

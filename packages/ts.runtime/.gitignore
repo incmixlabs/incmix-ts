@@ -47,3 +47,4 @@ Thumbs.db
 
 examples/*.tsr.ts
 test/*.tsr.ts
+TEMP_TEST_DIR/

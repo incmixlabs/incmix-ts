@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "skipLibCheck": true, // TODO remove me
+    "skipLibCheck": true,
     "declaration": true,
     "moduleResolution": "node",
     "outDir": "dist"
