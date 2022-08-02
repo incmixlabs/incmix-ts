@@ -79,6 +79,78 @@ describe(transform, () => {
             "    }",
         prependTsCode: false
     });
+    genericTypeChecker({
+        name: "unique symbol",
+        input: `export type UniqueSymbol = { readonly A: unique symbol; }`,
+        output: "export const UniqueSymbol_$TSR = {\n" +
+            `    id: \"${TEST_ID_GENERATED}\",\n` +
+            "    type: \"object\",\n" +
+            "    properties: {\n" +
+            "        A: {\n" +
+            "            type: \"propertySignature\",\n" +
+            "            optional: false,\n" +
+            "            tsRuntimeObject: {\n" +
+            `                id: \"${TEST_ID_GENERATED}\",\n` +
+            "                type: \"unique symbol\",\n" +
+            "                uniqueSymbolTypeId: Symbol()\n" +
+            "            }\n" +
+            "        }\n" +
+            "    }\n" +
+            "};\n",
+        prependTsCode: false
+    });
+    genericTypeChecker({
+        name: "readonly tuple",
+        input: "export type ReadOnlyTuple = {\n" +
+            "    A: readonly [string];\n" +
+            "};",
+        output: "export const ReadOnlyTuple_$TSR = {\n" +
+            `    id: \"${TEST_ID_GENERATED}\",\n` +
+            "    type: \"object\",\n" +
+            "    properties: {\n" +
+            "        A: {\n" +
+            "            type: \"propertySignature\",\n" +
+            "            optional: false,\n" +
+            "            tsRuntimeObject: {\n" +
+            `                id: \"${TEST_ID_GENERATED}\",\n` +
+            "                type: \"tuple\",\n" +
+            "                items: [\n" +
+            "                    {\n" +
+            "                        spread: false,\n" +
+            "                        optional: false,\n" +
+            `                        tsRuntimeObject: { id: \"${TEST_ID_GENERATED}\", type: \"string\" }\n` +
+            "                    }\n" +
+            "                ],\n" +
+            "                itemsAreReadOnly: true\n" +
+            "            }\n" +
+            "        }\n" +
+            "    }\n" +
+            "};",
+        prependTsCode: false
+    });
+    genericTypeChecker({
+        name: "readonly array",
+        input: "export type ReadOnlyArray = {\n" +
+            "    A: readonly string[];\n" +
+            "};",
+        output: "export const ReadOnlyArray_$TSR = {\n" +
+            `    id: \"${TEST_ID_GENERATED}\",\n` +
+            "    type: \"object\",\n" +
+            "    properties: {\n" +
+            "        A: {\n" +
+            "            type: \"propertySignature\",\n" +
+            "            optional: false,\n" +
+            "            tsRuntimeObject: {\n" +
+            `                id: \"${TEST_ID_GENERATED}\",\n` +
+            "                type: \"array\",\n" +
+            `                items: { id: \"${TEST_ID_GENERATED}\", type: \"string\" },\n` +
+            "                itemsAreReadOnly: true\n" +
+            "            }\n" +
+            "        }\n" +
+            "    }\n" +
+            "};",
+        prependTsCode: false
+    });
 });
 
 

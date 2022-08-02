@@ -36,19 +36,20 @@ export function transform(
     params: { filename: string; text: string; outputFilename: string, prependTsCode: boolean },
     deps: { id: Id }
 ): Failable.Type<string> {
-  const sourceFile = ts.createSourceFile(
+  try {
+    const sourceFile = ts.createSourceFile(
       params.filename,
       params.text,
       ts.ScriptTarget.Latest
-  );
+    );
 
-  const resultFile = ts.createSourceFile(
+    const resultFile = ts.createSourceFile(
       params.outputFilename,
       "",
       ts.ScriptTarget.Latest,
       /*setParentNodes*/ false,
       ts.ScriptKind.TS
-  );
+    );
 
   const transformResult = visit({deps, node: sourceFile});
   const prependedResult = params.prependTsCode ?
@@ -61,7 +62,10 @@ export function transform(
       resultFile
   );
 
-  return Failable.success(text);
+    return Failable.success(text);
+  } catch (e: any) {
+    return Failable.failure(e?.message ? e.message : e);
+  }
 }
 
 function createTsRuntimeFile(filename: string, text: string) {
