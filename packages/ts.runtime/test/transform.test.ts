@@ -26,7 +26,6 @@ const genericTypeChecker = ({name, input, output}: { name: string, input: string
         const transformResult = transform(
             {
                 filename: `${name}.tsr`,
-                text: input,
                 outputFilename: `${name}.tsr.ts`,
             },
             {id: testId}
@@ -51,7 +50,7 @@ describe(transform, () => {
         name: "enum",
         input: `export enum Enum {A, B = 2}`,
         output: `export const Enum_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "enum",\n enum: Enum, };`
-    })
+    });
 });
 
 

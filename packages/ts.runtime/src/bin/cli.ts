@@ -25,22 +25,15 @@ export function cli(params: { deps: { fileIO: FileIO; args: Args } }) {
   const options = program.opts();
   const outputFileName = options.output;
 
-  const text = Failable.run(
-    Failable.success(fileName),
-    params.deps.fileIO.read
-  );
 
-  const codeTransform = Failable.run(text, (v) =>
-    transform(
+  const codeTransform = transform(
       {
-        filename: fileName,
-        outputFilename: outputFileName ?? "output-file-name.ts",
-        text: v,
+          filename: fileName,
+          outputFilename: outputFileName ?? "output-file-name.ts",
       },
       {
-        id,
+          id,
       }
-    )
   );
 
   if (outputFileName) {

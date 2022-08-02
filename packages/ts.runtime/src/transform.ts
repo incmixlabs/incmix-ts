@@ -12,7 +12,7 @@ const fileExt = ".ts";
 export let checker: ts.TypeChecker;
 
 export function transform(
-  params: { filename: string; text: string; outputFilename: string },
+  params: { filename: string; outputFilename: string },
   deps: { id: Id }
 ): Failable.Type<string> {
   // TODO ensure that the file's extension is .ts instead of .tsr (so just map .tsr to .ts)
