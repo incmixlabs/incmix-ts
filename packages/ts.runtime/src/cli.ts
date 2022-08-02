@@ -29,6 +29,7 @@ export function cli(params: {
     .version("0.0.0")
     .argument("<input-file>", "The path to the file to read")
     .option("-o --output [output]", "The path to the output file")
+    .option("-p --prepend", "Prepend all statements (excluding imports) from .tsr into output file")
     .configureOutput({
       writeOut(str) {
         params.deps.logger.log(str);
@@ -57,6 +58,7 @@ export function cli(params: {
   const fileName = program.args[0];
   const options = program.opts();
   const outputFileName = options.output;
+  const prependTsCode = options.prepend;
 
   const text = Failable.run(
     Failable.success(fileName),
@@ -69,6 +71,7 @@ export function cli(params: {
         filename: fileName,
         outputFilename: outputFileName ?? "output-file-name.ts",
         text: v,
+        prependTsCode: !!prependTsCode
       },
       {
         id: params.deps.id,
