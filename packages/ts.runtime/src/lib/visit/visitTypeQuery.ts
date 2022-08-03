@@ -1,31 +1,9 @@
-import ts, {Identifier} from "typescript";
+import ts from "typescript";
 import {Visiter} from "../helpers/types";
+import {visit} from "./visit";
+import {resolve} from "../resolve/resolve";
 
 export const visitTypeQuery: Visiter<ts.TypeQueryNode> = ({node, metadata, deps}) => {
-    const statement = ts.factory.createQualifiedName(ts.factory.createIdentifier("a"), "b");
-
-    const printer = ts.createPrinter();
-
-    const result = printer.printNode(
-        ts.EmitHint.Unspecified,
-        statement,
-        //@ts-ignore
-        undefined
-    );
-
-    console.log(result)
-
-    return ts.factory.createObjectLiteralExpression(
-        [
-            ts.factory.createPropertyAssignment(
-                ts.factory.createIdentifier("type"),
-                ts.factory.createStringLiteral("uniqueSymbol")
-            ),
-            ts.factory.createPropertyAssignment(
-                ts.factory.createIdentifier("symbol"),
-                node.exprName as Identifier
-            )
-        ],
-        true
-    );
+    // Resolve the reference and then visit it
+    return visit({node: resolve(node), deps});
 };

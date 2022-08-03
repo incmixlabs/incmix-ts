@@ -1,7 +1,7 @@
 import ts from "typescript";
 import {checker} from "../../transform";
 
-export const getType = <T extends ts.Type = ts.Type>(node: T | ts.TypeReferenceNode) =>
-    (ts.isTypeReferenceNode(node as ts.Node) ?
-        checker.getTypeAtLocation(node as ts.TypeReferenceNode) : node
+export const getType = <T extends ts.Type = ts.Type>(node: T | ts.TypeNode) =>
+    (ts.isTypeNode(node as ts.Node) ?
+        checker.getTypeAtLocation(node as ts.TypeNode) : node
     ) as T
