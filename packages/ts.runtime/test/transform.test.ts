@@ -1,5 +1,5 @@
 import {transform} from "../src";
-import {Id} from "../src/Id";
+import {Id} from "../src/deps/Id";
 import prettier from "prettier";
 import {Failable} from "../src/Failable";
 import fs from "fs";
@@ -21,11 +21,12 @@ const basicTypeCheck = (name: string) => {
     genericTypeChecker({
         name: name,
         input: `export type Type = ${name};`,
-        output: `export const Type_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`
+        output: `export const Type_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`,
+        prependTsCode: false
     });
 };
 
-const genericTypeChecker = ({name, input, output}: { name: string, input: string, output: string }) => {
+const genericTypeChecker = ({name, input, output, prependTsCode}: { name: string, input: string, output: string, prependTsCode: boolean }) => {
     it(`Properly handles the ${name} type`, () => {
         const filename = `${TEST_DIR}${path.sep}${name}.tsr.ts`;
         // Populate test file with input
@@ -35,6 +36,7 @@ const genericTypeChecker = ({name, input, output}: { name: string, input: string
             {
                 filename,
                 outputFilename: `${filename}.output.ts`,
+                prependTsCode
             },
             {id: testId}
         );
@@ -45,8 +47,6 @@ const genericTypeChecker = ({name, input, output}: { name: string, input: string
         expect(format(transformSuccess.value.trim())).toBe(
             format(output)
         );
-
-
     });
 };
 
@@ -65,7 +65,8 @@ const basicTypeRefCheck = (name: string) => {
     genericTypeChecker({
         name: `Type Reference Primitive - ${name}`,
         input: `type A = ${name};\nexport type B = A`,
-        output: `export const B_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`
+        output: `export const B_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`,
+        prependTsCode: false
     });
 }
 
@@ -73,7 +74,8 @@ const basicTypeRefLiteralCheck = (name: string, literal: string) => {
     genericTypeChecker({
         name: `Type Reference Primitive Literal - ${name} ${literal}`,
         input: `type A = ${literal};\nexport type B = A`,
-        output: `export const B_$TSR = { id: "${TEST_ID_GENERATED}", type: "literal", typeLiteral: "${name}", value: ${literal} };`
+        output: `export const B_$TSR = { id: "${TEST_ID_GENERATED}", type: "literal", typeLiteral: "${name}", value: ${literal} };`,
+        prependTsCode: false
     });
 }
 
@@ -89,7 +91,104 @@ const runTests = () => {
     genericTypeChecker({
         name: "enum",
         input: `export enum Enum {A, B = 2}`,
-        output: `export const Enum_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "enum",\n enum: Enum, };`
+        output: `export const Enum_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "enum",\n enum: Enum, };`,
+        prependTsCode: false
+    });
+
+    genericTypeChecker({
+        name: "prepend - true",
+        input: `export type X = 1;`,
+        output: "export type X = 1;\n" +
+            "export const X_$TSR = {\n" +
+            `    id: \"${TEST_ID_GENERATED}\",\n` +
+            "    type: \"literal\",\n" +
+            "    typeLiteral: \"number\",\n" +
+            "    value: 1\n" +
+            "}",
+        prependTsCode: true
+    });
+    genericTypeChecker({
+        name: "prepend - false",
+        input: `export type X = 1;`,
+        output: "export const X_$TSR = {\n" +
+            `    id: \"${TEST_ID_GENERATED}\",\n` +
+            "        type: \"literal\",\n" +
+            "        typeLiteral: \"number\",\n" +
+            "        value: 1\n" +
+            "    }",
+        prependTsCode: false
+    });
+    genericTypeChecker({
+        name: "unique symbol",
+        input: `export type UniqueSymbol = { readonly A: unique symbol; }`,
+        output: "export const UniqueSymbol_$TSR = {\n" +
+            `    id: \"${TEST_ID_GENERATED}\",\n` +
+            "    type: \"object\",\n" +
+            "    properties: {\n" +
+            "        A: {\n" +
+            "            type: \"propertySignature\",\n" +
+            "            optional: false,\n" +
+            "            tsRuntimeObject: {\n" +
+            `                id: \"${TEST_ID_GENERATED}\",\n` +
+            "                type: \"unique symbol\",\n" +
+            "                uniqueSymbolTypeId: Symbol()\n" +
+            "            }\n" +
+            "        }\n" +
+            "    }\n" +
+            "};\n",
+        prependTsCode: false
+    });
+    genericTypeChecker({
+        name: "readonly tuple",
+        input: "export type ReadOnlyTuple = {\n" +
+            "    A: readonly [string];\n" +
+            "};",
+        output: "export const ReadOnlyTuple_$TSR = {\n" +
+            `    id: \"${TEST_ID_GENERATED}\",\n` +
+            "    type: \"object\",\n" +
+            "    properties: {\n" +
+            "        A: {\n" +
+            "            type: \"propertySignature\",\n" +
+            "            optional: false,\n" +
+            "            tsRuntimeObject: {\n" +
+            `                id: \"${TEST_ID_GENERATED}\",\n` +
+            "                type: \"tuple\",\n" +
+            "                items: [\n" +
+            "                    {\n" +
+            "                        spread: false,\n" +
+            "                        optional: false,\n" +
+            `                        tsRuntimeObject: { id: \"${TEST_ID_GENERATED}\", type: \"string\" }\n` +
+            "                    }\n" +
+            "                ],\n" +
+            "                itemsAreReadOnly: true\n" +
+            "            }\n" +
+            "        }\n" +
+            "    }\n" +
+            "};",
+        prependTsCode: false
+    });
+    genericTypeChecker({
+        name: "readonly array",
+        input: "export type ReadOnlyArray = {\n" +
+            "    A: readonly string[];\n" +
+            "};",
+        output: "export const ReadOnlyArray_$TSR = {\n" +
+            `    id: \"${TEST_ID_GENERATED}\",\n` +
+            "    type: \"object\",\n" +
+            "    properties: {\n" +
+            "        A: {\n" +
+            "            type: \"propertySignature\",\n" +
+            "            optional: false,\n" +
+            "            tsRuntimeObject: {\n" +
+            `                id: \"${TEST_ID_GENERATED}\",\n` +
+            "                type: \"array\",\n" +
+            `                items: { id: \"${TEST_ID_GENERATED}\", type: \"string\" },\n` +
+            "                itemsAreReadOnly: true\n" +
+            "            }\n" +
+            "        }\n" +
+            "    }\n" +
+            "};",
+        prependTsCode: false
     });
 
     /*** Resolver Tests ***/
@@ -107,7 +206,8 @@ const runTests = () => {
         output: `export const T_$TSR = {\n id: "${TEST_ID_GENERATED}",\n` +
             " type: \"union\",\n values: [\n" +
             ` { id: \"${TEST_ID_GENERATED}\", type: \"string\" },\n` +
-            ` { id: \"${TEST_ID_GENERATED}\", type: \"number\" },\n],\n}`
+            ` { id: \"${TEST_ID_GENERATED}\", type: \"number\" },\n],\n}`,
+        prependTsCode: false
     });
     genericTypeChecker({
         name: "Type Reference - intersection",
@@ -123,7 +223,8 @@ const runTests = () => {
             "            value: \"\"\n" +
             "        }\n" +
             "    }\n" +
-            "};"
+            "};",
+        prependTsCode: false
     });
     genericTypeChecker({
         name: "Type Reference - anonymous object",
@@ -132,12 +233,14 @@ const runTests = () => {
             `    id: \"${TEST_ID_GENERATED}\",\n` +
             "    type: \"object\",\n" +
             "    properties: {}\n" +
-            "};"
+            "};",
+        prependTsCode: false
     });
     genericTypeChecker({
         name: "Type Reference - typeof",
         input: `let A: string;\nexport type T = typeof A;`,
-        output: `export const T_$TSR = { id: "${TEST_ID_GENERATED}", type: "string" };`
+        output: `export const T_$TSR = { id: "${TEST_ID_GENERATED}", type: "string" };`,
+        prependTsCode: false
     });
 };
 

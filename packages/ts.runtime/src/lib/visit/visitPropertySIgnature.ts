@@ -1,31 +1,38 @@
-import ts, { PropertySignature } from "typescript";
-import { Visiter } from "../helpers/types";
-import { visit } from "./visit";
+import ts, {PropertySignature} from "typescript";
+import {Visiter} from "../helpers/types";
+import {visit} from "./visit";
 
 export const visitPropertySignature: Visiter<PropertySignature> = ({
-  node,
-  metadata,
-  deps,
+   node,
+   metadata,
+   deps,
 }) => {
-  const hasQuestion = !!node.questionToken;
-  node.name;
-  const type =
-    node.type ?? ts.factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword);
+    const isOptional = !!node.questionToken;
+    const type = node.type ?? ts.factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword);
 
-  return ts.factory.createPropertyAssignment(
-    node.name,
-
-    hasQuestion
-      ? (visit({
-          node: ts.factory.createUnionTypeNode([
-            type,
-            ts.factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword),
-            ts.factory.createLiteralTypeNode(
-              ts.factory.createToken(ts.SyntaxKind.NullKeyword)
+    return ts.factory.createPropertyAssignment(
+        node.name,
+        ts.factory.createObjectLiteralExpression([
+            ts.factory.createPropertyAssignment(
+                "type",
+                ts.factory.createStringLiteral("propertySignature")
             ),
-          ]),
-          deps,
-        }) as ts.Expression)
-      : (visit({ node: type, deps }) as ts.Expression)
-  );
+            ts.factory.createPropertyAssignment(
+                "optional",
+                isOptional ? ts.factory.createTrue() : ts.factory.createFalse()
+            ),
+            ts.factory.createPropertyAssignment(
+                "tsRuntimeObject",
+                isOptional
+                    ? (visit({
+                        node: ts.factory.createUnionTypeNode([
+                            type,
+                            ts.factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)
+                        ]),
+                        deps,
+                    }) as ts.Expression)
+                    : (visit({ node: type, deps }) as ts.Expression)
+            )
+        ], true)
+    );
 };

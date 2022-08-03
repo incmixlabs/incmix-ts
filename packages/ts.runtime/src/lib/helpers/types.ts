@@ -1,5 +1,5 @@
 import ts from "typescript";
-import { Id } from "../../Id";
+import { Id } from "../../deps/Id";
 
 export type Visiter<T extends ts.Node = ts.Node> = (params: {
   node: T;

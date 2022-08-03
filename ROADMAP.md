@@ -26,7 +26,7 @@
     - [x] union
     - [x] intersection
     - [ ] somehow add optional property on object keys instead of `null | undefined | type`
-    - [ ] empty statements
+    - [x] empty statements
     - [x] import statements
     - [x] setup testing
     - [ ] add tests for existing code
