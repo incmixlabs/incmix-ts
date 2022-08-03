@@ -5,7 +5,7 @@ import { visit } from "./visit";
 
 function includeNode(node: ts.Node) {
   const exclusionList: readonly ts.SyntaxKind[] = [
-      // TODO populate this list with the nodes to exclude
+      ts.SyntaxKind.VariableStatement,
   ];
   const isNotANonexportedType =
       !ts.isTypeAliasDeclaration(node) ||

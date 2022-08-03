@@ -134,6 +134,11 @@ const runTests = () => {
             "    properties: {}\n" +
             "};"
     });
+    genericTypeChecker({
+        name: "Type Reference - typeof",
+        input: `let A: string;\nexport type T = typeof A;`,
+        output: `export const T_$TSR = { id: "${TEST_ID_GENERATED}", type: "string" };`
+    });
 };
 
 describe(transform, () => {
