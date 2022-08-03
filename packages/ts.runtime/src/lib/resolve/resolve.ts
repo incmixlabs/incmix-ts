@@ -4,13 +4,14 @@ import {Resolver} from "../helpers/types";
 import {resolvePrimitive} from "./resolvePrimitive";
 import {resolveUnionOrIntersection} from "./resolveUnionOrIntersection";
 import {resolveObject} from "./resolveObject";
+import {getType} from "../helpers/getType";
 
 const resolutionMap: Partial<Record<ts.TypeFlags, Resolver<any>>> = {
     [ts.TypeFlags.Any]: resolvePrimitive,
     [ts.TypeFlags.Unknown]: resolvePrimitive,
     [ts.TypeFlags.String]: resolvePrimitive,
     [ts.TypeFlags.Number]: resolvePrimitive,
-    [ts.TypeFlags.Boolean]: resolvePrimitive,
+    [ts.TypeFlags.Boolean | ts.TypeFlags.Union]: resolvePrimitive,
     [ts.TypeFlags.BigInt]: resolvePrimitive,
     [ts.TypeFlags.StringLiteral]: resolvePrimitive,
     [ts.TypeFlags.NumberLiteral]: resolvePrimitive,
@@ -23,13 +24,11 @@ const resolutionMap: Partial<Record<ts.TypeFlags, Resolver<any>>> = {
 };
 
 export const resolve: Resolver = (node) => {
-    // TODO determine if there are instances in which resolver can be exclusively TypeReferenceNode or Type
-    // Primitives can just be resolved right away, whereas more complex types
-    // have their first layer of children resolved
-    const nodeType = (ts.isTypeReferenceNode(node as ts.Node) ?
-        checker.getTypeAtLocation(node as ts.TypeReferenceNode) : node as ts.Type
-    ).flags;
-    console.log("resolve", ts.TypeFlags[nodeType], `Type: ${ts.isTypeReferenceNode(node as ts.Node) ? "Type Ref Node": "Type"}`);
-    if (resolutionMap[nodeType]) return resolutionMap[nodeType]!(node);
-    else throw new Error(`Identifiers which reference the type: ${ts.TypeFlags[nodeType]} are not supported yet!`);
+    const nodeType = getType(node).flags;
+    console.log("resolve", `ts.TypeFlags[${nodeType}]=${ts.TypeFlags[nodeType]}`, ts.isTypeReferenceNode(node as ts.Node) ? "Type Ref Node": "Type");
+
+    if (resolutionMap[nodeType])
+        return resolutionMap[nodeType]!(node);
+    else
+        throw new Error(`Identifiers which reference the type: ${ts.TypeFlags[nodeType]} are not supported yet!`);
 };
