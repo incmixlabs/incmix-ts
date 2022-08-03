@@ -1,10 +1,10 @@
-import ts from "typescript";
 import {Resolver} from "../helpers/types";
 import { checker } from "../../transform";
+import {getType} from "../helpers/getType";
 
-export const resolvePrimitive: Resolver<ts.TypeReferenceNode> = (node) => {
+export const resolvePrimitive: Resolver = (node) => {
     // Primitives can be resolved right away
     return checker.typeToTypeNode(
-        checker.getTypeAtLocation(node), undefined, undefined
+        getType(node), undefined, undefined
     )!;
 };

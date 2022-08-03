@@ -7,13 +7,14 @@ function includeNode(node: ts.Node) {
   const exclusionList: readonly ts.SyntaxKind[] = [
       // TODO populate this list with the nodes to exclude
   ];
-  const isAnExportedType =
+  const isNotANonexportedType =
+      !ts.isTypeAliasDeclaration(node) ||
       ts.isTypeAliasDeclaration(node) &&
       !!(node as ts.TypeAliasDeclaration).modifiers &&
       !!(node as ts.TypeAliasDeclaration).modifiers!
           .find(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword);
 
-  return isAnExportedType && !exclusionList.includes(node.kind);
+  return isNotANonexportedType && !exclusionList.includes(node.kind);
 }
 
 export const visitSourceFile: Visiter<ts.SourceFile> = ({ node, deps }) => {
