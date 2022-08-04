@@ -4,7 +4,7 @@ import {transform as tsTransform} from "@incmix/ts.runtime";
 import {Failable, id as tsrId} from "@incmix/ts.runtime";
 
 const fileExtensionRE = /\.[^\/\s\?]+$/;
-const tsrExtensionRE = /\.tsr$/;
+const tsrExtensionRE = /\.tsr\.ts$/;
 
 export function viteTsrPlugin(): Plugin {
     return {
