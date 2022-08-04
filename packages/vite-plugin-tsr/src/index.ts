@@ -10,7 +10,7 @@ export function viteTsrPlugin(): Plugin {
   return {
     name: "vite-plugin-tsr",
     enforce: "pre",
-    async transform(id, options) {
+    async load(id) {
       console.log({id});
       if (id.endsWith(".tsr.ts")) {
         return {
