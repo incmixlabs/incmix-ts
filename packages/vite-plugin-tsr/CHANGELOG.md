@@ -1,5 +1,11 @@
 # @incmix/vite-plugin-tsr
 
+## 9.0.3
+
+### Patch Changes
+
+- 10e442b: change to load
+
 ## 9.0.2
 
 ### Patch Changes
