@@ -1,19 +1,16 @@
-import { Command } from "commander";
-import { read, write } from "fs";
 import { cli } from "../src/cli";
-import { FileIO } from "../src/deps/FileIO";
+import { FileOutput } from "../src/deps/FileOutput";
 import { Failable } from "../src/Failable";
 import prettier from "prettier";
 import { Id } from "../src/deps/Id";
+import {setupTestDir, wrapInTestDir, writeTest} from "./helpers/testFileIO";
+import {getFullFilePath} from "./helpers/Path";
 
 const format = (code: string) =>
   prettier.format(code, { parser: "typescript" });
-const blankTestFileIO: FileIO = {
+const blankTestFileIO: FileOutput = {
   write(p) {
     return Failable.success(undefined);
-  },
-  read(p) {
-    return Failable.success("");
   },
 };
 
@@ -25,6 +22,7 @@ const testIdGenerator: Id = {
 };
 
 describe(cli, () => {
+  setupTestDir();
   it("Should print help if passed the help flag", () => {
     let logs = "";
     let errors = "";
@@ -39,7 +37,7 @@ describe(cli, () => {
               exited = true;
             },
           },
-          fileIO: blankTestFileIO,
+          fileOutput: blankTestFileIO,
           args: {
             getArgs() {
               return ["-h"];
@@ -59,39 +57,39 @@ describe(cli, () => {
       })
     );
 
+    expect(errors).toBe("");
     expect(logs.includes("Usage: ")).toBeTruthy();
     expect(logs.includes(""));
     expect(exited).toBe(true);
   });
 
-  it("Should correctly write the output to files when all passed", () => {
+  it("Should correctly write the output to files when all passed",  () => {
     let logs = "";
     let errors = "";
     let exited = false;
-    let readCount = 0;
     let writeCount = 0;
+
+    const inputFileName = wrapInTestDir("abc1.tsr.ts");
+    const outputFileName = wrapInTestDir("xyz1.tsr.ts");
+
+    writeTest(inputFileName, `export type Type = number;`);
 
     cli({
       deps: {
-        fileIO: {
-          read(fileName) {
-            readCount++;
-            expect(fileName).toBe("abc.tsr");
-            return Failable.success(`export type Type = number;`);
-          },
+        fileOutput: {
           write({ filePath, text }) {
-            writeCount++;
-            expect(filePath).toBe("xyz.tsr.ts");
+            expect(filePath).toBe(getFullFilePath(outputFileName));
             expect(format(text)).toBe(
               format(`export const Type_$TSR = {id: "${cliTestID}", type: "number" }`)
             );
+            writeCount ++;
             return Failable.success(undefined);
           },
         },
         args: {
           startsOnActualArguments: true,
           getArgs() {
-            return ["abc.tsr", "-o", "xyz.tsr.ts"];
+            return [getFullFilePath(inputFileName), "-o", getFullFilePath(outputFileName)];
           },
         },
         commanderProgram: {
@@ -111,54 +109,9 @@ describe(cli, () => {
       },
     });
 
+    expect(errors).toBe("");
     expect(exited).toBe(false);
-    expect(readCount).toBe(1);
     expect(writeCount).toBe(1);
-  });
-
-  it("Should Exit if reading fails appropriate error messages", () => {
-    let logs = "";
-    let errors = "";
-    let exited = false;
-    let readCount = 0;
-
-    cli({
-      deps: {
-        fileIO: {
-          read(fileName) {
-            readCount++;
-            expect(fileName).toBe("abc.tsr");
-            return Failable.failure("Couldn't read");
-          },
-          write({ filePath, text }) {
-            fail("Shouldn't be writing");
-          },
-        },
-        args: {
-          startsOnActualArguments: true,
-          getArgs() {
-            return ["abc.tsr", "-o", "xyz.tsr.ts"];
-          },
-        },
-        commanderProgram: {
-          exitOverride(err) {
-            exited = true;
-          },
-        },
-        logger: {
-          error(text) {
-            errors += `${text}\n`;
-          },
-          log(text) {
-            logs += `${text}\n`;
-          },
-        },
-        id: testIdGenerator,
-      },
-    });
-
-    expect(readCount).toBe(1);
-    expect(errors.includes("Couldn't read")).toBe(true);
   });
 
   const testPrependFlag = (prepend: boolean) => () => {
@@ -166,13 +119,14 @@ describe(cli, () => {
     let errors = "";
     let exited = false;
 
+    const inputFileName = wrapInTestDir("abc3.tsr.ts");
+    const outputFileName = wrapInTestDir("xyz3.tsr.ts");
+
+    writeTest(inputFileName, `export type X = 1;`);
+
     cli({
       deps: {
-        fileIO: {
-          read(fileName) {
-            expect(fileName).toBe("abc.tsr");
-            return Failable.success(`export type X = 1;`);
-          },
+        fileOutput: {
           write({ text }) {
             expect(format(text)).toBe(
                 format(prepend ? "export type X = 1;\n" : "" +
@@ -189,7 +143,7 @@ describe(cli, () => {
         args: {
           startsOnActualArguments: true,
           getArgs() {
-            return ["abc.tsr", "-p"];
+            return [getFullFilePath(inputFileName), "-p"];
           },
         },
         commanderProgram: {

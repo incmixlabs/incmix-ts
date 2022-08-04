@@ -13,7 +13,7 @@
     - [x] objects
     - [x] identifiers
     - [ ] support resolving identifiers
-    - [ ] typeof types
+    - [x] typeof types
     - [ ] make tsRuntimeObjects have better typings by adding as const
     - [x] support interfaces
     - [ ] support enums
@@ -27,6 +27,7 @@
     - [x] intersection
     - [ ] somehow add optional property on object keys instead of `null | undefined | type`
     - [x] empty statements
+    - [x] import statements
     - [x] setup testing
     - [ ] add tests for existing code
     - [ ] make the transform function return a `Failure` if given invalid typescipt also test this

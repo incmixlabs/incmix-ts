@@ -2,8 +2,11 @@ import {transform} from "../src";
 import {Id} from "../src/deps/Id";
 import prettier from "prettier";
 import {Failable} from "../src/Failable";
+import {setupTestDir, wrapInTestDir, writeTest} from "./helpers/testFileIO";
+import {getFullFilePath} from "./helpers/Path";
 
 const TEST_ID_GENERATED = "the-id-is-here";
+
 const testId: Id = {
     generateId() {
         return TEST_ID_GENERATED;
@@ -15,7 +18,7 @@ const format = (code: string) =>
 
 const basicTypeCheck = (name: string) => {
     genericTypeChecker({
-        name: "enum",
+        name: name,
         input: `export type Type = ${name};`,
         output: `export const Type_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`,
         prependTsCode: false
@@ -24,11 +27,13 @@ const basicTypeCheck = (name: string) => {
 
 const genericTypeChecker = ({name, input, output, prependTsCode}: { name: string, input: string, output: string, prependTsCode: boolean }) => {
     it(`Properly handles the ${name} type`, () => {
+        const filename = wrapInTestDir(`${name}.tsr.ts`);
+        writeTest(filename, input);
+
         const transformResult = transform(
             {
-                filename: `${name}.tsr`,
-                text: input,
-                outputFilename: `${name}.tsr.ts`,
+                filename: getFullFilePath(filename),
+                outputFilename: `${filename}.output.ts`,
                 prependTsCode
             },
             {id: testId}
@@ -43,7 +48,28 @@ const genericTypeChecker = ({name, input, output, prependTsCode}: { name: string
     });
 };
 
-describe(transform, () => {
+const basicTypeRefCheck = (name: string) => {
+    genericTypeChecker({
+        name: `Type Reference Primitive - ${name}`,
+        input: `type A = ${name};\nexport type B = A`,
+        output: `export const B_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`,
+        prependTsCode: false
+    });
+}
+
+const basicTypeRefLiteralCheck = (name: string, literal: string) => {
+    genericTypeChecker({
+        name: `Type Reference Primitive Literal - ${name} ${literal}`,
+        input: `type A = ${literal};\nexport type B = A`,
+        output: `export const B_$TSR = { id: "${TEST_ID_GENERATED}", type: "literal", typeLiteral: "${name}", value: ${literal} };`,
+        prependTsCode: false
+    });
+}
+
+// TODO REMOVE ME - Handy regex for replacing generated ids ([a-f0-9]){8}-(([a-f0-9]){4}-){3}([a-f0-9]){12}
+
+const runTests = () => {
+    /*** Visitor Tests ***/
     basicTypeCheck("string");
     basicTypeCheck("number");
     basicTypeCheck("unknown");
@@ -151,6 +177,68 @@ describe(transform, () => {
             "};",
         prependTsCode: false
     });
+
+    /*** Resolver Tests ***/
+    basicTypeRefCheck("any");
+    basicTypeRefCheck("unknown");
+    basicTypeRefCheck("string");
+    basicTypeRefCheck("number");
+    basicTypeRefCheck("boolean");
+    basicTypeRefLiteralCheck("string", "\"text\"");
+    basicTypeRefLiteralCheck("number", "5");
+    basicTypeRefLiteralCheck("boolean", "true");
+    genericTypeChecker({
+        name: "Type Reference - union",
+        input: `type A = number | string;\nexport type T = A;`,
+        output: `export const T_$TSR = {\n id: "${TEST_ID_GENERATED}",\n` +
+            " type: \"union\",\n members: [\n" +
+            ` { id: \"${TEST_ID_GENERATED}\", type: \"string\" },\n` +
+            ` { id: \"${TEST_ID_GENERATED}\", type: \"number\" },\n],\n}`,
+        prependTsCode: false
+    });
+    genericTypeChecker({
+        name: "Type Reference - intersection",
+        input: `type A = {} & {a: ""};\nexport type T = A;`,
+        output: "export const T_$TSR = {\n" +
+            `    id: \"${TEST_ID_GENERATED}\",\n` +
+            "    type: \"object\",\n" +
+            "    properties: {\n" +
+            "        a: {\n" +
+            "            type: \"propertySignature\",\n" +
+            "            optional: false,\n" +
+            "            tsRuntimeObject: {\n" +
+            `                id: \"${TEST_ID_GENERATED}\",\n` +
+            "                type: \"literal\",\n" +
+            "                typeLiteral: \"string\",\n" +
+            "                value: \"\"\n" +
+            "            }\n" +
+            "        }\n" +
+            "    }\n" +
+            "};",
+        prependTsCode: false
+    });
+    genericTypeChecker({
+        name: "Type Reference - anonymous object",
+        input: `type A = {};\nexport type T = A;`,
+        output: "export const T_$TSR = {\n" +
+            `    id: \"${TEST_ID_GENERATED}\",\n` +
+            "    type: \"object\",\n" +
+            "    properties: {}\n" +
+            "};",
+        prependTsCode: false
+    });
+    genericTypeChecker({
+        name: "Type Reference - typeof",
+        input: `let A: string;\nexport type T = typeof A;`,
+        output: `export const T_$TSR = { id: "${TEST_ID_GENERATED}", type: "string" };`,
+        prependTsCode: false
+    });
+};
+
+describe(transform, () => {
+    setupTestDir();
+    runTests();
+    // teardownTestDir(); TODO include this
 });
 
 
