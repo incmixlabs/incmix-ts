@@ -1,5 +1,11 @@
 # @incmix/typescript-tsr-plugin
 
+## 3.0.0
+
+### Major Changes
+
+- b24e6c6: Change File extension from .tsr to .tsr.ts
+
 ## 2.0.2
 
 ### Patch Changes

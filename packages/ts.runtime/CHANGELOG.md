@@ -1,5 +1,19 @@
 # @incmix/ts.runtime
 
+## 3.0.0
+
+### Major Changes
+
+- b24e6c6: Change File extension from .tsr to .tsr.ts
+
+### Minor Changes
+
+- 2e2f058: All statements following the import statements in the tsr files are now inserted into the transformed file - between the import statements and the statements that follow them.
+- 67d12ee: Added support for resolving identifiers through resolving their semantic meaning and added support for visiting import nodes
+- 889ffe2: Added support for readonly keyword in TypeOperator.
+- c0a1c23: Fixed suboptimal optional key representation - the optional attribute is now appended alongside the rest of a type's attributes
+- 4689808: Added support for optional keys in objects
+
 ## 2.5.3
 
 ### Patch Changes
