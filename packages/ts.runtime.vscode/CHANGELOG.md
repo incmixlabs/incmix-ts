@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.0
+
+### Major Changes
+
+- b24e6c6: Change File extension from .tsr to .tsr.ts
+
 ## 1.0.6
 
 ### Patch Changes

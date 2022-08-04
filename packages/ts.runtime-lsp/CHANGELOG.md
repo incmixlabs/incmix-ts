@@ -1,5 +1,21 @@
 # Change Log
 
+## 2.0.0
+
+### Major Changes
+
+- b24e6c6: Change File extension from .tsr to .tsr.ts
+
+### Patch Changes
+
+- Updated dependencies [2e2f058]
+- Updated dependencies [67d12ee]
+- Updated dependencies [889ffe2]
+- Updated dependencies [c0a1c23]
+- Updated dependencies [b24e6c6]
+- Updated dependencies [4689808]
+  - @incmix/ts.runtime@3.0.0
+
 ## 1.0.10
 
 ### Patch Changes
