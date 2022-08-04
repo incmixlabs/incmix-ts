@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.1
+
+### Patch Changes
+
+- Updated dependencies [3fd77f5]
+  - @incmix/ts.runtime@3.0.1
+
 ## 2.0.0
 
 ### Major Changes
