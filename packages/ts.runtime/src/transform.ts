@@ -1,7 +1,6 @@
 import * as ts from "typescript";
 import fs from "fs";
 import {visit} from "./lib/visit/visit";
-import {FileIO} from "./deps/FileIO";
 import {Id} from "./deps/Id";
 import {Failable} from "./Failable";
 
@@ -9,14 +8,14 @@ var ctx: ts.TransformationContext;
 const fileExt = ".ts";
 
 
-function insertTSRCode(transformResult: ts.SourceFile, sourceFile: ts.SourceFile): ts.Node {
+function insertTSRCode(transformResult: ts.SourceFile, sourceFile: ts.SourceFile): ts.Statement[] {
     // Find the index at which the source file's code should be inserted into the transformed file
     const index = sourceFile.statements.findIndex(node =>
         node.kind !== ts.SyntaxKind.ImportDeclaration
     );
 
     // Nothing is to be done if the file contains only import statements, so return
-    if (index === -1) return transformResult;
+    if (index === -1) return [...transformResult.statements];
 
     // Filter out import statements from source file
     const sourceCode = sourceFile.statements.filter(node =>
@@ -24,13 +23,11 @@ function insertTSRCode(transformResult: ts.SourceFile, sourceFile: ts.SourceFile
     );
 
     // Insert those nodes at the above specified index into the transform result file
-    return ts.factory.createSourceFile(
-        transformResult.statements.slice(0, index)
-            .concat(sourceCode)
-            .concat(transformResult.statements.slice(index)),
-        transformResult.endOfFileToken,
-        transformResult.flags
-    ) as ts.Node;
+    return [
+        ...transformResult.statements.slice(0, index),
+        ...sourceCode,
+        ...transformResult.statements.slice(index)
+    ];
 }
 
 export let checker: ts.TypeChecker;
@@ -55,16 +52,18 @@ export function transform(
             ts.ScriptKind.TS
         );
 
-        const transformResult = visit({deps, node: sourceFile});
-        const prependedResult = params.prependTsCode ?
-            insertTSRCode(transformResult as ts.SourceFile, sourceFile)
-            : transformResult;
+        const transformResult = visit({deps, node: sourceFile}) as ts.SourceFile;
         const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed});
-        const text = printer.printNode(
-            ts.EmitHint.Unspecified,
-            prependedResult,
-            resultFile
-        );
+        const text = params.prependTsCode ?
+            insertTSRCode(transformResult as ts.SourceFile, sourceFile)
+                .map(node => printer.printNode(ts.EmitHint.Unspecified, node, sourceFile) + "\n")
+                .reduce((acc, val) => acc += val)
+            :
+            printer.printNode(
+                ts.EmitHint.Unspecified,
+                transformResult,
+                resultFile
+            );
 
         return Failable.success(text);
     } catch (e: any) {

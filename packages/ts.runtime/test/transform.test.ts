@@ -2,11 +2,10 @@ import {transform} from "../src";
 import {Id} from "../src/deps/Id";
 import prettier from "prettier";
 import {Failable} from "../src/Failable";
-import fs from "fs";
-import path from "path";
+import {setupTestDir, wrapInTestDir, writeTest} from "./helpers/testFileIO";
+import {getFullFilePath} from "./helpers/Path";
 
 const TEST_ID_GENERATED = "the-id-is-here";
-const TEST_DIR = "TEMP_TEST_DIR";
 
 const testId: Id = {
     generateId() {
@@ -28,13 +27,12 @@ const basicTypeCheck = (name: string) => {
 
 const genericTypeChecker = ({name, input, output, prependTsCode}: { name: string, input: string, output: string, prependTsCode: boolean }) => {
     it(`Properly handles the ${name} type`, () => {
-        const filename = `${TEST_DIR}${path.sep}${name}.tsr.ts`;
-        // Populate test file with input
-        fs.writeFileSync(filename, input);
+        const filename = wrapInTestDir(`${name}.tsr.ts`);
+        writeTest(filename, input);
 
         const transformResult = transform(
             {
-                filename,
+                filename: getFullFilePath(filename),
                 outputFilename: `${filename}.output.ts`,
                 prependTsCode
             },
@@ -48,17 +46,6 @@ const genericTypeChecker = ({name, input, output, prependTsCode}: { name: string
             format(output)
         );
     });
-};
-
-const setupTestDir = () => {
-    // Create an empty temporary test directory
-    if (fs.existsSync(TEST_DIR))
-        fs.rmdirSync(TEST_DIR, {recursive: true})
-    fs.mkdirSync(TEST_DIR);
-};
-
-const teardownTestDir = () => {
-    fs.rmdirSync(TEST_DIR, {recursive: true})
 };
 
 const basicTypeRefCheck = (name: string) => {
@@ -204,7 +191,7 @@ const runTests = () => {
         name: "Type Reference - union",
         input: `type A = number | string;\nexport type T = A;`,
         output: `export const T_$TSR = {\n id: "${TEST_ID_GENERATED}",\n` +
-            " type: \"union\",\n values: [\n" +
+            " type: \"union\",\n members: [\n" +
             ` { id: \"${TEST_ID_GENERATED}\", type: \"string\" },\n` +
             ` { id: \"${TEST_ID_GENERATED}\", type: \"number\" },\n],\n}`,
         prependTsCode: false
@@ -217,10 +204,14 @@ const runTests = () => {
             "    type: \"object\",\n" +
             "    properties: {\n" +
             "        a: {\n" +
-            `            id: \"${TEST_ID_GENERATED}\",\n` +
-            "            type: \"literal\",\n" +
-            "            typeLiteral: \"string\",\n" +
-            "            value: \"\"\n" +
+            "            type: \"propertySignature\",\n" +
+            "            optional: false,\n" +
+            "            tsRuntimeObject: {\n" +
+            `                id: \"${TEST_ID_GENERATED}\",\n` +
+            "                type: \"literal\",\n" +
+            "                typeLiteral: \"string\",\n" +
+            "                value: \"\"\n" +
+            "            }\n" +
             "        }\n" +
             "    }\n" +
             "};",
