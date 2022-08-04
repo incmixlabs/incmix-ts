@@ -1,5 +1,11 @@
 # @incmix/vite-plugin-tsr
 
+## 9.0.1
+
+### Patch Changes
+
+- 2369fbc: Fix bug in vite plugin
+
 ## 9.0.0
 
 ### Major Changes
