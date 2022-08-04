@@ -45,6 +45,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-examples/*.tsr.ts
-test/*.tsr.ts
+examples/*.tsr.ts.output.ts
+test/*.tsr.ts.output.ts
 TEMP_TEST_DIR/
