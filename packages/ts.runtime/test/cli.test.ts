@@ -75,12 +75,12 @@ describe(cli, () => {
         fileIO: {
           read(fileName) {
             readCount++;
-            expect(fileName).toBe("abc.tsr");
+            expect(fileName).toBe("abc.tsr.ts");
             return Failable.success(`export type Type = number;`);
           },
           write({ filePath, text }) {
             writeCount++;
-            expect(filePath).toBe("xyz.tsr.ts");
+            expect(filePath).toBe("xyz.tsr.ts.output.ts");
             expect(format(text)).toBe(
               format(`export const Type_$TSR = {id: "the-id", type: "number" }`)
             );
@@ -90,7 +90,7 @@ describe(cli, () => {
         args: {
           startsOnActualArguments: true,
           getArgs() {
-            return ["abc.tsr", "-o", "xyz.tsr.ts"];
+            return ["abc.tsr.ts", "-o", "xyz.tsr.ts.output.ts"];
           },
         },
         commanderProgram: {
@@ -126,7 +126,7 @@ describe(cli, () => {
         fileIO: {
           read(fileName) {
             readCount++;
-            expect(fileName).toBe("abc.tsr");
+            expect(fileName).toBe("abc.tsr.ts");
             return Failable.failure("Couldn't read");
           },
           write({ filePath, text }) {
@@ -136,7 +136,7 @@ describe(cli, () => {
         args: {
           startsOnActualArguments: true,
           getArgs() {
-            return ["abc.tsr", "-o", "xyz.tsr.ts"];
+            return ["abc.tsr.ts", "-o", "xyz.tsr.ts.output.ts"];
           },
         },
         commanderProgram: {
