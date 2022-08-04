@@ -1,5 +1,11 @@
 # @incmix/ts.runtime
 
+## 3.0.1
+
+### Patch Changes
+
+- 3fd77f5: consolelog
+
 ## 3.0.0
 
 ### Major Changes

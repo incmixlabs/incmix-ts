@@ -1,5 +1,18 @@
 # @incmix/vite-plugin-tsr
 
+## 9.0.2
+
+### Patch Changes
+
+- Updated dependencies [3fd77f5]
+  - @incmix/ts.runtime@3.0.1
+
+## 9.0.1
+
+### Patch Changes
+
+- 2369fbc: Fix bug in vite plugin
+
 ## 9.0.0
 
 ### Major Changes
