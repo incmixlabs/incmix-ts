@@ -27,6 +27,10 @@ import { visitTupleType } from "./visitTupleType";
 import { visitInterfaceDeclaration } from "./visitInterfaceDeclaration";
 import {visitEmptyStatement} from "./visitEmptyStatement";
 import {visitEnumDeclaration} from "./visitEnumDeclaration";
+import {visitImportDeclaration} from "./visitImportDeclaration";
+import {visitTypeQuery} from "./visitTypeQuery";
+import {visitSymbolKeyword} from "./visitSymbolKeyword";
+import {visitTypeOperator} from "./visitTypeOperator";
 
 const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.TypeAliasDeclaration]: visitTypeAliasDeclaration,
@@ -56,10 +60,14 @@ const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.InterfaceDeclaration]: visitInterfaceDeclaration,
   [ts.SyntaxKind.EmptyStatement]: visitEmptyStatement,
   [ts.SyntaxKind.EnumDeclaration]: visitEnumDeclaration,
+  [ts.SyntaxKind.TypeQuery]: visitTypeQuery,
+  [ts.SyntaxKind.ImportDeclaration]: visitImportDeclaration,
+  [ts.SyntaxKind.SymbolKeyword]: visitSymbolKeyword,
+  [ts.SyntaxKind.TypeOperator]: visitTypeOperator,
 };
 
 export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {
-  console.log(node.kind, metadata?.length);
+  console.log("visit", ts.SyntaxKind[node.kind], metadata?.length);
   if (visitMap[node.kind]) {
     return visitMap[node.kind]!({
       node: node,

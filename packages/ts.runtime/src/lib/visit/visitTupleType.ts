@@ -16,6 +16,10 @@ export const visitTupleType: Visiter<ts.TupleTypeNode> = ({
         ts.factory.createStringLiteral("tuple")
       ),
       ts.factory.createPropertyAssignment(
+        "itemsAreReadOnly",
+        ts.factory.createFalse()
+      ),
+      ts.factory.createPropertyAssignment(
         "items",
         ts.factory.createArrayLiteralExpression(
           node.elements.map((node) => {
