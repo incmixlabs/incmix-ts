@@ -11,6 +11,7 @@ export function viteTsrPlugin(): Plugin {
     name: "vite-plugin-tsr",
     enforce: "pre",
     async transform(id, options) {
+      console.log({id});
       if (id.endsWith(".tsr.ts")) {
         return {
           code: Failable.runFailure<string, Failable.Success<string>>(
