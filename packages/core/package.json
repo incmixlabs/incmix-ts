@@ -20,5 +20,8 @@
   "bugs": {
     "url": "TODO: add bugs url"
   },
-  "homepage": "TODO: add homepage url"
+  "homepage": "TODO: add homepage url",
+  "publishConfig": {
+    "access": "public"
+  }
 }
