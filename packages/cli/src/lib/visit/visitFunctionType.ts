@@ -3,6 +3,7 @@ import ts, {
   FunctionTypeNode,
   PropertyAssignment,
 } from "typescript";
+
 import { mapNodeChildren } from "../helpers/mapNodeChildren";
 import { Visiter } from "../helpers/types";
 import { visit } from "./visit";

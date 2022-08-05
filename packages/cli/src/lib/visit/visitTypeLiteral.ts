@@ -1,4 +1,5 @@
 import ts, { ObjectLiteralElementLike } from "typescript";
+
 import { mapNodeChildren } from "../helpers/mapNodeChildren";
 import { Visiter } from "../helpers/types";
 import { visit } from "./visit";

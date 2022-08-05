@@ -1,7 +1,8 @@
 import ts from "typescript";
+
 import { Visiter } from "../helpers/types";
 
-export const visitStringLiteral: Visiter = ({node, metadata}) => {
+export const visitStringLiteral: Visiter = ({ node, metadata }) => {
   return ts.factory.createObjectLiteralExpression(
     [
       ...(metadata ?? []),

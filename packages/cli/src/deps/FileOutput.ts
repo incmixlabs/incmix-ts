@@ -1,5 +1,5 @@
-import { readFileSync, writeFileSync } from "fs";
-import ts from "typescript";
+import { writeFileSync } from "fs";
+
 import { Failable } from "../Failable";
 
 export interface FileOutput {

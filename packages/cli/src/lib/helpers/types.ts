@@ -1,4 +1,5 @@
 import ts from "typescript";
+
 import { Id } from "../../deps/Id";
 
 export type Visiter<T extends ts.Node = ts.Node> = (params: {
@@ -7,4 +8,5 @@ export type Visiter<T extends ts.Node = ts.Node> = (params: {
   deps: { id: Id };
 }) => ts.Node;
 
-export type Resolver<T extends ts.TypeNode | ts.Type = ts.TypeNode | ts.Type> = (node: T) => ts.Node;
+export type Resolver<T extends ts.TypeNode | ts.Type = ts.TypeNode | ts.Type> =
+  (node: T) => ts.Node;

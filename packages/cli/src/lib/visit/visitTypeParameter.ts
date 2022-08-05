@@ -1,10 +1,10 @@
 import ts from "typescript";
+
 import { Visiter } from "../helpers/types";
 import { visit } from "./visit";
 
 export const visitTypeParameter: Visiter<ts.TypeParameterDeclaration> = ({
   node,
-  metadata,
   deps,
 }) => {
   return ts.factory.createObjectLiteralExpression(

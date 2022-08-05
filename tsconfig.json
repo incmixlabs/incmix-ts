@@ -2,12 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "scripthost"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext", "scripthost"],
     "newLine": "LF",
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
@@ -31,10 +26,6 @@
       "@testing-library/jest-dom"
     ]
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "node_modules/.tsr/**/*"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["**/src/**/*.ts"],
 }

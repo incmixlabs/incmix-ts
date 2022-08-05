@@ -1,4 +1,4 @@
-import {Identifier} from "typescript";
+import { Identifier } from "typescript";
 
 export type TsRuntimeObjectGeneric = {
   readonly name: string;
@@ -39,7 +39,8 @@ export type ObjectTsRuntimeObject = {
 export type ArrayTsRuntimeObject = {
   readonly type: "array";
   readonly items: TsRuntimeObject;
-} & CanBeReadOnly & GlobalTsRuntimeObjectKeys;
+} & CanBeReadOnly &
+  GlobalTsRuntimeObjectKeys;
 
 export type TupleTsRuntimeObject = {
   readonly type: "tuple";
@@ -55,7 +56,8 @@ export type TupleTsRuntimeObject = {
         readonly tsRuntimeObject: TsRuntimeObject;
       }
   )[];
-} & CanBeReadOnly & GlobalTsRuntimeObjectKeys;
+} & CanBeReadOnly &
+  GlobalTsRuntimeObjectKeys;
 
 export type NumberLiteralTsRuntimeObject = {
   readonly type: "literal";
@@ -163,14 +165,18 @@ export type ConcreteTsRuntimeObject = TsRuntimeObject & {
 };
 
 export const validateTsRuntimeObject = (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   tsRuntimeObject: ConcreteTsRuntimeObject,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   data: any
 ): boolean => {
   return false;
 };
 
 export const validateExtendsTsRuntimeObject = (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   tsRuntimeObject: ConcreteTsRuntimeObject,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   extendsTsRuntimeObject: ConcreteTsRuntimeObject
 ): boolean => {
   return false;
