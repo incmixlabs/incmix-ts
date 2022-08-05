@@ -25,7 +25,6 @@ export function cli(params: {
     .description('CLI to generate ".ts.runtime" files from ".ts" files.')
     .version("0.0.0")
     .argument("<input-file>", "The path to the file to read")
-    .option("-o --output [output]", "The path to the output file")
     .option(
       "-p --prepend",
       "Prepend all statements (excluding imports) from .tsr into output file"
@@ -57,12 +56,12 @@ export function cli(params: {
   }
   const fileName = program.args[0];
   const options = program.opts();
-  const outputFileName = options.output;
+  const outputFileName = fileName.replace(/\.tsr\.ts$/, ".tsr.o.ts");
   const prependTsCode = options.prepend;
   const codeTransform = transform(
     {
       filename: fileName,
-      outputFilename: outputFileName ?? "output-file-name.ts",
+      outputFilename: outputFileName,
       prependTsCode: !!prependTsCode,
     },
     {
@@ -70,30 +69,15 @@ export function cli(params: {
     }
   );
 
-  if (outputFileName) {
-    const fileWriteResult = Failable.run(codeTransform, (code) =>
-      params.deps.fileOutput.write({
-        filePath: outputFileName,
-        text: code,
-      })
-    );
+  const fileWriteResult = Failable.run(codeTransform, (code) =>
+    params.deps.fileOutput.write({
+      filePath: outputFileName,
+      text: code,
+    })
+  );
 
-    Failable.runFailure<void, Failable.Type<void>>(fileWriteResult, (err) => {
-      params.deps.logger.error(`${err.msg}`);
-      return err;
-    });
-
-    return;
-  }
-
-  if (codeTransform.type === "failure") {
-    params.deps.logger.error(`${codeTransform.msg}`);
-    return;
-  }
-
-  console.log(`
-Logging to console as you didn't provide an output file:
-
-${codeTransform.value}
-  `);
+  Failable.runFailure<void, Failable.Type<void>>(fileWriteResult, (err) => {
+    params.deps.logger.error(`${err.msg}`);
+    return err;
+  });
 }
