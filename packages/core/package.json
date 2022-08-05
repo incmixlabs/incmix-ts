@@ -1,6 +1,6 @@
 {
   "type": "commonjs",
-  "name": "@tsr/core",
+  "name": "@ts-r/core",
   "version": "0.0.1-alpha.1",
   "description": "",
   "types": "./dist/index.d.ts",

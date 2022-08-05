@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { Args, Failable, FileOutput, Id, Logger, transform } from "@tsr/core";
+import { Args, Failable, FileOutput, Id, Logger, transform } from "@ts-r/core";
 import { Command } from "commander";
 
 import { CommanderProgram } from "./CommanderProgram";

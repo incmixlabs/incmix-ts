@@ -1,15 +1,8 @@
-import { Failable, FileOutput, getFullFilePath, Id } from "@tsr/core";
-import {
-  setupTestDir,
-  wrapInTestDir,
-  writeTest,
-} from "@tsr/core/__tests__/helpers/testFileIO";
-import prettier from "prettier";
+import { Failable, FileOutput, Id } from "@ts-r/core";
+import { setupTestDir } from "@ts-r/core/__tests__/helpers/testFileIO";
 
 import { cli } from "../src/cli";
 
-const format = (code: string) =>
-  prettier.format(code, { parser: "typescript" });
 const blankTestFileIO: FileOutput = {
   write() {
     return Failable.success(undefined);
@@ -65,125 +58,5 @@ describe(cli, () => {
     expect(exited).toBe(true);
   });
 
-  it("Should correctly write the output to files when all passed", () => {
-    let errors = "";
-    let exited = false;
-    let writeCount = 0;
-
-    const inputFileName = wrapInTestDir("abc1.tsr.ts");
-    const outputFileName = wrapInTestDir("xyz1.tsr.ts");
-
-    writeTest(inputFileName, `export type Type = number;`);
-
-    cli({
-      deps: {
-        fileOutput: {
-          write({ filePath, text }) {
-            expect(filePath).toBe(getFullFilePath(outputFileName));
-            expect(format(text)).toBe(
-              format(
-                `export const Type_$TSR = {id: "${cliTestID}", type: "number" }`
-              )
-            );
-            writeCount++;
-            return Failable.success(undefined);
-          },
-        },
-        args: {
-          startsOnActualArguments: true,
-          getArgs() {
-            return [
-              getFullFilePath(inputFileName),
-              "-o",
-              getFullFilePath(outputFileName),
-            ];
-          },
-        },
-        commanderProgram: {
-          exitOverride() {
-            exited = true;
-          },
-        },
-        logger: {
-          error(text) {
-            errors += `${text}\n`;
-          },
-          log() {
-            /* noop */
-          },
-        },
-        id: testIdGenerator,
-      },
-    });
-
-    expect(errors).toBe("");
-    expect(exited).toBe(false);
-    expect(writeCount).toBe(1);
-  });
-
-  const testPrependFlag = (prepend: boolean) => () => {
-    let errors = "";
-
-    const inputFileName = wrapInTestDir("abc3.tsr.ts");
-
-    writeTest(inputFileName, `export type X = 1;`);
-
-    cli({
-      deps: {
-        fileOutput: {
-          write({ text }) {
-            expect(format(text)).toBe(
-              format(
-                prepend
-                  ? "export type X = 1;\n"
-                  : "" +
-                      "export const X_$TSR = {\n" +
-                      `    id: "${cliTestID}",\n` +
-                      '    type: "literal",\n' +
-                      '    typeLiteral: "number",\n' +
-                      "    value: 1\n" +
-                      "}"
-              )
-            );
-            return Failable.success(undefined);
-          },
-        },
-        args: {
-          startsOnActualArguments: true,
-          getArgs() {
-            return [getFullFilePath(inputFileName), "-p"];
-          },
-        },
-        commanderProgram: {
-          exitOverride() {
-            /* noop */
-          },
-        },
-        logger: {
-          error(text) {
-            errors += `${text}\n`;
-          },
-          log() {
-            /* noop */
-          },
-        },
-        id: testIdGenerator,
-      },
-    });
-
-    expect(errors.length === 0).toBe(true);
-  };
-
-  it(
-    "Should prepend code from tsr file (when -p flag is passed)",
-    testPrependFlag(true)
-  );
-  it(
-    "Shouldn't prepend code from tsr file (when -p flag is not passed)",
-    testPrependFlag(false)
-  );
-
-  it.todo(
-    "Should simply log the result if the -o flag is not passed and shouldn't perform any file writes"
-  );
+  test.todo("ADD MANY MORE TESTS");
 });
