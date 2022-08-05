@@ -67,7 +67,6 @@ const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
 };
 
 export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {
-  console.log("visit", ts.SyntaxKind[node.kind], metadata?.length);
   if (visitMap[node.kind]) {
     return visitMap[node.kind]!({
       node: node,

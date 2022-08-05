@@ -1,9 +1,11 @@
 {
-  "name": "@incmix/tsr-utils",
+  "name": "@tsr/utils",
   "description": "Utils for Typescript Runtime",
-  "main": "src/index.ts",
-  "publishConfig": {
-    "access": "public"
-  },
-  "version": "2.0.0"
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "version": "0.0.1-alpha.1",
+  "scripts": {
+    "test": "jest",
+    "build": "rm ./dist -rf & tsc"
+  }
 }

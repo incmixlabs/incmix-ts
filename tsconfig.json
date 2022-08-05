@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": false,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "moduleResolution": "Node",
@@ -17,14 +17,9 @@
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
-    "sourceMap": true,
-    "types": [
-      "solid-js",
-      "vite/client",
-      "node",
-      "jest",
-      "@testing-library/jest-dom"
-    ]
+    "sourceMap": false,
+    "types": ["node", "jest"],
+    "declaration": true
   },
   "exclude": ["node_modules"],
   "include": ["**/src/**/*.ts"],
