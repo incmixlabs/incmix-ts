@@ -1,13 +1,20 @@
 {
+  "type": "module",
   "name": "incmix-ui-monorepo",
-  "description": "The SolidJS component library you've incmixd for.",
-  "homepage": "https://incmix-ui.com",
+  "description": "Typescript Runtime",
+  "homepage": "TODO: Homepage",
   "bugs": {
-    "url": "https://github.com/fabien-ml/incmix-ui/issues"
+    "url": "TODO: Bugs URL"
   },
   "pnpm": {
     "peerDependencyRules": {
-      "ignoreMissing": ["rollup","webpack","types/lodash-es","vite","@babel/core"]
+      "ignoreMissing": [
+        "rollup",
+        "webpack",
+        "types/lodash-es",
+        "vite",
+        "@babel/core"
+      ]
     }
   },
   "workspaces": [
