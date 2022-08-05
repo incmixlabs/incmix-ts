@@ -163,6 +163,13 @@ export const validateTsRuntimeObject = (
   tsRuntimeObject: ConcreteTsRuntimeObject,
   data: any
 ): boolean => {
+  const primitives: readonly string[] = [
+    "number", "string", "boolean", "bigint", "symbol"
+  ];
+  if (primitives.includes(tsRuntimeObject.type))
+    return typeof data === tsRuntimeObject.type;
+  // Primitive types can be immediately resolved
+  // todo More complex types like: lists, objects need to be recursively checked
   return false;
 };
 
