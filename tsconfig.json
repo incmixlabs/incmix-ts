@@ -1,39 +1,26 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "scripthost"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext", "scripthost"],
     "newLine": "LF",
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": false,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "sourceMap": true,
-    "types": [
-      "solid-js",
-      "vite/client",
-      "node",
-      "jest",
-      "@testing-library/jest-dom"
-    ]
+    "strictNullChecks": true,
+    "sourceMap": false,
+    "types": ["node", "jest"],
+    "declaration": true,
+    "module": "commonjs"
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "node_modules/.tsr/**/*"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["**/src/**/*.ts"]
 }

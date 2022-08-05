@@ -164,3 +164,8 @@ temp/
 # End of https://www.toptal.com/developers/gitignore/api/macos,node
 .vscode/settings.json
 
+# Generated TSR output files
+*.tsr.o.ts
+
+# Temp test directory
+TEMP_TEST_DIR
