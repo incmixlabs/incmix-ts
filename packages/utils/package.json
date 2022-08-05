@@ -1,5 +1,5 @@
 {
-  "name": "@tsr/utils",
+  "name": "@ts-r/utils",
   "description": "Utils for Typescript Runtime",
   "types": "./dist/index.d.ts",
   "type": "commonjs",
