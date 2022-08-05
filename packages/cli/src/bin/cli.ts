@@ -1,4 +1,4 @@
-import { args, fileOutput, id, logger } from "@tsr/core";
+import { args, fileOutput, id, logger } from "@ts-r/core";
 
 import { cli } from "../cli";
 import { commanderProgram } from "../CommanderProgram";
