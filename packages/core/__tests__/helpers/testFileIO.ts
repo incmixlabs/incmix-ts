@@ -1,6 +1,6 @@
 import fs from "fs";
 
-import { getFullFilePath, Path, wrap } from "./Path";
+import { getFullFilePath, Path, wrap } from "../../src/Path";
 
 export const TEST_DIR = "TEMP_TEST_DIR";
 

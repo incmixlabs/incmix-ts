@@ -1,11 +1,12 @@
+import { Failable, FileOutput, getFullFilePath, Id } from "@tsr/core";
+import {
+  setupTestDir,
+  wrapInTestDir,
+  writeTest,
+} from "@tsr/core/__tests__/helpers/testFileIO";
 import prettier from "prettier";
 
 import { cli } from "../src/cli";
-import { FileOutput } from "../src/deps/FileOutput";
-import { Id } from "../src/deps/Id";
-import { Failable } from "../src/Failable";
-import { getFullFilePath } from "./helpers/Path";
-import { setupTestDir, wrapInTestDir, writeTest } from "./helpers/testFileIO";
 
 const format = (code: string) =>
   prettier.format(code, { parser: "typescript" });

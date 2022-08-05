@@ -66,6 +66,7 @@ importers:
 
   packages/cli:
     specifiers:
+      '@tsr/core': workspace:@tsr/core@*
       '@types/node': ^17.0.31
       commander: ^9.2.0
       ts-node: ^10.7.0
@@ -74,6 +75,7 @@ importers:
       commander: 9.3.0
       typescript: 4.7.4
     devDependencies:
+      '@tsr/core': link:../core
       '@types/node': 17.0.45
       ts-node: 10.8.1_x2utdhayajzrh747hktprshhby
 

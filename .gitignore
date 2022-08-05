@@ -166,3 +166,6 @@ temp/
 
 # Generated TSR output files
 *.tsr.o.ts
+
+# Temp test directory
+TEMP_TEST_DIR

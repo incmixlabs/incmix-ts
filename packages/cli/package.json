@@ -1,4 +1,5 @@
 {
+  "type": "commonjs",
   "name": "@tsr/cli",
   "version": "0.0.1-alpha.1",
   "description": "",
@@ -6,13 +7,13 @@
   "main": "./dist/index.js",
   "bin": "dist/bin/cli.js",
   "scripts": {
-    "test": "jest",
     "start": "ts-node src/bin/cli.ts",
     "node": "ts-node",
     "build": "rm ./dist -rf & tsc"
   },
   "license": "ISC",
   "devDependencies": {
+    "@tsr/core": "workspace:@tsr/core@*",
     "@types/node": "^17.0.31",
     "ts-node": "^10.7.0"
   },

@@ -1,9 +1,8 @@
 import prettier from "prettier";
 
-import { transform } from "../src";
+import { getFullFilePath, transform } from "../src";
 import { Id } from "../src/deps/Id";
 import { Failable } from "../src/Failable";
-import { getFullFilePath } from "./helpers/Path";
 import { setupTestDir, wrapInTestDir, writeTest } from "./helpers/testFileIO";
 
 const TEST_ID_GENERATED = "the-id-is-here";
@@ -75,7 +74,7 @@ const basicTypeRefLiteralCheck = (name: string, literal: string) => {
   });
 };
 
-// TODO REMOVE ME - Handy regex for replacing generated ids ([a-f0-9]){8}-(([a-f0-9]){4}-){3}([a-f0-9]){12}
+// TODO: REMOVE ME - Handy regex for replacing generated ids ([a-f0-9]){8}-(([a-f0-9]){4}-){3}([a-f0-9]){12}
 
 const runTests = () => {
   /*** Visitor Tests ***/

@@ -1,14 +1,9 @@
 #!/usr/bin/env node
 
+import { Args, Failable, FileOutput, Id, Logger, transform } from "@tsr/core";
 import { Command } from "commander";
 
-import { Args } from "./deps/Args";
-import { CommanderProgram } from "./deps/CommanderProgram";
-import { FileOutput } from "./deps/FileOutput";
-import { Id } from "./deps/Id";
-import { Logger } from "./deps/Logger";
-import { Failable } from "./Failable";
-import { transform } from "./transform";
+import { CommanderProgram } from "./CommanderProgram";
 
 export const program = new Command();
 

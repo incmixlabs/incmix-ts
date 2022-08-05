@@ -1,8 +1,6 @@
+import { args, fileOutput, id, logger } from "@tsr/core";
+
 import { cli } from "../cli";
-import { args } from "../deps/Args";
-import { commanderProgram } from "../deps/CommanderProgram";
-import { fileOutput } from "../deps/FileOutput";
-import { id } from "../deps/Id";
-import { logger } from "../deps/Logger";
+import { commanderProgram } from "../CommanderProgram";
 
 cli({ deps: { fileOutput: fileOutput, args, logger, commanderProgram, id } });

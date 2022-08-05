@@ -2,10 +2,10 @@
   "name": "@tsr/utils",
   "description": "Utils for Typescript Runtime",
   "types": "./dist/index.d.ts",
+  "type": "commonjs",
   "main": "./dist/index.js",
   "version": "0.0.1-alpha.1",
   "scripts": {
-    "test": "jest",
     "build": "rm ./dist -rf & tsc"
   }
 }
