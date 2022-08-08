@@ -1,5 +1,3 @@
-import {Identifier} from "typescript";
-
 export type TsRuntimeObjectGeneric = {
   readonly name: string;
   readonly extends: ConcreteTsRuntimeObject;
@@ -113,7 +111,7 @@ export type GenericTsRuntimeObjectValue = {
 
 export type EnumTsRuntimeObject = {
   readonly type: "enum";
-  readonly enum: Identifier;
+  readonly enum: object;
 } & GlobalTsRuntimeObjectKeys;
 
 export type SpecialTsRuntimeObject = {
