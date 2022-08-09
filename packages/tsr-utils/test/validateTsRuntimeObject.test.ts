@@ -4,7 +4,7 @@ import {
     BigIntTsRuntimeObject,
     BooleanLiteralTsRuntimeObject,
     BooleanTsRuntimeObject,
-    ConcreteTsRuntimeObject, EnumTsRuntimeObject, GenericTsRuntimeObjectValue,
+    ConcreteTsRuntimeObject, EnumTsRuntimeObject,
     GlobalTsRuntimeObjectKeys,
     InterfaceTsRuntimeObject,
     NumberLiteralTsRuntimeObject,
@@ -17,8 +17,31 @@ import {
     UniqueSymbolTsRuntimeObject,
     validateTsRuntimeObject
 } from "../src";
+import {Stack} from "../src/lib/helpers/Stack";
+import Valid = Stack.Valid;
+import invalidWithReason = Stack.invalidWithReason;
+import InvalidType = Stack.InvalidType;
+import InvalidTypeReason = Stack.InvalidTypeReason;
 
 const VALIDATE_TSROBJ_TEST_ID = "test_id";
+
+const invalidTest = (TSRObj: ConcreteTsRuntimeObject, data: any, expectedValue?: any) => {
+    const receivedObj = validateTsRuntimeObject(TSRObj, data);
+    const expectedObj = invalidWithReason(
+        TSRObj.type,
+        {receivedType: typeof data, receivedValue: data, expectedValue}
+    );
+    const withReason = (obj: InvalidType) =>  obj as InvalidType & {reason: InvalidTypeReason};
+
+    expect(receivedObj.valid).toBe(expectedObj.valid);
+    if (!(receivedObj.valid)) {
+        expect(receivedObj.type).toBe(expectedObj.type);
+
+        expect((withReason(receivedObj)).reason.receivedType).toBe(withReason(expectedObj).reason.receivedType);
+        expect((withReason(receivedObj)).reason.receivedValue).toBe(withReason(expectedObj).reason.receivedValue);
+        expect((withReason(receivedObj)).reason.expectedValue).toBe(withReason(expectedObj).reason.expectedValue);
+    }
+}
 
 describe(validateTsRuntimeObject, () => {
     const GlobalTSRObj = {
@@ -26,8 +49,8 @@ describe(validateTsRuntimeObject, () => {
         generics: undefined,
         documentation: undefined,
     } as ConcreteTsRuntimeObject;
-
     type ConcreteTSR<T extends GlobalTsRuntimeObjectKeys> = ConcreteTsRuntimeObject & T;
+
 
     /*** Primitive tests ***/
     it('Validate data of type number', () => {
@@ -35,9 +58,8 @@ describe(validateTsRuntimeObject, () => {
             ...GlobalTSRObj,
             type: "number"
         };
-
-        expect(validateTsRuntimeObject(TSRObj, 1)).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, "")).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, 1)).toBe(Valid);
+        invalidTest(TSRObj, "");
     });
 
     it('Validate data of type string', () => {
@@ -46,8 +68,8 @@ describe(validateTsRuntimeObject, () => {
             type: "string"
         };
 
-        expect(validateTsRuntimeObject(TSRObj, "text")).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, 1)).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, "text")).toBe(Valid);
+        invalidTest(TSRObj, 1);
     });
 
     it('Validate data of type boolean', () => {
@@ -56,9 +78,9 @@ describe(validateTsRuntimeObject, () => {
             type: "boolean"
         };
 
-        expect(validateTsRuntimeObject(TSRObj, true)).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, false)).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, "")).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, true)).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj, false)).toBe(Valid);
+        invalidTest(TSRObj, "");
     });
 
     it('Validate data of type bigint', () => {
@@ -68,8 +90,8 @@ describe(validateTsRuntimeObject, () => {
         };
 
 
-        expect(validateTsRuntimeObject(TSRObj, BigInt(1))).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, "")).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, BigInt(1))).toBe(Valid);
+        invalidTest(TSRObj, "");
     });
 
     it('Validate data of type symbol', () => {
@@ -78,21 +100,21 @@ describe(validateTsRuntimeObject, () => {
             type: "symbol"
         };
 
-        expect(validateTsRuntimeObject(TSRObj, Symbol(1))).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, "")).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, Symbol(1))).toBe(Valid);
+        invalidTest(TSRObj, "");
     });
 
     it('Validate data of type unique symbol', () => {
         const sym = Symbol("s");
+        const sym1 = Symbol("s");
         const TSRObj: ConcreteTSR<UniqueSymbolTsRuntimeObject> = {
             ...GlobalTSRObj,
             type: "unique symbol",
             uniqueSymbolTypeId: sym
         };
 
-        expect(validateTsRuntimeObject(TSRObj, sym)).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, Symbol("s"))).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, "")).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, sym)).toBe(Valid);
+        invalidTest(TSRObj, sym1, sym);
     });
 
 
@@ -105,9 +127,8 @@ describe(validateTsRuntimeObject, () => {
             value: 5
         };
 
-        expect(validateTsRuntimeObject(TSRObj, 5)).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, 1)).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, "")).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, 5)).toBe(Valid);
+        invalidTest(TSRObj, 1, 5);
     });
 
     it('Validate data of type string literal', () => {
@@ -118,9 +139,8 @@ describe(validateTsRuntimeObject, () => {
             value: "text"
         };
 
-        expect(validateTsRuntimeObject(TSRObj, "text")).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, "other text")).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, 1)).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, "text")).toBe(Valid);
+        invalidTest(TSRObj, "other text", "text");
     });
 
     it('Validate data of type boolean literal', () => {
@@ -131,9 +151,8 @@ describe(validateTsRuntimeObject, () => {
             value: true
         };
 
-        expect(validateTsRuntimeObject(TSRObj, true)).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, false)).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, "")).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, true)).toBe(Valid);
+        invalidTest(TSRObj, false, true);
     });
 
     it('Validate data of type bigint literal', () => {
@@ -144,9 +163,8 @@ describe(validateTsRuntimeObject, () => {
             value: BigInt(5)
         };
 
-        expect(validateTsRuntimeObject(TSRObj, BigInt(5))).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, BigInt(1))).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, "")).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, BigInt(5))).toBe(Valid);
+        invalidTest(TSRObj, BigInt(1), BigInt(5));
     });
 
 
@@ -162,10 +180,9 @@ describe(validateTsRuntimeObject, () => {
             itemsAreReadOnly: false
         };
 
-        expect(validateTsRuntimeObject(TSRObj, ["text", "text"])).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, [])).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, "")).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, ["text", 5])).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, ["text", "text"])).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj, [])).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj, ["text", 5]).valid).toBeFalsy();
     });
 
     it('Validate data of type tuple - spread true: array', () => {
@@ -201,10 +218,10 @@ describe(validateTsRuntimeObject, () => {
             itemsAreReadOnly: false
         };
 
-        expect(validateTsRuntimeObject(TSRObj, [["name", "age", "yes"], [2, 12, 3], [true, false]] as [string[], number[], boolean[]])).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, [["name", "age", "yes"], [2, 12, 3], [true, false]] as [string[], number[], [boolean, boolean]])).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, [["name"], 2, [true]] as [any, any, any])).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, [["name"]])).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, [["name", "age", "yes"], [2, 12, 3], [true, false]] as [string[], number[], boolean[]])).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj, [["name", "age", "yes"], [2, 12, 3], [true, false]] as [string[], number[], [boolean, boolean]]).valid).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, [["name"], 2, [true]] as [any, any, any]).valid).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, [["name"]]).valid).toBeFalsy();
     });
 
     it('Validate data of type tuple - spread true: tuple', () => {
@@ -248,11 +265,11 @@ describe(validateTsRuntimeObject, () => {
             itemsAreReadOnly: false
         };
 
-        expect(validateTsRuntimeObject(TSRObj, [["name", true], [2]] as [[string, boolean], [number]])).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, [["name", true], [2]] as [[string, any], [number]])).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, [[true], [2]] as [[boolean], [number]])).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, [["name", true], [""]])).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, "")).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, [["name", true], [2]] as [[string, boolean], [number]])).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj, [["name", true], [2]] as [[string, any], [number]]).valid).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, [[true], [2]] as [[boolean], [number]]).valid).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, [["name", true], [""]]).valid).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, "").valid).toBeFalsy();
     });
 
     it('Validate data of type tuple - spread false', () => {
@@ -281,9 +298,9 @@ describe(validateTsRuntimeObject, () => {
             itemsAreReadOnly: false
         };
 
-        expect(validateTsRuntimeObject(TSRObj, ["name", 2, true] as [string, number, boolean])).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, ["name", 2, true] as any[])).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, ["name", 2])).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, ["name", 2, true] as [string, number, boolean])).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj, ["name", 2, true] as any[]).valid).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, ["name", 2]).valid).toBeFalsy();
     });
 
 
@@ -310,12 +327,12 @@ describe(validateTsRuntimeObject, () => {
             }
         };
 
-        expect(validateTsRuntimeObject(TSRObj, {name: "Lorem ipsum", details: {age: 1}})).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, {name: "Lorem ipsum", details: {}})).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, {name: "Lorem ipsum", details: ""})).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, {name: "Lorem ipsum"})).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, {})).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj, "")).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, {name: "Lorem ipsum", details: {age: 1}})).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj, {name: "Lorem ipsum", details: {}}).valid).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, {name: "Lorem ipsum", details: ""}).valid).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, {name: "Lorem ipsum"}).valid).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, {}).valid).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, "").valid).toBeFalsy();
     });
 
     it('Validate data of type enum', () => {
@@ -328,8 +345,8 @@ describe(validateTsRuntimeObject, () => {
         };
 
         // todo: determine how enums are stored on the front-end for validation
-        expect(validateTsRuntimeObject(TSRObj, "A")).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, "B")).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, "A")).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj, "B").valid).toBeFalsy();
     });
 
     it('Validate data of type interface', () => {
@@ -385,9 +402,9 @@ describe(validateTsRuntimeObject, () => {
             }
         };
 
-        expect(validateTsRuntimeObject(TSRObj, Person)).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, john)).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj, Dog)).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj, Person)).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj, john)).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj, Dog).valid).toBeFalsy();
     });
 
     it('Validate date of type union', () => {
@@ -404,9 +421,9 @@ describe(validateTsRuntimeObject, () => {
             };
         };
 
-        expect(validateTsRuntimeObject(TSRObj(["string", "number"]), 2)).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj(["string", "number"]), "text")).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj(["boolean", "number"]), "text")).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj(["string", "number"]), 2)).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj(["string", "number"]), "text")).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj(["boolean", "number"]), "text").valid).toBeFalsy();
     });
 
     it('Validate date of type property signature', () => {
@@ -424,10 +441,10 @@ describe(validateTsRuntimeObject, () => {
                 };
             };
 
-        expect(validateTsRuntimeObject(TSRObj("string", false), "test")).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj("string", true), undefined)).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj("boolean", false), false)).toBeTruthy();
-        expect(validateTsRuntimeObject(TSRObj("string", false), undefined)).toBeFalsy();
-        expect(validateTsRuntimeObject(TSRObj("string", false), 1)).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj("string", false), "test")).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj("string", true), undefined)).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj("boolean", false), false)).toBe(Valid);
+        expect(validateTsRuntimeObject(TSRObj("string", false), undefined).valid).toBeFalsy();
+        expect(validateTsRuntimeObject(TSRObj("string", false), 1).valid).toBeFalsy();
     });
 });

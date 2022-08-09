@@ -1,3 +1,7 @@
+import {TSRObjValidator} from "./lib/helpers/types";
+import {validateLiteral} from "./lib/validators/validateLiteral";
+import {validatePrimitive} from "./lib/validators/validatePrimitive";
+
 export type TsRuntimeObjectGeneric = {
   readonly name: string;
   readonly extends: ConcreteTsRuntimeObject;
@@ -160,18 +164,21 @@ export type ConcreteTsRuntimeObject = TsRuntimeObject & {
   generics: undefined;
 };
 
-export const validateTsRuntimeObject = (
-  tsRuntimeObject: ConcreteTsRuntimeObject,
-  data: any
-): boolean => {
-  const primitives: readonly string[] = [
-    "number", "string", "boolean", "bigint", "symbol"
-  ];
-  if (primitives.includes(tsRuntimeObject.type))
-    return typeof data === tsRuntimeObject.type;
-  // Primitive types can be immediately resolved
-  // todo More complex types like: lists, objects need to be recursively checked
-  return false;
+export const validateTsRuntimeObject: TSRObjValidator = (tsRuntimeObject, data) => {
+  const validator: Partial<Record<TsRuntimeObject["type"], TSRObjValidator<any>>> = {
+    "literal": validateLiteral,
+    "number": validatePrimitive,
+    "string": validatePrimitive,
+    "boolean": validatePrimitive,
+    "bigint": validatePrimitive,
+    "symbol": validatePrimitive,
+    // "object"
+  };
+
+  if (validator[tsRuntimeObject.type])
+    return validator[tsRuntimeObject.type]!(tsRuntimeObject, data);
+  else
+    throw new Error(`Validation for ${tsRuntimeObject.type} isn't supported yet!`);
 };
 
 export const validateExtendsTsRuntimeObject = (
