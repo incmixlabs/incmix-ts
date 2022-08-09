@@ -6,7 +6,8 @@ export namespace Stack {
     export type InvalidTypeReason = {
         receivedType: string,
         receivedValue: any,
-        expectedValue?: any
+        expectedValue?: any,
+        name?: string
     };
     export type InvalidType = ({
         children: InvalidType[]
