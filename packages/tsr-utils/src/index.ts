@@ -5,6 +5,9 @@ import {validateUniqueSymbol} from "./lib/validators/validateUniqueSymbol";
 import {validateObjectOrInterface} from "./lib/validators/validateObjectOrInterface";
 import {validateArray} from "./lib/validators/validateArray";
 import {validateTuple} from "./lib/validators/validateTuple";
+import {validateEnum} from "./lib/validators/validateEnum";
+import {validateUnion} from "./lib/validators/validateUnion";
+import {validatePropertySignature} from "./lib/validators/validatePropertySignature";
 
 export type TsRuntimeObjectGeneric = {
   readonly name: string;
@@ -181,6 +184,9 @@ export const validateTsRuntimeObject: TSRObjValidator = (tsRuntimeObject, data) 
     "array": validateArray,
     "tuple": validateTuple,
     "interface": validateObjectOrInterface,
+    "enum": validateEnum,
+    "union": validateUnion,
+    "propertySignature": validatePropertySignature
   };
 
   if (validator[tsRuntimeObject.type])
