@@ -35,7 +35,7 @@ const invalidTest = (TSRObj: ConcreteTsRuntimeObject, data: any, expectedValue?:
 
     expect(receivedObj.valid).toBe(expectedObj.valid);
     if (!(receivedObj.valid)) {
-        expect(receivedObj.type).toBe(expectedObj.type);
+        expect(receivedObj.expectedType).toBe(expectedObj.expectedType);
 
         expect((withReason(receivedObj)).reason.receivedType).toBe(withReason(expectedObj).reason.receivedType);
         expect((withReason(receivedObj)).reason.receivedValue).toBe(withReason(expectedObj).reason.receivedValue);
@@ -219,7 +219,6 @@ describe(validateTsRuntimeObject, () => {
         };
 
         expect(validateTsRuntimeObject(TSRObj, [["name", "age", "yes"], [2, 12, 3], [true, false]] as [string[], number[], boolean[]])).toBe(Valid);
-        expect(validateTsRuntimeObject(TSRObj, [["name", "age", "yes"], [2, 12, 3], [true, false]] as [string[], number[], [boolean, boolean]]).valid).toBeFalsy();
         expect(validateTsRuntimeObject(TSRObj, [["name"], 2, [true]] as [any, any, any]).valid).toBeFalsy();
         expect(validateTsRuntimeObject(TSRObj, [["name"]]).valid).toBeFalsy();
     });
@@ -266,7 +265,6 @@ describe(validateTsRuntimeObject, () => {
         };
 
         expect(validateTsRuntimeObject(TSRObj, [["name", true], [2]] as [[string, boolean], [number]])).toBe(Valid);
-        expect(validateTsRuntimeObject(TSRObj, [["name", true], [2]] as [[string, any], [number]]).valid).toBeFalsy();
         expect(validateTsRuntimeObject(TSRObj, [[true], [2]] as [[boolean], [number]]).valid).toBeFalsy();
         expect(validateTsRuntimeObject(TSRObj, [["name", true], [""]]).valid).toBeFalsy();
         expect(validateTsRuntimeObject(TSRObj, "").valid).toBeFalsy();
@@ -299,7 +297,6 @@ describe(validateTsRuntimeObject, () => {
         };
 
         expect(validateTsRuntimeObject(TSRObj, ["name", 2, true] as [string, number, boolean])).toBe(Valid);
-        expect(validateTsRuntimeObject(TSRObj, ["name", 2, true] as any[]).valid).toBeFalsy();
         expect(validateTsRuntimeObject(TSRObj, ["name", 2]).valid).toBeFalsy();
     });
 

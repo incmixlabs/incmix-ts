@@ -8,21 +8,27 @@ import invalidWithChildren = Stack.invalidWithChildren;
 
 export const validateObject: TSRObjValidator<ObjectTsRuntimeObject & ConcreteTsRuntimeObject> = (tsRuntimeObject, data) => {
     data = data as object;
-    const stackTracesOfChildren = Object.keys(tsRuntimeObject.properties).map(property => {
+    const stackTracesOfChildren = Object.keys(tsRuntimeObject.properties).map(key => {
         // Check if key exists on data
-        if (Object.keys(data).includes(property)) {
+        if (Object.keys(data).includes(key)) {
             // Validate the value associated with that key with respect to the TSRObj schema
-            return validateTsRuntimeObject(tsRuntimeObject.properties[property] as ConcreteTsRuntimeObject, data[property]);
+            const stackTrace = validateTsRuntimeObject(tsRuntimeObject.properties[key] as ConcreteTsRuntimeObject, data[key]);
+            if (!stackTrace.valid) {
+                // Invalid properties need to have their key attached to the Invalid node
+                stackTrace.name = key;
+                return stackTrace;
+            }
+            else return undefined;
         } else {
-            // Return invalid error where expected type is the property's value
-            return invalidWithReason(tsRuntimeObject.properties[property].type, {
+            // Data doesn't have a property with this key - so,
+            // return an invalid node; where expected type is the property's value
+            return invalidWithReason(tsRuntimeObject.properties[key].type, {
                 receivedType: "undefined",
                 receivedValue: "undefined",
-                expectedValue: tsRuntimeObject.properties[property],
-                name: property
-            });
+                expectedValue: tsRuntimeObject.properties[key]
+            },{name: key});
         }
-    }).filter(trace => !trace.valid).map(_ => _ as InvalidType);
+    }).filter(stackTrace => !!stackTrace) as InvalidType[];
 
     return stackTracesOfChildren.length === 0 ? Valid : invalidWithChildren(tsRuntimeObject.type, stackTracesOfChildren);
 }
