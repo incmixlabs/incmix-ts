@@ -1,1 +1,1 @@
-export type NestedExample = string;
+export type NestedExample = number;

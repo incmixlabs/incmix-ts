@@ -6,6 +6,7 @@ import fs from "fs";
 import path from "path";
 
 import { CommanderProgram } from "./CommanderProgram";
+import chokidar from "chokidar";
 
 export const program = new Command();
 
@@ -63,10 +64,29 @@ export function cli(params: {
     return;
   }
 
-  handleFile({
-    deps: params.deps,
-    fileName,
-  });
+  const options = program.opts();
+  if (options.watch) {
+    const watcher = chokidar.watch(`${fileName}/**/*.tsr.ts`, {
+      persistent: true,
+    });
+
+    watcher.on("all", (type, fileName) => {
+      console.log(type, fileName);
+
+      if (type === "add" || type === "addDir" || type === "change") {
+        handleFile({
+          deps: params.deps,
+          fileName,
+        });
+        return;
+      }
+    });
+  } else {
+    handleFile({
+      deps: params.deps,
+      fileName,
+    });
+  }
 }
 
 const handleFile = (params: {
