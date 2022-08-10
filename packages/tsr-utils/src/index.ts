@@ -171,7 +171,7 @@ export type ConcreteTsRuntimeObject = TsRuntimeObject & {
   generics: undefined;
 };
 
-export const validateTsRuntimeObject: TSRObjValidator = (tsRuntimeObject, data) => {
+export const validateTsRuntimeObject: TSRObjValidator = (tsRuntimeObject, data, params) => {
   const validator: Partial<Record<TsRuntimeObject["type"], TSRObjValidator<any>>> = {
     "literal": validateLiteral,
     "number": validatePrimitive,
@@ -191,7 +191,12 @@ export const validateTsRuntimeObject: TSRObjValidator = (tsRuntimeObject, data) 
 
   if (validator[tsRuntimeObject.type])
     return validator[tsRuntimeObject.type]!(tsRuntimeObject, data);
-  else
+  else if (tsRuntimeObject.type.startsWith("$") && typeof tsRuntimeObject.type.slice(1) === "string") {
+    if (!params || !params.customValidator)
+      throw new Error("Special TSR objects require a custom validator");
+    else
+      return params.customValidator(tsRuntimeObject as SpecialTsRuntimeObject & ConcreteTsRuntimeObject, data);
+  } else
     throw new Error(`Validation for ${tsRuntimeObject.type} isn't supported yet!`);
 };
 

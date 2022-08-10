@@ -8,7 +8,7 @@ import {
     GlobalTsRuntimeObjectKeys,
     InterfaceTsRuntimeObject,
     NumberLiteralTsRuntimeObject,
-    NumberTsRuntimeObject, PropertySignatureTsRuntimeObject,
+    NumberTsRuntimeObject, PropertySignatureTsRuntimeObject, SpecialTsRuntimeObject,
     StringLiteralTsRuntimeObject,
     StringTsRuntimeObject,
     SymbolTsRuntimeObject,
@@ -22,6 +22,7 @@ import Valid = Stack.Valid;
 import invalidWithReason = Stack.invalidWithReason;
 import InvalidType = Stack.InvalidType;
 import InvalidTypeReason = Stack.InvalidTypeReason;
+import StackTrace = Stack.StackTrace;
 
 const VALIDATE_TSROBJ_TEST_ID = "test_id";
 
@@ -31,7 +32,7 @@ const invalidTest = (TSRObj: ConcreteTsRuntimeObject, data: any, expectedValue?:
         TSRObj.type,
         {receivedType: typeof data, receivedValue: data, expectedValue}
     );
-    const withReason = (obj: InvalidType) =>  obj as InvalidType & {reason: InvalidTypeReason};
+    const withReason = (obj: InvalidType) => obj as InvalidType & { reason: InvalidTypeReason };
 
     expect(receivedObj.valid).toBe(expectedObj.valid);
     if (!(receivedObj.valid)) {
@@ -381,7 +382,7 @@ describe(validateTsRuntimeObject, () => {
         expect(validateTsRuntimeObject(TSRObj, Dog).valid).toBeFalsy();
     });
 
-    it('Validate date of type union', () => {
+    it('Validate data of type union', () => {
         const TSRObj: (types: ("string" | "number" | "boolean")[]) => ConcreteTSR<UnionTsRuntimeObject> = types => {
             return {
                 ...GlobalTSRObj,
@@ -400,7 +401,7 @@ describe(validateTsRuntimeObject, () => {
         expect(validateTsRuntimeObject(TSRObj(["boolean", "number"]), "text").valid).toBeFalsy();
     });
 
-    it('Validate date of type property signature', () => {
+    it('Validate data of type property signature', () => {
         const TSRObj:
             (type: "string" | "number" | "boolean" | "object", optional: boolean) => ConcreteTSR<PropertySignatureTsRuntimeObject> =
             (type, optional) => {
@@ -420,5 +421,44 @@ describe(validateTsRuntimeObject, () => {
         expect(validateTsRuntimeObject(TSRObj("boolean", false), false)).toBe(Valid);
         expect(validateTsRuntimeObject(TSRObj("string", false), undefined).valid).toBeFalsy();
         expect(validateTsRuntimeObject(TSRObj("string", false), 1).valid).toBeFalsy();
+    });
+
+    it('Validate special TSR objects', () => {
+        const a = {
+            name: "john",
+            age: 15
+        };
+
+        const b = {
+            name: true,
+            height: 130
+        };
+
+        function customValidator(SpecialTSRObj: ConcreteTSR<SpecialTsRuntimeObject>, data: any): StackTrace {
+            if (SpecialTSRObj.type === "$object" && typeof data === "object") {
+                data = data as object;
+                if (typeof data["name"] === SpecialTSRObj.data["name"] && typeof data["age"] === SpecialTSRObj.data["age"]) {
+                    return Valid;
+                } else {
+                    return invalidWithReason(SpecialTSRObj.type, {
+                        receivedType: "undefined",
+                        receivedValue: undefined
+                    });
+                }
+            } else
+                return invalidWithReason(SpecialTSRObj.type, {
+                    receivedType: "undefined",
+                    receivedValue: undefined
+                });
+        }
+
+        const TSRObj: ConcreteTSR<SpecialTsRuntimeObject> = {
+            ...GlobalTSRObj,
+            type: "$object",
+            data: {name: "string", age: "number"}
+        };
+
+        expect(validateTsRuntimeObject(TSRObj, a, {customValidator}).valid).toBeTruthy();
+        expect(validateTsRuntimeObject(TSRObj, b, {customValidator}).valid).toBeFalsy();
     });
 });

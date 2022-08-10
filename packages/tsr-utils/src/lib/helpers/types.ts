@@ -2,7 +2,7 @@ import {
     BigIntLiteralTsRuntimeObject, BigIntTsRuntimeObject,
     BooleanLiteralTsRuntimeObject, BooleanTsRuntimeObject,
     ConcreteTsRuntimeObject,
-    NumberLiteralTsRuntimeObject, NumberTsRuntimeObject,
+    NumberLiteralTsRuntimeObject, NumberTsRuntimeObject, SpecialTsRuntimeObject,
     StringLiteralTsRuntimeObject, StringTsRuntimeObject, SymbolTsRuntimeObject
 } from "../../index";
 import {Stack} from "./Stack";
@@ -25,5 +25,8 @@ export type PrimitiveTSRObj = (
 
 export type TSRObjValidator<T extends ConcreteTsRuntimeObject = ConcreteTsRuntimeObject> = (
     tsRuntimeObject: T,
-    data: any
+    data: any,
+    params?: {
+        customValidator?: TSRObjValidator<SpecialTsRuntimeObject & ConcreteTsRuntimeObject>
+    }
 ) => StackTrace;
