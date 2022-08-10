@@ -38,7 +38,7 @@ export function cli(params: {
     .option(
       "-w --watch",
       "Watch the files and re-generate them when they change"
-    )
+    );
 
   try {
     if (params.deps.args.startsOnActualArguments) {
