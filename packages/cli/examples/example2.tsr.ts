@@ -1,1 +1,1 @@
-export type Type2 = number
+export type Type2 = number;
