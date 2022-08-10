@@ -1,3 +1,1 @@
-export type A = {
-  a: number;
-};
+export type A = 4 | 5 | 6 | 7;
