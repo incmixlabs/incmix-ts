@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 import { Args, Failable, FileOutput, Id, Logger, transform } from "@ts-r/core";
+import chokidar from "chokidar";
 import { Command } from "commander";
 import fs from "fs";
 import path from "path";
 
 import { CommanderProgram } from "./CommanderProgram";
-import chokidar from "chokidar";
 
 export const program = new Command();
 
@@ -65,10 +65,15 @@ export function cli(params: {
   }
 
   const options = program.opts();
+  const isFolder = fs.lstatSync(fileName).isDirectory();
+
   if (options.watch) {
-    const watcher = chokidar.watch(`${fileName}/**/*.tsr.ts`, {
-      persistent: true,
-    });
+    const watcher = chokidar.watch(
+      isFolder ? `${fileName}/**/*.tsr.ts` : fileName,
+      {
+        persistent: true,
+      }
+    );
 
     watcher.on("all", (type, fileName) => {
       console.log(type, fileName);
