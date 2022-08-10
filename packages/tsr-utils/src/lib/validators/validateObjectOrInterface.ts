@@ -1,18 +1,27 @@
 import {TSRObjValidator} from "../helpers/types";
-import {ConcreteTsRuntimeObject, ObjectTsRuntimeObject, validateTsRuntimeObject} from "../../index";
+import {
+    ConcreteTsRuntimeObject,
+    InterfaceTsRuntimeObject,
+    ObjectTsRuntimeObject, TsRuntimeObject,
+    validateTsRuntimeObject
+} from "../../index";
 import {Stack} from "../helpers/Stack";
 import Valid = Stack.Valid;
 import invalidWithReason = Stack.invalidWithReason;
 import InvalidType = Stack.InvalidType;
 import invalidWithChildren = Stack.invalidWithChildren;
 
-export const validateObject: TSRObjValidator<ObjectTsRuntimeObject & ConcreteTsRuntimeObject> = (tsRuntimeObject, data) => {
+export const validateObjectOrInterface: TSRObjValidator<(ObjectTsRuntimeObject | InterfaceTsRuntimeObject) & ConcreteTsRuntimeObject> = (tsRuntimeObject, data) => {
     data = data as object;
-    const stackTracesOfChildren = Object.keys(tsRuntimeObject.properties).map(key => {
+    const childrenObj = tsRuntimeObject.type === "object" ?
+        (tsRuntimeObject as ObjectTsRuntimeObject & ConcreteTsRuntimeObject).properties:
+        (tsRuntimeObject as InterfaceTsRuntimeObject & ConcreteTsRuntimeObject).members;
+
+    const stackTracesOfChildren = Object.keys(childrenObj).map(key => {
         // Check if key exists on data
         if (Object.keys(data).includes(key)) {
             // Validate the value associated with that key with respect to the TSRObj schema
-            const stackTrace = validateTsRuntimeObject(tsRuntimeObject.properties[key] as ConcreteTsRuntimeObject, data[key]);
+            const stackTrace = validateTsRuntimeObject(childrenObj[key] as ConcreteTsRuntimeObject, data[key]);
             if (!stackTrace.valid) {
                 // Invalid properties need to have their key attached to the Invalid node
                 stackTrace.name = key;
@@ -22,10 +31,10 @@ export const validateObject: TSRObjValidator<ObjectTsRuntimeObject & ConcreteTsR
         } else {
             // Data doesn't have a property with this key - so,
             // return an invalid node; where expected type is the property's value
-            return invalidWithReason(tsRuntimeObject.properties[key].type, {
+            return invalidWithReason(childrenObj[key].type, {
                 receivedType: "undefined",
                 receivedValue: "undefined",
-                expectedValue: tsRuntimeObject.properties[key]
+                expectedValue: childrenObj[key]
             },{name: key});
         }
     }).filter(stackTrace => !!stackTrace) as InvalidType[];

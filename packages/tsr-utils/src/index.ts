@@ -2,7 +2,7 @@ import {TSRObjValidator} from "./lib/helpers/types";
 import {validateLiteral} from "./lib/validators/validateLiteral";
 import {validatePrimitive} from "./lib/validators/validatePrimitive";
 import {validateUniqueSymbol} from "./lib/validators/validateUniqueSymbol";
-import {validateObject} from "./lib/validators/validateObject";
+import {validateObjectOrInterface} from "./lib/validators/validateObjectOrInterface";
 import {validateArray} from "./lib/validators/validateArray";
 import {validateTuple} from "./lib/validators/validateTuple";
 
@@ -177,9 +177,10 @@ export const validateTsRuntimeObject: TSRObjValidator = (tsRuntimeObject, data) 
     "bigint": validatePrimitive,
     "symbol": validatePrimitive,
     "unique symbol": validateUniqueSymbol,
-    "object": validateObject,
+    "object": validateObjectOrInterface,
     "array": validateArray,
     "tuple": validateTuple,
+    "interface": validateObjectOrInterface,
   };
 
   if (validator[tsRuntimeObject.type])

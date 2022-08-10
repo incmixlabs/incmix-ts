@@ -3,7 +3,7 @@ import {
     BooleanLiteralTsRuntimeObject, BooleanTsRuntimeObject,
     ConcreteTsRuntimeObject,
     NumberLiteralTsRuntimeObject, NumberTsRuntimeObject,
-    StringLiteralTsRuntimeObject, StringTsRuntimeObject, SymbolTsRuntimeObject, TsRuntimeObject
+    StringLiteralTsRuntimeObject, StringTsRuntimeObject, SymbolTsRuntimeObject
 } from "../../index";
 import {Stack} from "./Stack";
 import StackTrace = Stack.StackTrace;

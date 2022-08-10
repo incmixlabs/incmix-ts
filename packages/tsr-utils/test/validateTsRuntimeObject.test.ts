@@ -347,39 +347,17 @@ describe(validateTsRuntimeObject, () => {
     });
 
     it('Validate data of type interface', () => {
-        interface Human {
-            name: string;
-            age: number;
-            isAdult: boolean;
+        const Person = {
+            age: 5,
+            isAdult: false,
+            name: "jerry"
         }
 
-        class Person implements Human {
-            age: number;
-            isAdult: boolean;
-            name: string;
-
-            constructor(age: number, isAdult: boolean, name: string) {
-                this.age = age;
-                this.isAdult = isAdult;
-                this.name = name;
-            }
+        const Dog = {
+            age: 5,
+            name: "Henry VIII",
         }
 
-        class Dog {
-            age: number;
-            name: string;
-
-            constructor(age: number, name: string) {
-                this.age = age;
-                this.name = name;
-            }
-        }
-
-        const john = {
-            name: "john",
-            age: 45,
-            isAdult: true
-        }
         const TSRObj: ConcreteTSR<InterfaceTsRuntimeObject> = {
             ...GlobalTSRObj,
             type: "interface",
@@ -400,7 +378,6 @@ describe(validateTsRuntimeObject, () => {
         };
 
         expect(validateTsRuntimeObject(TSRObj, Person)).toBe(Valid);
-        expect(validateTsRuntimeObject(TSRObj, john)).toBe(Valid);
         expect(validateTsRuntimeObject(TSRObj, Dog).valid).toBeFalsy();
     });
 
