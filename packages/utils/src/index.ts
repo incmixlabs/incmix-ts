@@ -1,4 +1,13 @@
-import { Identifier } from "typescript";
+import { TSRObjValidator } from "./lib/helpers/types";
+import { validateArray } from "./lib/validators/validateArray";
+import { validateEnum } from "./lib/validators/validateEnum";
+import { validateLiteral } from "./lib/validators/validateLiteral";
+import { validateObjectOrInterface } from "./lib/validators/validateObjectOrInterface";
+import { validatePrimitive } from "./lib/validators/validatePrimitive";
+import { validatePropertySignature } from "./lib/validators/validatePropertySignature";
+import { validateTuple } from "./lib/validators/validateTuple";
+import { validateUnion } from "./lib/validators/validateUnion";
+import { validateUniqueSymbol } from "./lib/validators/validateUniqueSymbol";
 
 export type TsRuntimeObjectGeneric = {
   readonly name: string;
@@ -115,7 +124,7 @@ export type GenericTsRuntimeObjectValue = {
 
 export type EnumTsRuntimeObject = {
   readonly type: "enum";
-  readonly enum: Identifier;
+  readonly enum: object;
 } & GlobalTsRuntimeObjectKeys;
 
 export type SpecialTsRuntimeObject = {
@@ -164,13 +173,47 @@ export type ConcreteTsRuntimeObject = TsRuntimeObject & {
   generics: undefined;
 };
 
-export const validateTsRuntimeObject = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  tsRuntimeObject: ConcreteTsRuntimeObject,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  data: any
-): boolean => {
-  return false;
+export const validateTsRuntimeObject: TSRObjValidator = (
+  tsRuntimeObject,
+  data,
+  params
+) => {
+  const validator: Partial<
+    Record<TsRuntimeObject["type"], TSRObjValidator<any>>
+  > = {
+    literal: validateLiteral,
+    number: validatePrimitive,
+    string: validatePrimitive,
+    boolean: validatePrimitive,
+    bigint: validatePrimitive,
+    symbol: validatePrimitive,
+    "unique symbol": validateUniqueSymbol,
+    object: validateObjectOrInterface,
+    array: validateArray,
+    tuple: validateTuple,
+    interface: validateObjectOrInterface,
+    enum: validateEnum,
+    union: validateUnion,
+    propertySignature: validatePropertySignature,
+  };
+
+  if (validator[tsRuntimeObject.type])
+    return validator[tsRuntimeObject.type]!(tsRuntimeObject, data);
+  else if (
+    tsRuntimeObject.type.startsWith("$") &&
+    typeof tsRuntimeObject.type.slice(1) === "string"
+  ) {
+    if (!params || !params.customValidator)
+      throw new Error("Special TSR objects require a custom validator");
+    else
+      return params.customValidator(
+        tsRuntimeObject as SpecialTsRuntimeObject & ConcreteTsRuntimeObject,
+        data
+      );
+  } else
+    throw new Error(
+      `Validation for ${tsRuntimeObject.type} isn't supported yet!`
+    );
 };
 
 export const validateExtendsTsRuntimeObject = (
