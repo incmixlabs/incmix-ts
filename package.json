@@ -18,6 +18,7 @@
     "commit": "git-cz",
     "format": "prettier . --write --ignore-path .gitignore && git update-index --again",
     "lint": "eslint . --ext .ts,.tsx --ignore-path .gitignore --max-warnings=0",
+    "lint-fix": "eslint . --ext .ts,.tsx --fix --ignore-path .gitignore --max-warnings=0",
     "prepare": "husky install",
     "release": "turbo run build && changeset publish",
     "test": "jest",
