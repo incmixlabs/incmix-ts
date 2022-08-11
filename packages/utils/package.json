@@ -1,0 +1,14 @@
+{
+  "name": "@ts-r/utils",
+  "description": "Utils for Typescript Runtime",
+  "types": "./dist/index.d.ts",
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "version": "0.0.2",
+  "scripts": {
+    "build": "rm ./dist -rf & tsc"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
