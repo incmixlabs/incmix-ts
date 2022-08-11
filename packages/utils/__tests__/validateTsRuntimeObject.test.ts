@@ -36,11 +36,11 @@ const invalidTest = (TSRObj: ConcreteTsRuntimeObject, data: any, expectedValue?:
 
     expect(receivedObj.valid).toBe(expectedObj.valid);
     if (!(receivedObj.valid)) {
-        expect(receivedObj.expectedType).toBe(expectedObj.expectedType);
+        expect((receivedObj as InvalidType).expectedType).toBe(expectedObj.expectedType);
 
-        expect((withReason(receivedObj)).reason.receivedType).toBe(withReason(expectedObj).reason.receivedType);
-        expect((withReason(receivedObj)).reason.receivedValue).toBe(withReason(expectedObj).reason.receivedValue);
-        expect((withReason(receivedObj)).reason.expectedValue).toBe(withReason(expectedObj).reason.expectedValue);
+        expect((withReason((receivedObj as InvalidType))).reason.receivedType).toBe(withReason(expectedObj).reason.receivedType);
+        expect((withReason((receivedObj as InvalidType))).reason.receivedValue).toBe(withReason(expectedObj).reason.receivedValue);
+        expect((withReason((receivedObj as InvalidType))).reason.expectedValue).toBe(withReason(expectedObj).reason.expectedValue);
     }
 }
 
@@ -461,4 +461,8 @@ describe(validateTsRuntimeObject, () => {
         expect(validateTsRuntimeObject(TSRObj, a, {customValidator}).valid).toBeTruthy();
         expect(validateTsRuntimeObject(TSRObj, b, {customValidator}).valid).toBeFalsy();
     });
+
+    test.todo("Augment \"object\" tests so that they validate the correctness of invalid" +
+        "stack traces produced by validateTSRObject - instead of solely validating invalid" +
+        "stack traces (which is what is currently done)");
 });
