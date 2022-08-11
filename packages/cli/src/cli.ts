@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
 import { Args, Failable, FileOutput, Id, Logger, transform } from "@ts-r/core";
+import chokidar from "chokidar";
 import { Command } from "commander";
+import fs from "fs";
+import path from "path";
 
 import { CommanderProgram } from "./CommanderProgram";
 
@@ -25,10 +28,6 @@ export function cli(params: {
     .description('CLI to generate ".ts.runtime" files from ".ts" files.')
     .version("0.0.0")
     .argument("<input-file>", "The path to the file to read")
-    .option(
-      "-p --prepend",
-      "Prepend all statements (excluding imports) from .tsr into output file"
-    )
     .configureOutput({
       writeOut(str) {
         params.deps.logger.log(str);
@@ -36,7 +35,11 @@ export function cli(params: {
       writeErr(str) {
         params.deps.logger.error(str);
       },
-    });
+    })
+    .option(
+      "-w --watch",
+      "Watch the files and re-generate them when they change"
+    );
 
   try {
     if (params.deps.args.startsOnActualArguments) {
@@ -55,14 +58,72 @@ export function cli(params: {
     return;
   }
   const fileName = program.args[0];
+
+  if (!fs.existsSync(fileName)) {
+    // TODO:
+    return;
+  }
+
   const options = program.opts();
-  const outputFileName = fileName.replace(/\.tsr\.ts$/, ".tsr.o.ts");
-  const prependTsCode = options.prepend;
+  const isFolder = fs.lstatSync(fileName).isDirectory();
+
+  if (options.watch) {
+    const watcher = chokidar.watch(
+      isFolder ? `${fileName}/**/*.tsr.ts` : fileName,
+      {
+        persistent: true,
+      }
+    );
+
+    watcher.on("all", (type, fileName) => {
+      console.log(type, fileName);
+
+      if (type === "add" || type === "addDir" || type === "change") {
+        handleFile({
+          deps: params.deps,
+          fileName,
+        });
+        return;
+      }
+    });
+  } else {
+    handleFile({
+      deps: params.deps,
+      fileName,
+    });
+  }
+}
+
+const handleFile = (params: {
+  fileName: string;
+  deps: {
+    fileOutput: FileOutput;
+    args: Args;
+    logger: Logger;
+    commanderProgram: CommanderProgram;
+    id: Id;
+  };
+}) => {
+  const isFolder = fs.lstatSync(params.fileName).isDirectory();
+
+  if (isFolder) {
+    const children = fs.readdirSync(params.fileName);
+    for (const child of children) {
+      handleFile({
+        fileName: path.join(params.fileName, child),
+        deps: params.deps,
+      });
+    }
+    return;
+  }
+
+  if (!params.fileName.endsWith(".tsr.ts")) return;
+  const outputFileName = params.fileName.replace(/\.tsr\.ts$/, ".tsr.o.ts");
   const codeTransform = transform(
     {
-      filename: fileName,
+      filename: params.fileName,
       outputFilename: outputFileName,
-      prependTsCode: !!prependTsCode,
+      prependTsCode: false,
     },
     {
       id: params.deps.id,
@@ -80,4 +141,4 @@ export function cli(params: {
     params.deps.logger.error(`${err.msg}`);
     return err;
   });
-}
+};
