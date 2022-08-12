@@ -62,6 +62,6 @@
     "inquirer": "8.0.0"
   },
   "lint-staged": {
-    "*.ts": "eslint --ext .ts --ignore-path .gitignore --max-warnings=0"
+    "*.ts": "eslint --ext .ts --ignore-path .gitignore --max-warnings=0 --fix"
   }
 }

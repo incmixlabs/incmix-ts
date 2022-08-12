@@ -8,6 +8,8 @@ import path from "path";
 
 import { CommanderProgram } from "./CommanderProgram";
 
+// Comment
+
 export const program = new Command();
 
 export function cli(params: {
