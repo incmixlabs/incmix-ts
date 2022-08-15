@@ -249,14 +249,15 @@ const runTests = () => {
   genericTypeChecker({
     name: "JSDoc prepend",
     input: `\n/**\n * Comment\n */\nexport type T = 1;`,
-    output: "/**\n" +
-        " * Comment */\n" +
-        "export const T_$TSR = {\n" +
-        `    id: \"${TEST_ID_GENERATED}\",\n` +
-        "    type: \"literal\",\n" +
-        "    typeLiteral: \"number\",\n" +
-        "    value: 1\n" +
-        "};",
+    output:
+      "/**\n" +
+      " * Comment */\n" +
+      "export const T_$TSR = {\n" +
+      `    id: "${TEST_ID_GENERATED}",\n` +
+      '    type: "literal",\n' +
+      '    typeLiteral: "number",\n' +
+      "    value: 1\n" +
+      "};",
     prependTsCode: false,
   });
 };
