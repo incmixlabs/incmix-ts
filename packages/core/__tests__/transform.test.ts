@@ -74,8 +74,6 @@ const basicTypeRefLiteralCheck = (name: string, literal: string) => {
   });
 };
 
-// TODO: REMOVE ME - Handy regex for replacing generated ids ([a-f0-9]){8}-(([a-f0-9]){4}-){3}([a-f0-9]){12}
-
 const runTests = () => {
   /*** Visitor Tests ***/
   basicTypeCheck("string");
@@ -245,6 +243,20 @@ const runTests = () => {
     name: "Type Reference - typeof",
     input: `let A: string;\nexport type T = typeof A;`,
     output: `export const T_$TSR = { id: "${TEST_ID_GENERATED}", type: "string" };`,
+    prependTsCode: false,
+  });
+
+  genericTypeChecker({
+    name: "JSDoc prepend",
+    input: `\n/**\n * Comment\n */\nexport type T = 1;`,
+    output: "/**\n" +
+        " * Comment */\n" +
+        "export const T_$TSR = {\n" +
+        `    id: \"${TEST_ID_GENERATED}\",\n` +
+        "    type: \"literal\",\n" +
+        "    typeLiteral: \"number\",\n" +
+        "    value: 1\n" +
+        "};",
     prependTsCode: false,
   });
 };
