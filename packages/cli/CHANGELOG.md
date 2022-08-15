@@ -1,5 +1,17 @@
 # @ts-r/cli
 
+## 0.0.4
+
+### Patch Changes
+
+- b7e3e13: Change Bin
+
+## 0.0.3
+
+### Patch Changes
+
+- 86fc0fa: Add support for an entire folder
+
 ## 0.0.2
 
 ### Patch Changes

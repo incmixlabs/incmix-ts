@@ -4,11 +4,17 @@
   "types": "./dist/index.d.ts",
   "type": "commonjs",
   "main": "./dist/index.js",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "scripts": {
-    "build": "rm ./dist -rf & tsc"
+    "build": "rm ./dist -rf & tsc",
+    "test": "jest"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/jest": "27.4.1",
+    "jest": "27.5.1",
+    "ts-jest": "27.1.4"
   }
 }
