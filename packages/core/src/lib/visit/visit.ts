@@ -1,5 +1,6 @@
 import ts from "typescript";
 
+import { getSourceFile } from "../helpers/getSourceFile";
 import { Visiter } from "../helpers/types";
 import { visitAnyKeyword } from "./visitAnyKeyword";
 import { visitArrayType } from "./visitArrayType";
@@ -82,11 +83,6 @@ export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {
 
     // Append the JSDoc comments from the input node onto the output node
     if (Object.keys(node).includes("jsDoc")) {
-      const getSrcFile: (node: ts.Node) => ts.SourceFile = (node) => {
-        if (ts.isSourceFile(node)) return node;
-        else return getSrcFile(node.parent);
-      };
-
       // Append each JS document comment that precedes this input node onto the output node
       const jsDocList = (node as ts.Node & { jsDoc: ts.NodeArray<ts.JSDoc> })
         .jsDoc;
@@ -94,7 +90,7 @@ export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {
         const printer = ts.createPrinter();
         // Get the text of the JSDoc
         const output = printer
-          .printNode(ts.EmitHint.Unspecified, doc, getSrcFile(node))
+          .printNode(ts.EmitHint.Unspecified, doc, getSourceFile(node))
           .trim()
           .replace(/^\/\*|\*\/$/g, "");
         // Prepend that text of that JSDoc to the output node
