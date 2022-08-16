@@ -16,19 +16,25 @@ export const visitEnumDeclaration: Visiter<ts.EnumDeclaration> = ({
           ts.factory.createIdentifier(`${name.text}_$TSR`),
           undefined,
           undefined,
-          ts.factory.createObjectLiteralExpression(
-            [
-              ...(metadata ?? []),
-              ts.factory.createPropertyAssignment(
-                ts.factory.createIdentifier("type"),
-                ts.factory.createStringLiteral("enum")
-              ),
-              ts.factory.createPropertyAssignment(
-                ts.factory.createIdentifier("enum"),
-                ts.factory.createIdentifier(name.text)
-              ),
-            ],
-            true
+          ts.factory.createAsExpression(
+            ts.factory.createObjectLiteralExpression(
+              [
+                ...(metadata ?? []),
+                ts.factory.createPropertyAssignment(
+                  ts.factory.createIdentifier("type"),
+                  ts.factory.createStringLiteral("enum")
+                ),
+                ts.factory.createPropertyAssignment(
+                  ts.factory.createIdentifier("enum"),
+                  ts.factory.createIdentifier(name.text)
+                ),
+              ],
+              true
+            ),
+            ts.factory.createTypeReferenceNode(
+              ts.factory.createIdentifier("const"),
+              undefined
+            )
           )
         ),
       ],
