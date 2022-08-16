@@ -144,6 +144,14 @@ export type PropertySignatureTsRuntimeObject = {
   readonly tsRuntimeObject: TsRuntimeObject;
 } & GlobalTsRuntimeObjectKeys;
 
+export type UndefinedTsRuntimeObject = {
+  readonly type: "undefined";
+} & GlobalTsRuntimeObjectKeys;
+
+export type NullTsRuntimeObject = {
+  readonly type: "null";
+} & GlobalTsRuntimeObjectKeys;
+
 export type TsRuntimeObject =
   | FunctionTsRuntimeObject
   | ObjectTsRuntimeObject
@@ -164,7 +172,9 @@ export type TsRuntimeObject =
   | InterfaceTsRuntimeObject
   | SpecialTsRuntimeObject
   | UnionTsRuntimeObject
-  | PropertySignatureTsRuntimeObject;
+  | PropertySignatureTsRuntimeObject
+  | UndefinedTsRuntimeObject
+  | NullTsRuntimeObject;
 
 export type GenericTsRuntimeObject = TsRuntimeObject & {
   generics: TsRuntimeObjectGeneric[];
