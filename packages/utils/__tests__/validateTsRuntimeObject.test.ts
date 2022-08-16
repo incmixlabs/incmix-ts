@@ -79,6 +79,8 @@ describe(validateTsRuntimeObject, () => {
     };
     expect(validateTsRuntimeObject(TSRObj, 1)).toBe(Valid);
     invalidTest(TSRObj, "");
+    invalidTest(TSRObj, undefined);
+    invalidTest(TSRObj, null);
   });
 
   it("Validate data of type string", () => {
@@ -89,6 +91,8 @@ describe(validateTsRuntimeObject, () => {
 
     expect(validateTsRuntimeObject(TSRObj, "text")).toBe(Valid);
     invalidTest(TSRObj, 1);
+    invalidTest(TSRObj, undefined);
+    invalidTest(TSRObj, null);
   });
 
   it("Validate data of type boolean", () => {
@@ -100,6 +104,8 @@ describe(validateTsRuntimeObject, () => {
     expect(validateTsRuntimeObject(TSRObj, true)).toBe(Valid);
     expect(validateTsRuntimeObject(TSRObj, false)).toBe(Valid);
     invalidTest(TSRObj, "");
+    invalidTest(TSRObj, undefined);
+    invalidTest(TSRObj, null);
   });
 
   it("Validate data of type bigint", () => {
@@ -110,6 +116,8 @@ describe(validateTsRuntimeObject, () => {
 
     expect(validateTsRuntimeObject(TSRObj, BigInt(1))).toBe(Valid);
     invalidTest(TSRObj, "");
+    invalidTest(TSRObj, undefined);
+    invalidTest(TSRObj, null);
   });
 
   it("Validate data of type symbol", () => {
@@ -120,6 +128,8 @@ describe(validateTsRuntimeObject, () => {
 
     expect(validateTsRuntimeObject(TSRObj, Symbol(1))).toBe(Valid);
     invalidTest(TSRObj, "");
+    invalidTest(TSRObj, undefined);
+    invalidTest(TSRObj, null);
   });
 
   it("Validate data of type unique symbol", () => {
@@ -133,6 +143,8 @@ describe(validateTsRuntimeObject, () => {
 
     expect(validateTsRuntimeObject(TSRObj, sym)).toBe(Valid);
     invalidTest(TSRObj, sym1, sym);
+    invalidTest(TSRObj, undefined, sym);
+    invalidTest(TSRObj, null, sym);
   });
 
   /*** Primitive literal tests ***/
@@ -146,6 +158,9 @@ describe(validateTsRuntimeObject, () => {
 
     expect(validateTsRuntimeObject(TSRObj, 5)).toBe(Valid);
     invalidTest(TSRObj, 1, 5);
+
+    invalidTest(TSRObj, undefined, 5);
+    invalidTest(TSRObj, null, 5);
   });
 
   it("Validate data of type string literal", () => {
@@ -158,6 +173,9 @@ describe(validateTsRuntimeObject, () => {
 
     expect(validateTsRuntimeObject(TSRObj, "text")).toBe(Valid);
     invalidTest(TSRObj, "other text", "text");
+
+    invalidTest(TSRObj, undefined, "text");
+    invalidTest(TSRObj, null, "text");
   });
 
   it("Validate data of type boolean literal", () => {
@@ -170,6 +188,9 @@ describe(validateTsRuntimeObject, () => {
 
     expect(validateTsRuntimeObject(TSRObj, true)).toBe(Valid);
     invalidTest(TSRObj, false, true);
+
+    invalidTest(TSRObj, undefined, true);
+    invalidTest(TSRObj, null, true);
   });
 
   it("Validate data of type bigint literal", () => {
@@ -182,6 +203,9 @@ describe(validateTsRuntimeObject, () => {
 
     expect(validateTsRuntimeObject(TSRObj, BigInt(5))).toBe(Valid);
     invalidTest(TSRObj, BigInt(1), BigInt(5));
+
+    invalidTest(TSRObj, undefined, BigInt(5));
+    invalidTest(TSRObj, null, BigInt(5));
   });
 
   /*** List tests ***/
@@ -199,6 +223,9 @@ describe(validateTsRuntimeObject, () => {
     expect(validateTsRuntimeObject(TSRObj, ["text", "text"])).toBe(Valid);
     expect(validateTsRuntimeObject(TSRObj, [])).toBe(Valid);
     expect(validateTsRuntimeObject(TSRObj, ["text", 5]).valid).toBeFalsy();
+
+    expect(validateTsRuntimeObject(TSRObj, undefined).valid).toBeFalsy();
+    expect(validateTsRuntimeObject(TSRObj, null).valid).toBeFalsy();
   });
 
   it("Validate data of type tuple - spread true: array", () => {
@@ -252,6 +279,9 @@ describe(validateTsRuntimeObject, () => {
         .valid
     ).toBeFalsy();
     expect(validateTsRuntimeObject(TSRObj, [["name"]]).valid).toBeFalsy();
+
+    expect(validateTsRuntimeObject(TSRObj, undefined).valid).toBeFalsy();
+    expect(validateTsRuntimeObject(TSRObj, null).valid).toBeFalsy();
   });
 
   it("Validate data of type tuple - spread true: tuple", () => {
@@ -314,6 +344,9 @@ describe(validateTsRuntimeObject, () => {
       validateTsRuntimeObject(TSRObj, [["name", true], [""]]).valid
     ).toBeFalsy();
     expect(validateTsRuntimeObject(TSRObj, "").valid).toBeFalsy();
+
+    expect(validateTsRuntimeObject(TSRObj, undefined).valid).toBeFalsy();
+    expect(validateTsRuntimeObject(TSRObj, null).valid).toBeFalsy();
   });
 
   it("Validate data of type tuple - spread false", () => {
@@ -350,6 +383,9 @@ describe(validateTsRuntimeObject, () => {
       ])
     ).toBe(Valid);
     expect(validateTsRuntimeObject(TSRObj, ["name", 2]).valid).toBeFalsy();
+
+    expect(validateTsRuntimeObject(TSRObj, undefined).valid).toBeFalsy();
+    expect(validateTsRuntimeObject(TSRObj, null).valid).toBeFalsy();
   });
 
   /*** Object tests ***/
@@ -394,6 +430,9 @@ describe(validateTsRuntimeObject, () => {
     ).toBeFalsy();
     expect(validateTsRuntimeObject(TSRObj, {}).valid).toBeFalsy();
     expect(validateTsRuntimeObject(TSRObj, "").valid).toBeFalsy();
+
+    expect(validateTsRuntimeObject(TSRObj, undefined).valid).toBeFalsy();
+    expect(validateTsRuntimeObject(TSRObj, null).valid).toBeFalsy();
   });
 
   it("Validate data of type enum", () => {
@@ -410,6 +449,9 @@ describe(validateTsRuntimeObject, () => {
     // todo: determine how enums are stored on the front-end for validation
     expect(validateTsRuntimeObject(TSRObj, "A")).toBe(Valid);
     expect(validateTsRuntimeObject(TSRObj, "B").valid).toBeFalsy();
+
+    expect(validateTsRuntimeObject(TSRObj, undefined).valid).toBeFalsy();
+    expect(validateTsRuntimeObject(TSRObj, null).valid).toBeFalsy();
   });
 
   it("Validate data of type interface", () => {
@@ -445,6 +487,9 @@ describe(validateTsRuntimeObject, () => {
 
     expect(validateTsRuntimeObject(TSRObj, Person)).toBe(Valid);
     expect(validateTsRuntimeObject(TSRObj, Dog).valid).toBeFalsy();
+
+    expect(validateTsRuntimeObject(TSRObj, undefined).valid).toBeFalsy();
+    expect(validateTsRuntimeObject(TSRObj, null).valid).toBeFalsy();
   });
 
   it("Validate data of type union", () => {
@@ -471,6 +516,13 @@ describe(validateTsRuntimeObject, () => {
     );
     expect(
       validateTsRuntimeObject(TSRObj(["boolean", "number"]), "text").valid
+    ).toBeFalsy();
+
+    expect(
+      validateTsRuntimeObject(TSRObj(["boolean"]), undefined).valid
+    ).toBeFalsy();
+    expect(
+      validateTsRuntimeObject(TSRObj(["boolean"]), null).valid
     ).toBeFalsy();
   });
 
@@ -501,6 +553,9 @@ describe(validateTsRuntimeObject, () => {
     );
     expect(
       validateTsRuntimeObject(TSRObj("string", false), undefined).valid
+    ).toBeFalsy();
+    expect(
+      validateTsRuntimeObject(TSRObj("string", false), null).valid
     ).toBeFalsy();
     expect(
       validateTsRuntimeObject(TSRObj("string", false), 1).valid
@@ -553,6 +608,13 @@ describe(validateTsRuntimeObject, () => {
     ).toBeTruthy();
     expect(
       validateTsRuntimeObject(TSRObj, b, { customValidator }).valid
+    ).toBeFalsy();
+
+    expect(
+      validateTsRuntimeObject(TSRObj, undefined, { customValidator }).valid
+    ).toBeFalsy();
+    expect(
+      validateTsRuntimeObject(TSRObj, null, { customValidator }).valid
     ).toBeFalsy();
   });
 

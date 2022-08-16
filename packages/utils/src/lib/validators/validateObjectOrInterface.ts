@@ -14,6 +14,14 @@ import invalidWithChildren = Stack.invalidWithChildren;
 export const validateObjectOrInterface: TSRObjValidator<
   (ObjectTsRuntimeObject | InterfaceTsRuntimeObject) & ConcreteTsRuntimeObject
 > = (tsRuntimeObject, data) => {
+  // Ensure that the data is neither null nor undefined
+  if (data === undefined || data === null) {
+    return invalidWithReason(tsRuntimeObject.type, {
+      receivedType: typeof data,
+      receivedValue: data,
+    });
+  }
+
   data = data as object;
   const childrenObj =
     tsRuntimeObject.type === "object"
