@@ -1,5 +1,6 @@
 import ts from "typescript";
 
+import { getSourceFile } from "../helpers/getSourceFile";
 import { Visiter } from "../helpers/types";
 import { visitAnyKeyword } from "./visitAnyKeyword";
 import { visitArrayType } from "./visitArrayType";
@@ -68,7 +69,7 @@ const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
 
 export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {
   if (visitMap[node.kind]) {
-    return visitMap[node.kind]!({
+    const resultNode = visitMap[node.kind]!({
       node: node,
       metadata: [
         ...(metadata ?? []),
@@ -79,6 +80,30 @@ export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {
       ],
       deps: deps,
     });
+
+    // Append the JSDoc comments from the input node onto the output node
+    if (Object.keys(node).includes("jsDoc")) {
+      // Append each JS document comment that precedes this input node onto the output node
+      const jsDocList = (node as ts.Node & { jsDoc: ts.NodeArray<ts.JSDoc> })
+        .jsDoc;
+      jsDocList.forEach((doc) => {
+        const printer = ts.createPrinter();
+        // Get the text of the JSDoc
+        const output = printer
+          .printNode(ts.EmitHint.Unspecified, doc, getSourceFile(node))
+          .trim()
+          .replace(/^\/\*|\*\/$/g, "");
+        // Prepend that text of that JSDoc to the output node
+        ts.addSyntheticLeadingComment(
+          resultNode,
+          ts.SyntaxKind.MultiLineCommentTrivia,
+          output,
+          true
+        );
+      });
+    }
+
+    return resultNode;
   }
 
   if (node.kind === ts.SyntaxKind.LiteralType) {
