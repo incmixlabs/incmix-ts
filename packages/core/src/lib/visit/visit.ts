@@ -12,6 +12,7 @@ import { visitFunctionType } from "./visitFunctionType";
 import { visitImportDeclaration } from "./visitImportDeclaration";
 import { visitInterfaceDeclaration } from "./visitInterfaceDeclaration";
 import { visitIntersectionType } from "./visitIntersectionType";
+import { visitLiteralType } from "./visitLiteralType";
 import { visitNullKeyword } from "./visitNullKeyword";
 import { visitNumberKeyword } from "./visitNumberKeyword";
 import { visitNumericLiteral } from "./visitNumericLiteral";
@@ -66,6 +67,7 @@ export const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.SymbolKeyword]: visitSymbolKeyword,
   [ts.SyntaxKind.TypeOperator]: visitTypeOperator,
   [ts.SyntaxKind.ClassDeclaration]: visitClassDeclaration,
+  [ts.SyntaxKind.LiteralType]: visitLiteralType,
 };
 
 export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {
@@ -79,14 +81,6 @@ export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {
           ts.factory.createStringLiteral(deps.id.generateId())
         ),
       ],
-      deps: deps,
-    });
-  }
-
-  if (node.kind === ts.SyntaxKind.LiteralType) {
-    visit({
-      node: (node as ts.LiteralTypeNode).literal,
-      metadata: metadata,
       deps: deps,
     });
   }
