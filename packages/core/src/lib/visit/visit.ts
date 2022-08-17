@@ -5,6 +5,7 @@ import { visitAnyKeyword } from "./visitAnyKeyword";
 import { visitArrayType } from "./visitArrayType";
 import { visitBooleanKeyword } from "./visitBooleanKeyword";
 import { visitBooleanLiteral } from "./visitBooleanLiteral";
+import { visitClassDeclaration } from "./visitClassDeclaration";
 import { visitEmptyStatement } from "./visitEmptyStatement";
 import { visitEnumDeclaration } from "./visitEnumDeclaration";
 import { visitFunctionType } from "./visitFunctionType";
@@ -32,7 +33,7 @@ import { visitUnionType } from "./visitUnionType";
 import { visitUnknownKeyword } from "./visitUnknownKeyword";
 import { visitVoidKeyword } from "./visitVoidKeyword";
 
-const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
+export const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.TypeAliasDeclaration]: visitTypeAliasDeclaration,
   [ts.SyntaxKind.NumericLiteral]: visitNumericLiteral,
   [ts.SyntaxKind.StringLiteral]: visitStringLiteral,
@@ -64,6 +65,7 @@ const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.ImportDeclaration]: visitImportDeclaration,
   [ts.SyntaxKind.SymbolKeyword]: visitSymbolKeyword,
   [ts.SyntaxKind.TypeOperator]: visitTypeOperator,
+  [ts.SyntaxKind.ClassDeclaration]: visitClassDeclaration,
 };
 
 export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {

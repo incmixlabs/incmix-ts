@@ -247,6 +247,110 @@ const runTests = () => {
     output: `export const T_$TSR = { id: "${TEST_ID_GENERATED}", type: "string" };`,
     prependTsCode: false,
   });
+
+  /*** Exclusion tests */
+  genericTypeChecker({
+    name: "exclusion - if statement",
+    input: "if (true) {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - try-catch statement",
+    input: "try {} catch (e) { }",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - throw statement",
+    input: "throw {};",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - switch statement",
+    input: "switch (0) {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - var statement",
+    input: "var a;",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - let statement",
+    input: "let a;",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - const statement",
+    input: "const a = 0;",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - function",
+    input: "function f() {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "inclusion - class",
+    input: "class C {}",
+    output: "class C {}",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - while",
+    input: "while (true) {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - do-while",
+    input: "do {} while (true);",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - for",
+    input: "for (;;) {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - for-of",
+    input: "for (let a of []) {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - for-in",
+    input: "for (let a in []) {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - block",
+    input: "{}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - debugger",
+    input: "debugger;",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - with",
+    input: "with ({}) {}",
+    output: "",
+    prependTsCode: false,
+  });
 };
 
 describe(transform, () => {
