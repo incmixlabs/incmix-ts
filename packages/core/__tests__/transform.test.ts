@@ -20,7 +20,7 @@ const basicTypeCheck = (name: string) => {
   genericTypeChecker({
     name: name,
     input: `export type Type = ${name};`,
-    output: `export const Type_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`,
+    output: `export const Type_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" } as const;`,
     prependTsCode: false,
   });
 };
@@ -60,7 +60,7 @@ const basicTypeRefCheck = (name: string) => {
   genericTypeChecker({
     name: `Type Reference Primitive - ${name}`,
     input: `type A = ${name};\nexport type B = A`,
-    output: `export const B_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" };`,
+    output: `export const B_$TSR = { id: "${TEST_ID_GENERATED}", type: "${name}" } as const;`,
     prependTsCode: false,
   });
 };
@@ -69,7 +69,7 @@ const basicTypeRefLiteralCheck = (name: string, literal: string) => {
   genericTypeChecker({
     name: `Type Reference Primitive Literal - ${name} ${literal}`,
     input: `type A = ${literal};\nexport type B = A`,
-    output: `export const B_$TSR = { id: "${TEST_ID_GENERATED}", type: "literal", typeLiteral: "${name}", value: ${literal} };`,
+    output: `export const B_$TSR = { id: "${TEST_ID_GENERATED}", type: "literal", typeLiteral: "${name}", value: ${literal} } as const;`,
     prependTsCode: false,
   });
 };
@@ -96,7 +96,7 @@ const runTests = () => {
   genericTypeChecker({
     name: "enum",
     input: `export enum Enum {A, B = 2}`,
-    output: `export const Enum_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "enum",\n enum: Enum, };`,
+    output: `export const Enum_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "enum",\n enum: Enum, } as const;`,
     prependTsCode: false,
   });
 
@@ -110,7 +110,7 @@ const runTests = () => {
       '    type: "literal",\n' +
       '    typeLiteral: "number",\n' +
       "    value: 1\n" +
-      "}",
+      "} as const;",
     prependTsCode: true,
   });
   genericTypeChecker({
@@ -122,7 +122,7 @@ const runTests = () => {
       '        type: "literal",\n' +
       '        typeLiteral: "number",\n' +
       "        value: 1\n" +
-      "    }",
+      "    } as const;",
     prependTsCode: false,
   });
   genericTypeChecker({
@@ -143,7 +143,7 @@ const runTests = () => {
       "            }\n" +
       "        }\n" +
       "    }\n" +
-      "};\n",
+      "} as const;\n",
     prependTsCode: false,
   });
   genericTypeChecker({
@@ -172,7 +172,7 @@ const runTests = () => {
       "            }\n" +
       "        }\n" +
       "    }\n" +
-      "};",
+      "} as const;",
     prependTsCode: false,
   });
   genericTypeChecker({
@@ -195,7 +195,7 @@ const runTests = () => {
       "            }\n" +
       "        }\n" +
       "    }\n" +
-      "};",
+      "} as const;",
     prependTsCode: false,
   });
 
@@ -215,7 +215,7 @@ const runTests = () => {
       `export const T_$TSR = {\n id: "${TEST_ID_GENERATED}",\n` +
       ' type: "union",\n members: [\n' +
       ` { id: "${TEST_ID_GENERATED}", type: "string" },\n` +
-      ` { id: "${TEST_ID_GENERATED}", type: "number" },\n],\n}`,
+      ` { id: "${TEST_ID_GENERATED}", type: "number" },\n],\n} as const;`,
     prependTsCode: false,
   });
   genericTypeChecker({
@@ -237,7 +237,7 @@ const runTests = () => {
       "            }\n" +
       "        }\n" +
       "    }\n" +
-      "};",
+      "} as const;",
     prependTsCode: false,
   });
   genericTypeChecker({
@@ -248,13 +248,13 @@ const runTests = () => {
       `    id: "${TEST_ID_GENERATED}",\n` +
       '    type: "object",\n' +
       "    properties: {}\n" +
-      "};",
+      "} as const;",
     prependTsCode: false,
   });
   genericTypeChecker({
     name: "Type Reference - typeof",
     input: `let A: string;\nexport type T = typeof A;`,
-    output: `export const T_$TSR = { id: "${TEST_ID_GENERATED}", type: "string" };`,
+    output: `export const T_$TSR = { id: "${TEST_ID_GENERATED}", type: "string" } as const;`,
     prependTsCode: false,
   });
 

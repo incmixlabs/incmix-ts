@@ -17,26 +17,32 @@ export const visitTypeAliasDeclaration: Visiter<ts.TypeAliasDeclaration> = ({
           undefined,
           undefined,
 
-          visit({
-            node: node.type,
-            metadata: [
-              !!node.typeParameters?.length &&
-                ts.factory.createPropertyAssignment(
-                  "generics",
-                  ts.factory.createArrayLiteralExpression(
-                    node.typeParameters!.map(
-                      (typeParameter) =>
-                        visit({ node: typeParameter, deps }) as Expression
-                    ),
-                    true
-                  )
-                ),
-              // TODO: Add Logic to detect documentation,
-            ]
-              .filter((i) => !!i)
-              .map((i) => i as ts.PropertyAssignment),
-            deps: deps,
-          }) as Expression
+          ts.factory.createAsExpression(
+            visit({
+              node: node.type,
+              metadata: [
+                !!node.typeParameters?.length &&
+                  ts.factory.createPropertyAssignment(
+                    "generics",
+                    ts.factory.createArrayLiteralExpression(
+                      node.typeParameters!.map(
+                        (typeParameter) =>
+                          visit({ node: typeParameter, deps }) as Expression
+                      ),
+                      true
+                    )
+                  ),
+                // TODO: Add Logic to detect documentation,
+              ]
+                .filter((i) => !!i)
+                .map((i) => i as ts.PropertyAssignment),
+              deps: deps,
+            }) as Expression,
+            ts.factory.createTypeReferenceNode(
+              ts.factory.createIdentifier("const"),
+              undefined
+            )
+          )
         ),
       ],
       ts.NodeFlags.Const
