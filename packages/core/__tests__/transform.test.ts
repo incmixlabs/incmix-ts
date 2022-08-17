@@ -84,13 +84,13 @@ const runTests = () => {
   genericTypeChecker({
     name: "undefined",
     input: `export type T = undefined;`,
-    output: `export const T_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "undefined",\n};`,
+    output: `export const T_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "undefined",\n} as const;`,
     prependTsCode: false,
   });
   genericTypeChecker({
     name: "null",
     input: `export type T = null;`,
-    output: `export const T_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "null",\n};`,
+    output: `export const T_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "null",\n} as const;`,
     prependTsCode: false,
   });
   genericTypeChecker({
@@ -269,7 +269,7 @@ const runTests = () => {
       '    type: "literal",\n' +
       '    typeLiteral: "number",\n' +
       "    value: 1\n" +
-      "};",
+      "} as const;",
     prependTsCode: false,
   });
 };
