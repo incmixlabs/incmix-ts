@@ -44,5 +44,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          title: "fix: version packages"
+          commit: "fix: version packages"
           version: pnpm version-packages
