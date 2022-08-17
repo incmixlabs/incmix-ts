@@ -1,5 +1,13 @@
 # @ts-r/utils
 
+## 0.1.1
+
+### Patch Changes
+
+- 3b993b7: Added TSR objects for null and undefined in utils. Added tests in core for null and undefined.
+- 6807993: Added npmrc file so that peer dependencies are ignored
+- a575a9f: Bug fix: validateTSRObj now handles undefined/null data - but not null or undefined TSRObjects.
+
 ## 0.1.0
 
 ### Minor Changes

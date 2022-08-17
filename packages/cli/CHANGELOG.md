@@ -1,5 +1,11 @@
 # @ts-r/cli
 
+## 0.0.5
+
+### Patch Changes
+
+- 6807993: Added npmrc file so that peer dependencies are ignored
+
 ## 0.0.4
 
 ### Patch Changes
