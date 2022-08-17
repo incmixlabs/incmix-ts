@@ -84,6 +84,18 @@ const runTests = () => {
   basicTypeCheck("any");
   basicTypeCheck("boolean");
   genericTypeChecker({
+    name: "undefined",
+    input: `export type T = undefined;`,
+    output: `export const T_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "undefined",\n};`,
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "null",
+    input: `export type T = null;`,
+    output: `export const T_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "null",\n};`,
+    prependTsCode: false,
+  });
+  genericTypeChecker({
     name: "enum",
     input: `export enum Enum {A, B = 2}`,
     output: `export const Enum_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "enum",\n enum: Enum, };`,
