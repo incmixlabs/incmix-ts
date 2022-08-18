@@ -99,6 +99,50 @@ const runTests = () => {
     output: `export const Enum_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "enum",\n enum: Enum, } as const;`,
     prependTsCode: false,
   });
+  genericTypeChecker({
+    name: "optional - false",
+    input: `export type T = {T: number};`,
+    output:
+      "export const T_$TSR = {\n" +
+      `    id: "${TEST_ID_GENERATED}",\n` +
+      '    type: "object",\n' +
+      "    properties: {\n" +
+      "        T: {\n" +
+      '            type: "propertySignature",\n' +
+      "            optional: false,\n" +
+      `            tsRuntimeObject: { id: "${TEST_ID_GENERATED}", type: "number" }\n` +
+      "        }\n" +
+      "    }\n" +
+      "} as const;",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "optional - true",
+    input: `export type T = {T?: number};`,
+    output:
+      "export const T_$TSR = {\n" +
+      `    id: "${TEST_ID_GENERATED}",\n` +
+      '    type: "object",\n' +
+      "    properties: {\n" +
+      "        T: {\n" +
+      '            type: "propertySignature",\n' +
+      "            optional: true,\n" +
+      "            tsRuntimeObject: {\n" +
+      `                id: "${TEST_ID_GENERATED}",\n` +
+      '                type: "union",\n' +
+      "                members: [\n" +
+      `                    { id: "${TEST_ID_GENERATED}", type: "number" },\n` +
+      "                    {\n" +
+      `                        id: "${TEST_ID_GENERATED}",\n` +
+      '                        type: "undefined"\n' +
+      "                    }\n" +
+      "                ]\n" +
+      "            }\n" +
+      "        }\n" +
+      "    }\n" +
+      "} as const;\n",
+    prependTsCode: false,
+  });
 
   genericTypeChecker({
     name: "prepend - true",
