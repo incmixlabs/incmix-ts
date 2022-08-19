@@ -1,5 +1,12 @@
 # @ts-r/core
 
+## 0.0.4
+
+### Patch Changes
+
+- 629cd19: Added support for excluding all nodes that the visitor doesn't visit from being output
+- 8fc8d24: Added tests for optional object keys
+
 ## 0.0.3
 
 ### Patch Changes
