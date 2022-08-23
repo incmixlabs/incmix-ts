@@ -6,12 +6,14 @@ import { visitAnyKeyword } from "./visitAnyKeyword";
 import { visitArrayType } from "./visitArrayType";
 import { visitBooleanKeyword } from "./visitBooleanKeyword";
 import { visitBooleanLiteral } from "./visitBooleanLiteral";
+import { visitClassDeclaration } from "./visitClassDeclaration";
 import { visitEmptyStatement } from "./visitEmptyStatement";
 import { visitEnumDeclaration } from "./visitEnumDeclaration";
 import { visitFunctionType } from "./visitFunctionType";
 import { visitImportDeclaration } from "./visitImportDeclaration";
 import { visitInterfaceDeclaration } from "./visitInterfaceDeclaration";
 import { visitIntersectionType } from "./visitIntersectionType";
+import { visitLiteralType } from "./visitLiteralType";
 import { visitNullKeyword } from "./visitNullKeyword";
 import { visitNumberKeyword } from "./visitNumberKeyword";
 import { visitNumericLiteral } from "./visitNumericLiteral";
@@ -33,7 +35,7 @@ import { visitUnionType } from "./visitUnionType";
 import { visitUnknownKeyword } from "./visitUnknownKeyword";
 import { visitVoidKeyword } from "./visitVoidKeyword";
 
-const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
+export const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.TypeAliasDeclaration]: visitTypeAliasDeclaration,
   [ts.SyntaxKind.NumericLiteral]: visitNumericLiteral,
   [ts.SyntaxKind.StringLiteral]: visitStringLiteral,
@@ -65,6 +67,8 @@ const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.ImportDeclaration]: visitImportDeclaration,
   [ts.SyntaxKind.SymbolKeyword]: visitSymbolKeyword,
   [ts.SyntaxKind.TypeOperator]: visitTypeOperator,
+  [ts.SyntaxKind.ClassDeclaration]: visitClassDeclaration,
+  [ts.SyntaxKind.LiteralType]: visitLiteralType,
 };
 
 export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {
@@ -104,14 +108,6 @@ export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {
     }
 
     return resultNode;
-  }
-
-  if (node.kind === ts.SyntaxKind.LiteralType) {
-    visit({
-      node: (node as ts.LiteralTypeNode).literal,
-      metadata: metadata,
-      deps: deps,
-    });
   }
 
   return node.forEachChild((n) => visit({ node: n, deps: deps })) as ts.Node;

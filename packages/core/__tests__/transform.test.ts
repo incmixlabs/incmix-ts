@@ -99,6 +99,50 @@ const runTests = () => {
     output: `export const Enum_$TSR = {\n id: "${TEST_ID_GENERATED}",\n type: "enum",\n enum: Enum, } as const;`,
     prependTsCode: false,
   });
+  genericTypeChecker({
+    name: "optional - false",
+    input: `export type T = {T: number};`,
+    output:
+      "export const T_$TSR = {\n" +
+      `    id: "${TEST_ID_GENERATED}",\n` +
+      '    type: "object",\n' +
+      "    properties: {\n" +
+      "        T: {\n" +
+      '            type: "propertySignature",\n' +
+      "            optional: false,\n" +
+      `            tsRuntimeObject: { id: "${TEST_ID_GENERATED}", type: "number" }\n` +
+      "        }\n" +
+      "    }\n" +
+      "} as const;",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "optional - true",
+    input: `export type T = {T?: number};`,
+    output:
+      "export const T_$TSR = {\n" +
+      `    id: "${TEST_ID_GENERATED}",\n` +
+      '    type: "object",\n' +
+      "    properties: {\n" +
+      "        T: {\n" +
+      '            type: "propertySignature",\n' +
+      "            optional: true,\n" +
+      "            tsRuntimeObject: {\n" +
+      `                id: "${TEST_ID_GENERATED}",\n` +
+      '                type: "union",\n' +
+      "                members: [\n" +
+      `                    { id: "${TEST_ID_GENERATED}", type: "number" },\n` +
+      "                    {\n" +
+      `                        id: "${TEST_ID_GENERATED}",\n` +
+      '                        type: "undefined"\n' +
+      "                    }\n" +
+      "                ]\n" +
+      "            }\n" +
+      "        }\n" +
+      "    }\n" +
+      "} as const;\n",
+    prependTsCode: false,
+  });
 
   genericTypeChecker({
     name: "prepend - true",
@@ -270,6 +314,110 @@ const runTests = () => {
       '    typeLiteral: "number",\n' +
       "    value: 1\n" +
       "} as const;",
+    prependTsCode: false,
+  });
+
+  /*** Exclusion tests */
+  genericTypeChecker({
+    name: "exclusion - if statement",
+    input: "if (true) {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - try-catch statement",
+    input: "try {} catch (e) { }",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - throw statement",
+    input: "throw {};",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - switch statement",
+    input: "switch (0) {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - var statement",
+    input: "var a;",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - let statement",
+    input: "let a;",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - const statement",
+    input: "const a = 0;",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - function",
+    input: "function f() {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "inclusion - class",
+    input: "class C {}",
+    output: "class C {}",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - while",
+    input: "while (true) {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - do-while",
+    input: "do {} while (true);",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - for",
+    input: "for (;;) {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - for-of",
+    input: "for (let a of []) {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - for-in",
+    input: "for (let a in []) {}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - block",
+    input: "{}",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - debugger",
+    input: "debugger;",
+    output: "",
+    prependTsCode: false,
+  });
+  genericTypeChecker({
+    name: "exclusion - with",
+    input: "with ({}) {}",
+    output: "",
     prependTsCode: false,
   });
 };
