@@ -1,19 +1,24 @@
 import fs from "fs";
 
-import { getFullFilePath, Path, wrap } from "../../src/Path";
+import Path from "../../src/Path";
 
 export const TEST_DIR = "TEMP_TEST_DIR";
 
 export const setupTestDir = () => {
   // Create an empty temporary test directory
-  if (fs.existsSync(TEST_DIR)) fs.rmdirSync(TEST_DIR, { recursive: true });
-  fs.mkdirSync(TEST_DIR);
+  if (!fs.existsSync(TEST_DIR)) fs.mkdirSync(TEST_DIR);
 };
 
 export const writeTest = (filePath: Path, input: string) =>
-  fs.writeFileSync(getFullFilePath(filePath), input);
+  fs.writeFileSync(filePath.getFullFilePath(), input);
 
-export const wrapInTestDir = (filename: string) => wrap(filename, TEST_DIR);
+export const appendToTest = (filePath: Path, data: string) =>
+  fs.appendFileSync(filePath.getFullFilePath(), data);
+
+export const readTest = (filePath: Path) =>
+  fs.readFileSync(filePath.getFullFilePath()).toString();
+
+export const wrapInTestDir = (filename: string) => new Path(filename, TEST_DIR);
 
 export const teardownTestDir = () => {
   fs.rmdirSync(TEST_DIR, { recursive: true });

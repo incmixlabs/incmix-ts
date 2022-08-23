@@ -1,10 +1,17 @@
 import path from "path";
 
-export type Path = { path: string; filename: string };
+class Path {
+  path: string;
+  filename: string;
 
-export const wrap = (filename: string, path: string) => {
-  return { path, filename } as Path;
-};
+  constructor(filename: string, path: string) {
+    this.filename = filename;
+    this.path = path;
+  }
 
-export const getFullFilePath = (wrappedPath: Path) =>
-  `${wrappedPath.path}${path.sep}${wrappedPath.filename}`;
+  getFullFilePath() {
+    return `${this.path}${path.sep}${this.filename}`;
+  }
+}
+
+export default Path;

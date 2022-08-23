@@ -1,6 +1,6 @@
 import prettier from "prettier";
 
-import { getFullFilePath, transform } from "../src";
+import { transform } from "../src";
 import { Id } from "../src/deps/Id";
 import { Failable } from "../src/Failable";
 import { setupTestDir, wrapInTestDir, writeTest } from "./helpers/testFileIO";
@@ -42,7 +42,7 @@ const genericTypeChecker = ({
 
     const transformResult = transform(
       {
-        filename: getFullFilePath(filename),
+        filename: filename.getFullFilePath(),
         outputFilename: `${filename}.output.ts`,
         prependTsCode,
       },
