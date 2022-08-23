@@ -1,5 +1,11 @@
 # @ts-r/cli
 
+## 0.0.6
+
+### Patch Changes
+
+- d12af29: added folder compilation tests for cli
+
 ## 0.0.5
 
 ### Patch Changes
