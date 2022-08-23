@@ -1,4 +1,5 @@
 import fs from "fs";
+import path = require("path");
 
 import Path from "../../src/Path";
 
@@ -7,6 +8,11 @@ export const TEST_DIR = "TEMP_TEST_DIR";
 export const setupTestDir = () => {
   // Create an empty temporary test directory
   if (!fs.existsSync(TEST_DIR)) fs.mkdirSync(TEST_DIR);
+};
+
+export const createTestDir = (subDir: string) => {
+  subDir = `${TEST_DIR}${path.sep}${subDir}`;
+  if (!fs.existsSync(subDir)) fs.mkdirSync(subDir);
 };
 
 export const writeTest = (filePath: Path, input: string) =>
