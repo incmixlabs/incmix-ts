@@ -4,6 +4,7 @@ import { getSourceFile } from "../helpers/getSourceFile";
 import { Visiter } from "../helpers/types";
 import { visitAnyKeyword } from "./visitAnyKeyword";
 import { visitArrayType } from "./visitArrayType";
+import { visitBigInt } from "./visitBigInt";
 import { visitBooleanKeyword } from "./visitBooleanKeyword";
 import { visitBooleanLiteral } from "./visitBooleanLiteral";
 import { visitClassDeclaration } from "./visitClassDeclaration";
@@ -14,6 +15,7 @@ import { visitImportDeclaration } from "./visitImportDeclaration";
 import { visitInterfaceDeclaration } from "./visitInterfaceDeclaration";
 import { visitIntersectionType } from "./visitIntersectionType";
 import { visitLiteralType } from "./visitLiteralType";
+import { visitNever } from "./visitNever";
 import { visitNullKeyword } from "./visitNullKeyword";
 import { visitNumberKeyword } from "./visitNumberKeyword";
 import { visitNumericLiteral } from "./visitNumericLiteral";
@@ -69,6 +71,8 @@ export const visitMap: Partial<Record<ts.SyntaxKind, Visiter<any>>> = {
   [ts.SyntaxKind.TypeOperator]: visitTypeOperator,
   [ts.SyntaxKind.ClassDeclaration]: visitClassDeclaration,
   [ts.SyntaxKind.LiteralType]: visitLiteralType,
+  [ts.SyntaxKind.NeverKeyword]: visitNever,
+  [ts.SyntaxKind.BigIntLiteral]: visitBigInt,
 };
 
 export const visit: Visiter = ({ deps, node, metadata }): ts.Node => {
