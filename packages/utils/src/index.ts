@@ -152,6 +152,10 @@ export type NullTsRuntimeObject = {
   readonly type: "null";
 } & GlobalTsRuntimeObjectKeys;
 
+export type NeverTsRuntimeObject = {
+  readonly type: "never";
+} & GlobalTsRuntimeObjectKeys;
+
 export type TsRuntimeObject =
   | FunctionTsRuntimeObject
   | ObjectTsRuntimeObject
@@ -174,7 +178,8 @@ export type TsRuntimeObject =
   | UnionTsRuntimeObject
   | PropertySignatureTsRuntimeObject
   | UndefinedTsRuntimeObject
-  | NullTsRuntimeObject;
+  | NullTsRuntimeObject
+  | NeverTsRuntimeObject;
 
 export type GenericTsRuntimeObject = TsRuntimeObject & {
   generics: TsRuntimeObjectGeneric[];
