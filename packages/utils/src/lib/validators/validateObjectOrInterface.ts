@@ -4,22 +4,21 @@ import {
   ObjectTsRuntimeObject,
   validateTsRuntimeObject,
 } from "../../index";
-import { Stack } from "../helpers/Stack";
-import { TSRObjValidator } from "../helpers/types";
-import Valid = Stack.Valid;
-import invalidWithReason = Stack.invalidWithReason;
-import InvalidType = Stack.InvalidType;
-import invalidWithChildren = Stack.invalidWithChildren;
+import {
+  Invalid,
+  InvalidLeaf,
+  InvalidNode,
+  Reason,
+  TSRObjValidator,
+  Valid,
+} from "../helpers";
 
 export const validateObjectOrInterface: TSRObjValidator<
   (ObjectTsRuntimeObject | InterfaceTsRuntimeObject) & ConcreteTsRuntimeObject
 > = (tsRuntimeObject, data) => {
   // Ensure that the data is neither null nor undefined
   if (data === undefined || data === null) {
-    return invalidWithReason(tsRuntimeObject.type, {
-      receivedType: typeof data,
-      receivedValue: data,
-    });
+    return new InvalidLeaf(tsRuntimeObject.type, new Reason(typeof data, data));
   }
 
   data = data as object;
@@ -35,32 +34,28 @@ export const validateObjectOrInterface: TSRObjValidator<
       // Check if key exists on data
       if (Object.keys(data).includes(key)) {
         // Validate the value associated with that key with respect to the TSRObj schema
-        const stackTrace = validateTsRuntimeObject(
+        const validityTree = validateTsRuntimeObject(
           childrenObj[key] as ConcreteTsRuntimeObject,
           data[key]
         );
-        if (!stackTrace.valid) {
+        if (validityTree instanceof Invalid) {
           // Invalid properties need to have their key attached to the Invalid node
-          stackTrace.name = key;
-          return stackTrace;
+          validityTree.name = key;
+          return validityTree;
         } else return undefined;
       } else {
         // Data doesn't have a property with this key - so,
         // return an invalid node; where expected type is the property's value
-        return invalidWithReason(
+        return new InvalidLeaf(
           childrenObj[key].type,
-          {
-            receivedType: "undefined",
-            receivedValue: "undefined",
-            expectedValue: childrenObj[key],
-          },
+          new Reason("undefined", "undefined", childrenObj[key]),
           { name: key }
         );
       }
     })
-    .filter((stackTrace) => !!stackTrace) as InvalidType[];
+    .filter((validityTree) => !!validityTree) as Invalid[];
 
   return stackTracesOfChildren.length === 0
-    ? Valid
-    : invalidWithChildren(tsRuntimeObject.type, stackTracesOfChildren);
+    ? new Valid()
+    : new InvalidNode(tsRuntimeObject.type, stackTracesOfChildren);
 };

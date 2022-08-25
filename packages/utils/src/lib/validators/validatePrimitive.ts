@@ -1,18 +1,18 @@
-import { Stack } from "../helpers/Stack";
-import { PrimitiveTSRObj, TSRObjValidator } from "../helpers/types";
-import Valid = Stack.Valid;
-import invalidWithReason = Stack.invalidWithReason;
+import {
+  InvalidLeaf,
+  PrimitiveTSRObj,
+  Reason,
+  TSRObjValidator,
+  Valid,
+} from "../helpers";
 
 export const validatePrimitive: TSRObjValidator<PrimitiveTSRObj> = (
   tsRuntimeObject,
   data
 ) => {
   if (typeof data === tsRuntimeObject.type) {
-    return Valid;
+    return new Valid();
   } else {
-    return invalidWithReason(tsRuntimeObject.type, {
-      receivedType: typeof data,
-      receivedValue: data,
-    });
+    return new InvalidLeaf(tsRuntimeObject.type, new Reason(typeof data, data));
   }
 };

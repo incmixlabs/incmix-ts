@@ -11,8 +11,7 @@ import {
   StringTsRuntimeObject,
   SymbolTsRuntimeObject,
 } from "../../index";
-import { Stack } from "./Stack";
-import StackTrace = Stack.StackTrace;
+import { ValidityTree } from "./ValidityTree";
 
 export type LiteralTSRObj = (
   | NumberLiteralTsRuntimeObject
@@ -41,4 +40,4 @@ export type TSRObjValidator<
       SpecialTsRuntimeObject & ConcreteTsRuntimeObject
     >;
   }
-) => StackTrace;
+) => ValidityTree;

@@ -3,32 +3,31 @@ import {
   ConcreteTsRuntimeObject,
   validateTsRuntimeObject,
 } from "../../index";
-import { Stack } from "../helpers/Stack";
-import { TSRObjValidator } from "../helpers/types";
-import Valid = Stack.Valid;
-import invalidWithReason = Stack.invalidWithReason;
-import InvalidType = Stack.InvalidType;
-import invalidWithChildren = Stack.invalidWithChildren;
+import {
+  Invalid,
+  InvalidLeaf,
+  InvalidNode,
+  Reason,
+  TSRObjValidator,
+  Valid,
+} from "../helpers";
 
 export const validateArray: TSRObjValidator<
   ArrayTsRuntimeObject & ConcreteTsRuntimeObject
 > = (tsRuntimeObject, data) => {
   if (Array.isArray(data)) {
-    const stackTrace = (data as any[])
+    const validityTree = (data as any[])
       .map((item) =>
         validateTsRuntimeObject(
           tsRuntimeObject.items as ConcreteTsRuntimeObject,
           item
         )
       )
-      .filter((stackTrace) => !stackTrace.valid) as InvalidType[];
-    return stackTrace.length === 0
-      ? Valid
-      : invalidWithChildren(tsRuntimeObject.type, stackTrace);
+      .filter((validityTree) => validityTree instanceof Invalid) as Invalid[];
+    return validityTree.length === 0
+      ? new Valid()
+      : new InvalidNode(tsRuntimeObject.type, validityTree);
   } else {
-    return invalidWithReason(tsRuntimeObject.type, {
-      receivedType: typeof data,
-      receivedValue: data,
-    });
+    return new InvalidLeaf(tsRuntimeObject.type, new Reason(typeof data, data));
   }
 };

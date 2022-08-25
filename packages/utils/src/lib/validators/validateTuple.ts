@@ -3,12 +3,14 @@ import {
   TupleTsRuntimeObject,
   validateTsRuntimeObject,
 } from "../../index";
-import { Stack } from "../helpers/Stack";
-import { TSRObjValidator } from "../helpers/types";
-import Valid = Stack.Valid;
-import invalidWithReason = Stack.invalidWithReason;
-import InvalidType = Stack.InvalidType;
-import invalidWithChildren = Stack.invalidWithChildren;
+import {
+  Invalid,
+  InvalidLeaf,
+  InvalidNode,
+  Reason,
+  TSRObjValidator,
+  Valid,
+} from "../helpers";
 
 export const validateTuple: TSRObjValidator<
   TupleTsRuntimeObject & ConcreteTsRuntimeObject
@@ -16,7 +18,7 @@ export const validateTuple: TSRObjValidator<
   if (Array.isArray(data)) {
     const dataAsArray = data as any[];
 
-    const stackTrace = Array(
+    const validityTree = Array(
       Math.max(tsRuntimeObject.items.length, dataAsArray.length)
     )
       .fill(undefined)
@@ -38,26 +40,23 @@ export const validateTuple: TSRObjValidator<
       /*
        * Attach the index number of any invalid tuple data and remove any valid stack traces
        */
-      .map((stackTrace, i) => {
-        if (!stackTrace.valid) {
-          stackTrace["index"] = i;
-          return stackTrace;
+      .map((validityTree, i) => {
+        if (validityTree instanceof Invalid) {
+          validityTree.index = i;
+          return validityTree;
         } else return undefined;
       })
-      .filter((stackTrace) => !!stackTrace) as InvalidType[];
+      .filter((validityTree) => !!validityTree) as Invalid[];
     /*
      * Return a valid stack trace if the data matches the tuple's schema.
      * Otherwise, wrap all invalid data in a stack trace to represent this
      * tuple's invalid data
      * */
-    return stackTrace.length === 0
-      ? Valid
-      : invalidWithChildren(tsRuntimeObject.type, stackTrace);
+    return validityTree.length === 0
+      ? new Valid()
+      : new InvalidNode(tsRuntimeObject.type, validityTree);
   } else {
     // Data isn't a tuple so it is invalid
-    return invalidWithReason(tsRuntimeObject.type, {
-      receivedType: typeof data,
-      receivedValue: data,
-    });
+    return new InvalidLeaf(tsRuntimeObject.type, new Reason(typeof data, data));
   }
 };

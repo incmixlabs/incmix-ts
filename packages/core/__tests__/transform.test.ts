@@ -1,4 +1,4 @@
-import prettier from "prettier";
+import * as prettier from "prettier";
 
 import { getFullFilePath, transform } from "../src";
 import { Id } from "../src/deps/Id";

@@ -1,7 +1,10 @@
-import { Stack } from "../helpers/Stack";
-import { LiteralTSRObj, TSRObjValidator } from "../helpers/types";
-import Valid = Stack.Valid;
-import invalidWithReason = Stack.invalidWithReason;
+import {
+  InvalidLeaf,
+  LiteralTSRObj,
+  Reason,
+  TSRObjValidator,
+  Valid,
+} from "../helpers";
 
 export const validateLiteral: TSRObjValidator<LiteralTSRObj> = (
   tsRuntimeObject,
@@ -18,12 +21,11 @@ export const validateLiteral: TSRObjValidator<LiteralTSRObj> = (
     primitiveLiterals.includes(tsRuntimeObject.literalType) &&
     tsRuntimeObject.value === data
   ) {
-    return Valid;
+    return new Valid();
   } else {
-    return invalidWithReason(tsRuntimeObject.type, {
-      receivedType: typeof data,
-      receivedValue: data,
-      expectedValue: tsRuntimeObject.value,
-    });
+    return new InvalidLeaf(
+      tsRuntimeObject.type,
+      new Reason(typeof data, data, tsRuntimeObject.value)
+    );
   }
 };
