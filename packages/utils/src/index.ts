@@ -127,9 +127,9 @@ export type EnumTsRuntimeObject = {
   readonly enum: object;
 } & GlobalTsRuntimeObjectKeys;
 
-export type SpecialTsRuntimeObject = {
+export type CustomTsRuntimeObject = {
   readonly type: `$${string}`;
-  readonly data: any;
+  readonly schema: any;
 } & GlobalTsRuntimeObjectKeys;
 
 export type UnionTsRuntimeObject = {
@@ -169,7 +169,7 @@ export type TsRuntimeObject =
   | GenericTsRuntimeObjectValue
   | EnumTsRuntimeObject
   | InterfaceTsRuntimeObject
-  | SpecialTsRuntimeObject
+  | CustomTsRuntimeObject
   | UnionTsRuntimeObject
   | PropertySignatureTsRuntimeObject
   | UndefinedTsRuntimeObject
@@ -222,7 +222,7 @@ export const validateTsRuntimeObject: TSRObjValidator = (
       );
     else
       return params.customValidator(
-        tsRuntimeObject as SpecialTsRuntimeObject & ConcreteTsRuntimeObject,
+        tsRuntimeObject as CustomTsRuntimeObject & ConcreteTsRuntimeObject,
         data
       );
   } else

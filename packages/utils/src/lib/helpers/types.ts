@@ -4,15 +4,18 @@ import {
   BooleanLiteralTsRuntimeObject,
   BooleanTsRuntimeObject,
   ConcreteTsRuntimeObject,
+  CustomTsRuntimeObject,
   NumberLiteralTsRuntimeObject,
   NumberTsRuntimeObject,
-  SpecialTsRuntimeObject,
   StringLiteralTsRuntimeObject,
   StringTsRuntimeObject,
   SymbolTsRuntimeObject,
 } from "../../index";
 import { ValidityTree } from "./ValidityTree";
 
+/**
+ * The super type of any literal TSR object
+ */
 export type LiteralTSRObj = (
   | NumberLiteralTsRuntimeObject
   | StringLiteralTsRuntimeObject
@@ -21,6 +24,9 @@ export type LiteralTSRObj = (
 ) &
   ConcreteTsRuntimeObject;
 
+/**
+ * The super type of any primitive TSR object
+ */
 export type PrimitiveTSRObj = (
   | NumberTsRuntimeObject
   | StringTsRuntimeObject
@@ -37,7 +43,7 @@ export type TSRObjValidator<
   data: any,
   params?: {
     customValidator?: TSRObjValidator<
-      SpecialTsRuntimeObject & ConcreteTsRuntimeObject
+      CustomTsRuntimeObject & ConcreteTsRuntimeObject
     >;
   }
 ) => ValidityTree;

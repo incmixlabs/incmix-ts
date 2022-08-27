@@ -5,13 +5,13 @@ import {
   BooleanLiteralTsRuntimeObject,
   BooleanTsRuntimeObject,
   ConcreteTsRuntimeObject,
+  CustomTsRuntimeObject,
   EnumTsRuntimeObject,
   GlobalTsRuntimeObjectKeys,
   InterfaceTsRuntimeObject,
   NumberLiteralTsRuntimeObject,
   NumberTsRuntimeObject,
   PropertySignatureTsRuntimeObject,
-  SpecialTsRuntimeObject,
   StringLiteralTsRuntimeObject,
   StringTsRuntimeObject,
   SymbolTsRuntimeObject,
@@ -556,7 +556,7 @@ describe(validateTsRuntimeObject, () => {
     ).toBeFalsy();
   });
 
-  it("Validate special TSR objects", () => {
+  it("Validate custom TSR objects", () => {
     const a = {
       name: "john",
       age: 15,
@@ -568,33 +568,33 @@ describe(validateTsRuntimeObject, () => {
     };
 
     function customValidator(
-      SpecialTSRObj: ConcreteTSR<SpecialTsRuntimeObject>,
+      CustomTSRObj: ConcreteTSR<CustomTsRuntimeObject>,
       data: any
     ): ValidityTree {
-      if (SpecialTSRObj.type === "$object" && typeof data === "object") {
+      if (CustomTSRObj.type === "$object" && typeof data === "object") {
         data = data as object;
         if (
-          typeof data["name"] === SpecialTSRObj.data["name"] &&
-          typeof data["age"] === SpecialTSRObj.data["age"]
+          typeof data["name"] === CustomTSRObj.schema["name"] &&
+          typeof data["age"] === CustomTSRObj.schema["age"]
         ) {
           return new Valid();
         } else {
           return new InvalidLeaf(
-            SpecialTSRObj.type,
+            CustomTSRObj.type,
             new Reason("undefined", undefined)
           );
         }
       } else
         return new InvalidLeaf(
-          SpecialTSRObj.type,
+          CustomTSRObj.type,
           new Reason("undefined", undefined)
         );
     }
 
-    const TSRObj: ConcreteTSR<SpecialTsRuntimeObject> = {
+    const TSRObj: ConcreteTSR<CustomTsRuntimeObject> = {
       ...GlobalTSRObj,
       type: "$object",
-      data: { name: "string", age: "number" },
+      schema: { name: "string", age: "number" },
     };
 
     expect(
