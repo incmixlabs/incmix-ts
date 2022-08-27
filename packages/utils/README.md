@@ -44,9 +44,8 @@ type CustomTsRuntimeObject = {
 };
 ```
 
-Since the custom validator takes the entire custom TSR objects - the type can be leveraged in order to allow for custom
-TSR objects with a different `CustomTsRuntimeObject.type`
-to have the same `schema` and `customValidator`
+Since the custom validator takes the entire custom TSR objects - the `CustomTsRuntimeObject.type` can be leveraged in
+order to allow for custom TSR objects with a different types to have the same `schema` and `customValidator`
 
 ## Example `customValidator`
 
