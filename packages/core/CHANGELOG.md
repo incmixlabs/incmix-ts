@@ -1,5 +1,11 @@
 # @ts-r/core
 
+## 0.0.5
+
+### Patch Changes
+
+- 5a1f01c: visitor can now handle the never keyword and bigint literals and NeverTSRObj was added to utils
+
 ## 0.0.4
 
 ### Patch Changes
