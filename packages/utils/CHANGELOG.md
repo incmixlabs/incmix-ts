@@ -1,5 +1,12 @@
 # @ts-r/utils
 
+## 0.1.2
+
+### Patch Changes
+
+- 9f9f2fc: Added documentation for the validator and a md guide for how to create a custom validator
+- 5a1f01c: visitor can now handle the never keyword and bigint literals and NeverTSRObj was added to utils
+
 ## 0.1.1
 
 ### Patch Changes
