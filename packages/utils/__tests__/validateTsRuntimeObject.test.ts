@@ -5,13 +5,13 @@ import {
   BooleanLiteralTsRuntimeObject,
   BooleanTsRuntimeObject,
   ConcreteTsRuntimeObject,
+  CustomTsRuntimeObject,
   EnumTsRuntimeObject,
   GlobalTsRuntimeObjectKeys,
   InterfaceTsRuntimeObject,
   NumberLiteralTsRuntimeObject,
   NumberTsRuntimeObject,
   PropertySignatureTsRuntimeObject,
-  SpecialTsRuntimeObject,
   StringLiteralTsRuntimeObject,
   StringTsRuntimeObject,
   SymbolTsRuntimeObject,
@@ -21,12 +21,7 @@ import {
   UniqueSymbolTsRuntimeObject,
   validateTsRuntimeObject,
 } from "../src";
-import { Stack } from "../src/lib/helpers/Stack";
-import Valid = Stack.Valid;
-import invalidWithReason = Stack.invalidWithReason;
-import InvalidType = Stack.InvalidType;
-import InvalidTypeReason = Stack.InvalidTypeReason;
-import StackTrace = Stack.StackTrace;
+import { InvalidLeaf, Reason, Valid, ValidityTree } from "../src/lib/helpers";
 
 const VALIDATE_TSROBJ_TEST_ID = "test_id";
 
@@ -36,28 +31,25 @@ const invalidTest = (
   expectedValue?: any
 ) => {
   const receivedObj = validateTsRuntimeObject(TSRObj, data);
-  const expectedObj = invalidWithReason(TSRObj.type, {
-    receivedType: typeof data,
-    receivedValue: data,
-    expectedValue,
-  });
-  const withReason = (obj: InvalidType) =>
-    obj as InvalidType & { reason: InvalidTypeReason };
+  const expectedObj = new InvalidLeaf(
+    TSRObj.type,
+    new Reason(typeof data, data, expectedValue)
+  );
 
   expect(receivedObj.valid).toBe(expectedObj.valid);
   if (!receivedObj.valid) {
-    expect((receivedObj as InvalidType).expectedType).toBe(
+    expect((receivedObj as InvalidLeaf).expectedType).toBe(
       expectedObj.expectedType
     );
 
-    expect(withReason(receivedObj as InvalidType).reason.receivedType).toBe(
-      withReason(expectedObj).reason.receivedType
+    expect((receivedObj as InvalidLeaf).reason.receivedType).toBe(
+      expectedObj.reason.receivedType
     );
-    expect(withReason(receivedObj as InvalidType).reason.receivedValue).toBe(
-      withReason(expectedObj).reason.receivedValue
+    expect((receivedObj as InvalidLeaf).reason.receivedValue).toBe(
+      expectedObj.reason.receivedValue
     );
-    expect(withReason(receivedObj as InvalidType).reason.expectedValue).toBe(
-      withReason(expectedObj).reason.expectedValue
+    expect((receivedObj as InvalidLeaf).reason.expectedValue).toBe(
+      expectedObj.reason.expectedValue
     );
   }
 };
@@ -77,7 +69,7 @@ describe(validateTsRuntimeObject, () => {
       ...GlobalTSRObj,
       type: "number",
     };
-    expect(validateTsRuntimeObject(TSRObj, 1)).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, 1)).toBeInstanceOf(Valid);
     invalidTest(TSRObj, "");
     invalidTest(TSRObj, undefined);
     invalidTest(TSRObj, null);
@@ -89,7 +81,7 @@ describe(validateTsRuntimeObject, () => {
       type: "string",
     };
 
-    expect(validateTsRuntimeObject(TSRObj, "text")).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, "text").valid).toBe(true);
     invalidTest(TSRObj, 1);
     invalidTest(TSRObj, undefined);
     invalidTest(TSRObj, null);
@@ -101,8 +93,8 @@ describe(validateTsRuntimeObject, () => {
       type: "boolean",
     };
 
-    expect(validateTsRuntimeObject(TSRObj, true)).toBe(Valid);
-    expect(validateTsRuntimeObject(TSRObj, false)).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, true)).toBeInstanceOf(Valid);
+    expect(validateTsRuntimeObject(TSRObj, false)).toBeInstanceOf(Valid);
     invalidTest(TSRObj, "");
     invalidTest(TSRObj, undefined);
     invalidTest(TSRObj, null);
@@ -114,7 +106,7 @@ describe(validateTsRuntimeObject, () => {
       type: "bigint",
     };
 
-    expect(validateTsRuntimeObject(TSRObj, BigInt(1))).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, BigInt(1))).toBeInstanceOf(Valid);
     invalidTest(TSRObj, "");
     invalidTest(TSRObj, undefined);
     invalidTest(TSRObj, null);
@@ -126,7 +118,7 @@ describe(validateTsRuntimeObject, () => {
       type: "symbol",
     };
 
-    expect(validateTsRuntimeObject(TSRObj, Symbol(1))).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, Symbol(1))).toBeInstanceOf(Valid);
     invalidTest(TSRObj, "");
     invalidTest(TSRObj, undefined);
     invalidTest(TSRObj, null);
@@ -141,7 +133,7 @@ describe(validateTsRuntimeObject, () => {
       uniqueSymbolTypeId: sym,
     };
 
-    expect(validateTsRuntimeObject(TSRObj, sym)).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, sym)).toBeInstanceOf(Valid);
     invalidTest(TSRObj, sym1, sym);
     invalidTest(TSRObj, undefined, sym);
     invalidTest(TSRObj, null, sym);
@@ -156,7 +148,7 @@ describe(validateTsRuntimeObject, () => {
       value: 5,
     };
 
-    expect(validateTsRuntimeObject(TSRObj, 5)).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, 5)).toBeInstanceOf(Valid);
     invalidTest(TSRObj, 1, 5);
 
     invalidTest(TSRObj, undefined, 5);
@@ -171,7 +163,7 @@ describe(validateTsRuntimeObject, () => {
       value: "text",
     };
 
-    expect(validateTsRuntimeObject(TSRObj, "text")).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, "text")).toBeInstanceOf(Valid);
     invalidTest(TSRObj, "other text", "text");
 
     invalidTest(TSRObj, undefined, "text");
@@ -186,7 +178,7 @@ describe(validateTsRuntimeObject, () => {
       value: true,
     };
 
-    expect(validateTsRuntimeObject(TSRObj, true)).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, true)).toBeInstanceOf(Valid);
     invalidTest(TSRObj, false, true);
 
     invalidTest(TSRObj, undefined, true);
@@ -201,7 +193,7 @@ describe(validateTsRuntimeObject, () => {
       value: BigInt(5),
     };
 
-    expect(validateTsRuntimeObject(TSRObj, BigInt(5))).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, BigInt(5))).toBeInstanceOf(Valid);
     invalidTest(TSRObj, BigInt(1), BigInt(5));
 
     invalidTest(TSRObj, undefined, BigInt(5));
@@ -220,8 +212,10 @@ describe(validateTsRuntimeObject, () => {
       itemsAreReadOnly: false,
     };
 
-    expect(validateTsRuntimeObject(TSRObj, ["text", "text"])).toBe(Valid);
-    expect(validateTsRuntimeObject(TSRObj, [])).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, ["text", "text"])).toBeInstanceOf(
+      Valid
+    );
+    expect(validateTsRuntimeObject(TSRObj, [])).toBeInstanceOf(Valid);
     expect(validateTsRuntimeObject(TSRObj, ["text", 5]).valid).toBeFalsy();
 
     expect(validateTsRuntimeObject(TSRObj, undefined).valid).toBeFalsy();
@@ -273,7 +267,7 @@ describe(validateTsRuntimeObject, () => {
         [2, 12, 3],
         [true, false],
       ] as [string[], number[], boolean[]])
-    ).toBe(Valid);
+    ).toBeInstanceOf(Valid);
     expect(
       validateTsRuntimeObject(TSRObj, [["name"], 2, [true]] as [any, any, any])
         .valid
@@ -335,7 +329,7 @@ describe(validateTsRuntimeObject, () => {
         [string, boolean],
         [number]
       ])
-    ).toBe(Valid);
+    ).toBeInstanceOf(Valid);
     expect(
       validateTsRuntimeObject(TSRObj, [[true], [2]] as [[boolean], [number]])
         .valid
@@ -381,7 +375,7 @@ describe(validateTsRuntimeObject, () => {
         number,
         boolean
       ])
-    ).toBe(Valid);
+    ).toBeInstanceOf(Valid);
     expect(validateTsRuntimeObject(TSRObj, ["name", 2]).valid).toBeFalsy();
 
     expect(validateTsRuntimeObject(TSRObj, undefined).valid).toBeFalsy();
@@ -416,7 +410,7 @@ describe(validateTsRuntimeObject, () => {
         name: "Lorem ipsum",
         details: { age: 1 },
       })
-    ).toBe(Valid);
+    ).toBeInstanceOf(Valid);
     expect(
       validateTsRuntimeObject(TSRObj, { name: "Lorem ipsum", details: {} })
         .valid
@@ -447,7 +441,7 @@ describe(validateTsRuntimeObject, () => {
     };
 
     // todo: determine how enums are stored on the front-end for validation
-    expect(validateTsRuntimeObject(TSRObj, "A")).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, "A")).toBeInstanceOf(Valid);
     expect(validateTsRuntimeObject(TSRObj, "B").valid).toBeFalsy();
 
     expect(validateTsRuntimeObject(TSRObj, undefined).valid).toBeFalsy();
@@ -485,7 +479,7 @@ describe(validateTsRuntimeObject, () => {
       },
     };
 
-    expect(validateTsRuntimeObject(TSRObj, Person)).toBe(Valid);
+    expect(validateTsRuntimeObject(TSRObj, Person)).toBeInstanceOf(Valid);
     expect(validateTsRuntimeObject(TSRObj, Dog).valid).toBeFalsy();
 
     expect(validateTsRuntimeObject(TSRObj, undefined).valid).toBeFalsy();
@@ -508,12 +502,12 @@ describe(validateTsRuntimeObject, () => {
       };
     };
 
-    expect(validateTsRuntimeObject(TSRObj(["string", "number"]), 2)).toBe(
-      Valid
-    );
-    expect(validateTsRuntimeObject(TSRObj(["string", "number"]), "text")).toBe(
-      Valid
-    );
+    expect(
+      validateTsRuntimeObject(TSRObj(["string", "number"]), 2)
+    ).toBeInstanceOf(Valid);
+    expect(
+      validateTsRuntimeObject(TSRObj(["string", "number"]), "text")
+    ).toBeInstanceOf(Valid);
     expect(
       validateTsRuntimeObject(TSRObj(["boolean", "number"]), "text").valid
     ).toBeFalsy();
@@ -542,15 +536,15 @@ describe(validateTsRuntimeObject, () => {
       };
     };
 
-    expect(validateTsRuntimeObject(TSRObj("string", false), "test")).toBe(
-      Valid
-    );
-    expect(validateTsRuntimeObject(TSRObj("string", true), undefined)).toBe(
-      Valid
-    );
-    expect(validateTsRuntimeObject(TSRObj("boolean", false), false)).toBe(
-      Valid
-    );
+    expect(
+      validateTsRuntimeObject(TSRObj("string", false), "test")
+    ).toBeInstanceOf(Valid);
+    expect(
+      validateTsRuntimeObject(TSRObj("string", true), undefined)
+    ).toBeInstanceOf(Valid);
+    expect(
+      validateTsRuntimeObject(TSRObj("boolean", false), false)
+    ).toBeInstanceOf(Valid);
     expect(
       validateTsRuntimeObject(TSRObj("string", false), undefined).valid
     ).toBeFalsy();
@@ -562,7 +556,7 @@ describe(validateTsRuntimeObject, () => {
     ).toBeFalsy();
   });
 
-  it("Validate special TSR objects", () => {
+  it("Validate custom TSR objects", () => {
     const a = {
       name: "john",
       age: 15,
@@ -574,33 +568,33 @@ describe(validateTsRuntimeObject, () => {
     };
 
     function customValidator(
-      SpecialTSRObj: ConcreteTSR<SpecialTsRuntimeObject>,
+      CustomTSRObj: ConcreteTSR<CustomTsRuntimeObject>,
       data: any
-    ): StackTrace {
-      if (SpecialTSRObj.type === "$object" && typeof data === "object") {
+    ): ValidityTree {
+      if (CustomTSRObj.type === "$object" && typeof data === "object") {
         data = data as object;
         if (
-          typeof data["name"] === SpecialTSRObj.data["name"] &&
-          typeof data["age"] === SpecialTSRObj.data["age"]
+          typeof data["name"] === CustomTSRObj.schema["name"] &&
+          typeof data["age"] === CustomTSRObj.schema["age"]
         ) {
-          return Valid;
+          return new Valid();
         } else {
-          return invalidWithReason(SpecialTSRObj.type, {
-            receivedType: "undefined",
-            receivedValue: undefined,
-          });
+          return new InvalidLeaf(
+            CustomTSRObj.type,
+            new Reason("undefined", undefined)
+          );
         }
       } else
-        return invalidWithReason(SpecialTSRObj.type, {
-          receivedType: "undefined",
-          receivedValue: undefined,
-        });
+        return new InvalidLeaf(
+          CustomTSRObj.type,
+          new Reason("undefined", undefined)
+        );
     }
 
-    const TSRObj: ConcreteTSR<SpecialTsRuntimeObject> = {
+    const TSRObj: ConcreteTSR<CustomTsRuntimeObject> = {
       ...GlobalTSRObj,
       type: "$object",
-      data: { name: "string", age: "number" },
+      schema: { name: "string", age: "number" },
     };
 
     expect(

@@ -1,5 +1,4 @@
-import { Stack } from "./lib/helpers/Stack";
-import { TSRObjValidator } from "./lib/helpers/types";
+import { InvalidLeaf, Reason, TSRObjValidator } from "./lib/helpers";
 import { validateArray } from "./lib/validators/validateArray";
 import { validateEnum } from "./lib/validators/validateEnum";
 import { validateLiteral } from "./lib/validators/validateLiteral";
@@ -128,9 +127,9 @@ export type EnumTsRuntimeObject = {
   readonly enum: object;
 } & GlobalTsRuntimeObjectKeys;
 
-export type SpecialTsRuntimeObject = {
+export type CustomTsRuntimeObject = {
   readonly type: `$${string}`;
-  readonly data: any;
+  readonly schema: any;
 } & GlobalTsRuntimeObjectKeys;
 
 export type UnionTsRuntimeObject = {
@@ -170,7 +169,7 @@ export type TsRuntimeObject =
   | GenericTsRuntimeObjectValue
   | EnumTsRuntimeObject
   | InterfaceTsRuntimeObject
-  | SpecialTsRuntimeObject
+  | CustomTsRuntimeObject
   | UnionTsRuntimeObject
   | PropertySignatureTsRuntimeObject
   | UndefinedTsRuntimeObject
@@ -217,13 +216,13 @@ export const validateTsRuntimeObject: TSRObjValidator = (
     if (!params || !params.customValidator)
       throw new Error("Special TSR objects require a custom validator");
     else if (data === undefined || data === null)
-      return Stack.invalidWithReason(tsRuntimeObject.type, {
-        receivedType: typeof data,
-        receivedValue: data,
-      });
+      return new InvalidLeaf(
+        tsRuntimeObject.type,
+        new Reason(typeof data, data)
+      );
     else
       return params.customValidator(
-        tsRuntimeObject as SpecialTsRuntimeObject & ConcreteTsRuntimeObject,
+        tsRuntimeObject as CustomTsRuntimeObject & ConcreteTsRuntimeObject,
         data
       );
   } else

@@ -1,22 +1,18 @@
-import { Stack } from "../helpers/Stack";
-import { TSRObjValidator } from "../helpers/types";
-import Valid = Stack.Valid;
-import invalidWithReason = Stack.invalidWithReason;
 import {
   ConcreteTsRuntimeObject,
   UniqueSymbolTsRuntimeObject,
 } from "../../index";
+import { InvalidLeaf, Reason, TSRObjValidator, Valid } from "../helpers";
 
 export const validateUniqueSymbol: TSRObjValidator<
   UniqueSymbolTsRuntimeObject & ConcreteTsRuntimeObject
 > = (tsRuntimeObject, data) => {
   if (data === tsRuntimeObject.uniqueSymbolTypeId) {
-    return Valid;
+    return new Valid();
   } else {
-    return invalidWithReason(tsRuntimeObject.type, {
-      receivedType: typeof data,
-      receivedValue: data,
-      expectedValue: tsRuntimeObject.uniqueSymbolTypeId,
-    });
+    return new InvalidLeaf(
+      tsRuntimeObject.type,
+      new Reason(typeof data, data, tsRuntimeObject.uniqueSymbolTypeId)
+    );
   }
 };
